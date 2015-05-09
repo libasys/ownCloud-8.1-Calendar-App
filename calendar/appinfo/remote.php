@@ -7,7 +7,7 @@
  */
 
  
-//OCP\App::checkAppEnabled('calendar');
+
 /*
 if(substr(\OC::$server->getRequest()->getRequestUri(),0,strlen(OC_App::getAppWebPath('calendar').'/caldav.php')) == OC_App::getAppWebPath('calendar'). '/caldav.php') {
 	$baseuri = OC_App::getAppWebPath('calendar').'/caldav.php';
@@ -51,25 +51,16 @@ $caldavBackend    = new OCA\Calendar\Connector\Sabre\Backend();
 	$server->setBaseUri($baseuri);
 	// Add plugins
 	$defaults = new OC_Defaults();
-	$email = 'sebastian.doell@libasys.de';
-	//\OCP\Util::writeLog('calendar',' IMIP USE Start: '.$email, \OCP\Util::DEBUG);
+	
 	$server->addPlugin(new \Sabre\DAV\Auth\Plugin($authBackend,$defaults->getName()));
 	$server->addPlugin(new \Sabre\CalDAV\Plugin());
 	$server->addPlugin(new \Sabre\DAVACL\Plugin());
-	//$server->addPlugin(new \Sabre\CalDAV\Schedule\Plugin());
-//	$server->addPlugin(new \Sabre\DAV\Browser\Plugin(false)); // Show something in the Browser, but no upload
 	$server->addPlugin(new \Sabre\CalDAV\ICSExportPlugin());
 	$server->addPlugin(new \OC\Connector\Sabre\ExceptionLoggerPlugin('caldav', \OC::$server->getLogger()));
 	$server->addPlugin(new \OC\Connector\Sabre\AppEnabledPlugin(
 		'calendar',
 		\OC::$server->getAppManager()
 	));
-	
-	if($email !== null) {
-		$server->addPlugin(
-		    new \Sabre\CalDAV\Schedule\IMipPlugin($email)
-		);
-	}
 	
 	// And off we go!
 	$server->exec();
