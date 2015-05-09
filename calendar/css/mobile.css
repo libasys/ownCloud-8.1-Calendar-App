@@ -1,0 +1,48 @@
+@media only screen and (max-width: 768px) {
+
+
+/* do not show Deleted Files on mobile, not optimized yet and button too long */
+#controls .view.button-group {
+	display:none;
+}
+.view.navigation-left {
+	display:block;
+}
+.view.navigation-left .ioc-next{
+	margin-right:15px;
+}
+
+/* proper notification area for multi line messages */
+#notification-container {
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+}
+.ui-dialog .ui-widget-header button, .ui-dialog #actions button {
+	min-width:30px;
+	height:30px;
+	line-height:24px;
+	text-align:center;
+	font-size:12px;
+	padding:0;
+	padding-left:5px;
+	padding-right:5px;
+}
+.ui-dialog	#actions #closeDialog{
+		display:none;
+	}
+.ui-dialog	#accordion{
+		width:100%;
+		
+	}
+.ui-dialog	#actions .button-group.first{
+		width:79%;
+		
+	}
+.ui-dialog	#actions .button-group.second{
+		width:21%;
+		
+	}	
+}
