@@ -32,6 +32,7 @@ $(document).ready(function(){
 			$.post( OC.generateUrl('apps/calendar/calendarsettingssetfirstday'), data, function(jsondata){
 				OC.msg.finishedSaving('.msgFd', jsondata);
 				Calendar.calendarConfig['firstDay'] = jsondata.firstday;
+				$("#datepickerNav").datepicker('option', 'firstDay', jsondata.firstday);
 				$('#fullcalendar').fullCalendar('destroy');
 				Calendar.init();
 				

@@ -31,14 +31,13 @@ class Alarm {
 		
 		$this -> nowTime = strtotime(date('d.m.Y H:i', $timeNow)) + ($calcSumWin);
 		
-        //\OCP\Util::writeLog('calendar','Alarm TimeZoneOffset :'.$offset,\OCP\Util::DEBUG);
-		
+ 		
 		if (\OC::$server->getSession() -> get('public_link_token')) {
 			$linkItem = \OCP\Share::getShareByToken(\OC::$server->getSession() -> get('public_link_token', false));
 			if (is_array($linkItem) && isset($linkItem['uid_owner'])) {
-				$rootLinkItem = Calendar::find($linkItem['item_source']);
+				$itemSource = App::validateItemSource($linkItem['item_source'],$linkItem['item_type'].'-');
+				$rootLinkItem = Calendar::find($itemSource);
 				$this -> aCalendars[] = $rootLinkItem;
-				// \OCP\Util::writeLog('calendar','Guest Refresh :'.$rootLinkItem['ctag'].':'.\OC::$session->get('public_link_token', false).':'.$rootLinkItem['id'] ,\OCP\Util::DEBUG);
 			}
 		} else {
 			$this -> aCalendars = Calendar::allCalendars(\OCP\User::getUser());

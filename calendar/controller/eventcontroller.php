@@ -1081,10 +1081,22 @@ class EventController extends Controller {
                 }
             }
             foreach($valarm as $vInfo){
-                if($vInfo['ACTION']=='DISPLAY' && strstr($vInfo['TRIGGER'],'PT')){
-                    $sAlarm[]='TRIGGER:'.$vInfo['TRIGGER'];
+                if($vInfo['ACTION']=='DISPLAY' && strstr($vInfo['TRIGGER'],'P')){
+                    if(substr_count($vInfo['TRIGGER'],'PT') == 1){
+                    	 $sAlarm[]='TRIGGER:'.$vInfo['TRIGGER'];
+                    }
+					
+				    if(substr_count($vInfo['TRIGGER'],'-P') == 1 && substr_count($vInfo['TRIGGER'],'PT') == 0){
+                    	 $temp=explode('-P',(string)$vInfo['TRIGGER']);
+						 $sAlarm[]='TRIGGER:-PT'.$temp[1];
+                    }
+					if(substr_count($vInfo['TRIGGER'],'+P') == 1 && substr_count($vInfo['TRIGGER'],'PT') == 0){
+                    	$temp=explode('+P',$vInfo['TRIGGER']);
+						 $sAlarm[]='TRIGGER:+PT'.$temp[1];
+                    }
+				   
                 }
-                if($vInfo['ACTION']=='DISPLAY' && !strstr($vInfo['TRIGGER'],'PT')){
+                if($vInfo['ACTION']=='DISPLAY' && !strstr($vInfo['TRIGGER'],'P')){
                     if(!strstr($vInfo['TRIGGER'],'DATE-TIME'))  {
                         $sAlarm[]='TRIGGER;VALUE=DATE-TIME:'.$vInfo['TRIGGER'];
                     }else{
@@ -1516,13 +1528,30 @@ class EventController extends Controller {
 			
             $aAlarm['action']=$valarm['ACTION'];
             $aAlarm['triggerRequest']=$valarm['TRIGGER'];
-            $tempTrigger=$aAlarm['triggerRequest'];
-            if(strstr($tempTrigger,'TRIGGER')){
-                $temp=explode('TRIGGER:',$tempTrigger);
-                $aAlarm['trigger']=$temp[1];
-            }else{
-                $aAlarm['trigger']=$tempTrigger;
-                $aAlarm['triggerRequest']='TRIGGER;VALUE=DATE-TIME:'.$tempTrigger;
+            $tempTrigger=(string)$aAlarm['triggerRequest'];
+			
+           	 if(substr_count($tempTrigger,'PT') == 1){
+           	 	$temp=explode('TRIGGER:',$tempTrigger);	
+           	 	$aAlarm['trigger']=$temp[1];
+				$aAlarm['triggerRequest']=$aAlarm['trigger'];
+				//\OCP\Util::writeLog('calendar', 'ALARM TRIGGER TIME-> '.$tempTrigger, \OCP\Util::DEBUG);
+           	 }
+           	 if(substr_count($tempTrigger,'-P') == 1 && substr_count($tempTrigger,'PT') == 0){
+           	 	$temp=explode('-P',$tempTrigger);
+				$aAlarm['trigger']='-PT'.$temp[1];
+				$aAlarm['triggerRequest']=$aAlarm['trigger'];
+				
+           	 }
+			 if(substr_count($tempTrigger,'+P') == 1 && substr_count($tempTrigger,'PT') == 0){
+           	 	$temp=explode('+P',$tempTrigger);
+				$aAlarm['trigger']='+PT'.$temp[1];
+				$aAlarm['triggerRequest']=$aAlarm['trigger'];
+           	 }
+			 
+           	 if(!strstr($tempTrigger,'P')){
+               //\OCP\Util::writeLog('calendar', 'ALARM TRIGGER TIME-> '.$tempTrigger, \OCP\Util::DEBUG);
+			    $aAlarm['trigger']=$tempTrigger;
+                $aAlarm['triggerRequest']=$tempTrigger;
             }
             
             $aAlarm['email']='';
@@ -1538,9 +1567,10 @@ class EventController extends Controller {
                
            }else{
               $aAlarm['action']='OWNDEF';
-          
+          		
                 if(stristr($aAlarm['trigger'],'PT')){
-                        $tempDescr='';
+                  
+				        $tempDescr='';
                         $aAlarm['reminderdate'] ='';
                         $aAlarm['remindertime'] = '';
                         if(stristr($aAlarm['trigger'],'-PT')){
@@ -1551,7 +1581,7 @@ class EventController extends Controller {
                         }
                         
                         //GetTime
-                        $TimeCheck=substr($aAlarm['trigger'],3,strlen($aAlarm['trigger']));
+                        $TimeCheck=substr($aAlarm['triggerRequest'],3,strlen($aAlarm['triggerRequest']));
                         
                         $aAlarm['reminder_time_input']=substr($TimeCheck,0,(strlen($TimeCheck)-1));
                         
@@ -1567,11 +1597,14 @@ class EventController extends Controller {
                         if($alarmTimeDescr=='D'){
                             $aAlarm['reminder_time_select']='days'.$tempDescr;
                         }
+						 if($alarmTimeDescr=='W'){
+                            $aAlarm['reminder_time_select']='weeks'.$tempDescr;
+                        }
                 }else{
                    
                     
-					$tDttriggertime=explode('TRIGGER;VALUE=DATE-TIME:',$valarm['TRIGGER']);
-					$tDttriggertime = $tDttriggertime[0];
+					$tDttriggertime=explode('TRIGGER;VALUE=DATE-TIME:',$aAlarm['triggerRequest']);
+					$tDttriggertime = $tDttriggertime[1];
 					
                     if(strlen($tDttriggertime)== 8){
                          $dttriggertime= new \DateTime($tDttriggertime);		

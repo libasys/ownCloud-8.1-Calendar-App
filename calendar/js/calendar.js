@@ -29,7 +29,7 @@ Calendar = {
 					Calendar.calendarConfig['myRefreshChecker'] = jsondata.myRefreshChecker;
 					
 					Calendar.initCalendar();
-					
+					Calendar.Util.calViewEventHandler();
 					
 				}
 			});
@@ -332,6 +332,9 @@ Calendar = {
 					if (sTimeMode == 'daysbefore') {
 						sResult = '-PT' + sTimeInput + 'D';
 					}
+					if (sTimeMode == 'weeksbefore') {
+						sResult = '-PT' + sTimeInput + 'W';
+					}
 					if (sTimeMode == 'minutesafter') {
 						sResult = '+PT' + sTimeInput + 'M';
 					}
@@ -340,6 +343,9 @@ Calendar = {
 					}
 					if (sTimeMode == 'daysafter') {
 						sResult = '+PT' + sTimeInput + 'D';
+					}
+					if (sTimeMode == 'weeksafter') {
+						sResult = '+PT' + sTimeInput + 'W';
 					}
 					sResult = 'TRIGGER:' + sResult;
 				}
@@ -375,6 +381,7 @@ Calendar = {
 		},
 		reminderToText : function(sReminder) {
 			if (sReminder != '') {
+				
 				var sReminderTxt = '';
 				if (sReminder.indexOf('-PT') != -1) {
 					//before
@@ -389,6 +396,9 @@ Calendar = {
 					if (sTempTF == 'D') {
 						sReminderTxt = t('calendar', 'Days before');
 					}
+					if (sTempTF == 'W') {
+						sReminderTxt = t('calendar', 'Weeks before');
+					}
 					var sTime = sTemp[1].substring(0, (sTemp[1].length - 1));
 					sReminderTxt = sTime + ' ' + sReminderTxt;
 				} else if (sReminder.indexOf('+PT') != -1) {
@@ -402,6 +412,9 @@ Calendar = {
 					}
 					if (sTempTF == 'D') {
 						sReminderTxt = t('calendar', 'Days after');
+					}
+					if (sTempTF == 'W') {
+						sReminderTxt = t('calendar', 'Weeks after');
 					}
 					var sTime = sTemp[1].substring(0, (sTemp[1].length - 1));
 					sReminderTxt = sTime + ' ' + sReminderTxt;
@@ -775,6 +788,7 @@ Calendar = {
 			$("#datepickerNav").datepicker({
 
 				minDate : null,
+				firstDay: Calendar.calendarConfig['firstDay'],
 				onSelect : function(value, inst) {
 					var date = inst.input.datepicker('getDate');
 
@@ -932,6 +946,7 @@ Calendar = {
 
 			$("#datepickerDayMore").datepicker({
 				minDate : null,
+				firstDay: Calendar.calendarConfig['firstDay'],
 				onSelect : function(value, inst) {
 					var date = inst.input.datepicker('getDate');
 
@@ -1012,7 +1027,7 @@ Calendar = {
 													color = Calendar.calendarConfig['calendarcolors'][el[0].calendarid]['color'];
 												}
 												var CalDiv = '<span class="colorCal-list" style="margin-top:6px;background-color:' + bgColor + ';">' + '&nbsp;' + '</span>';
-												var time = '<span class="timeAgenda">ganzt&auml;gig</span>';
+												var time = '<span class="timeAgenda">'+t('calendar',"All day")+'</span>';
 	
 												if (!el[0].allDay) {
 													var time = '<span class="timeAgenda">' + $.fullCalendar.formatDates(new Date(el[0].startlist), new Date(el[0].endlist), 'HH:mm{ - HH:mm}') + '</span>';
@@ -1507,6 +1522,7 @@ Calendar = {
 			$('#from').datetimepicker({
 				altField : '#fromtime',
 				dateFormat : 'dd-mm-yy',
+				firstDay: Calendar.calendarConfig['firstDay'],
 				stepMinute : 5,
 				minDate : null,
 				numberOfMonths : 1,
@@ -1544,6 +1560,7 @@ Calendar = {
 			var ToTime = $('#totime').val().split(':');
 			$('#to').datetimepicker({
 				altField : '#totime',
+				firstDay: Calendar.calendarConfig['firstDay'],
 				dateFormat : 'dd-mm-yy',
 				stepMinute : 5,
 				numberOfMonths : 1,
@@ -3010,7 +3027,7 @@ $(document).ready(function() {
 	});
 
 
-	Calendar.Util.calViewEventHandler();
+	
 
 	$('.view button').each(function(i, el) {
 		$(el).on('click', function() {

@@ -106,7 +106,8 @@ class PublicController extends Controller {
 			$linkItem = Share::getShareByToken($token, false);
 			if (is_array($linkItem) && isset($linkItem['uid_owner'])) {
 				$type = $linkItem['item_type'];
-				$itemSource = $linkItem['item_source'];
+				$itemSource = CalendarApp :: validateItemSource($linkItem['item_source'],(string)$type.'-');
+				
 				$itemType= $linkItem['item_type'];
 				$shareOwner = $linkItem['uid_owner'];
 				$calendarName= $linkItem['item_target'];
@@ -228,7 +229,8 @@ class PublicController extends Controller {
 				
 				if (isset($rootLinkItem['uid_owner'])) {
 					\OCP\JSON::checkUserExists($rootLinkItem['uid_owner']);	
-					$calendar_id=$linkItem['item_source'];
+					$calendar_id = CalendarApp :: validateItemSource($linkItem['item_source'],(string)$linkItem['item_type'].'-');
+					
 				}
 			}
 			
@@ -307,7 +309,7 @@ class PublicController extends Controller {
 			if (is_array($linkItem) && isset($linkItem['uid_owner'])) {
 				// seems to be a valid share
 				$type = $linkItem['item_type'];
-				$itemSource = $linkItem['item_source'];
+				$itemSource = CalendarApp :: validateItemSource($linkItem['item_source'],(string)$type.'-');
 				$shareOwner = $linkItem['uid_owner'];
 				$rootLinkItem = \OCP\Share::resolveReShare($linkItem);
 				
@@ -386,7 +388,12 @@ class PublicController extends Controller {
 		
 	}
 	
+	
+	
 	private function getPublicEvent($itemSource, $shareOwner, $token){
+				
+			$itemSource = CalendarApp :: validateItemSource($itemSource,'event-');
+				
 			$data = CalendarApp::getEventObject($itemSource, false, false);
 			$object = VObject::parse($data['calendardata']);
 			$vevent = $object -> VEVENT;

@@ -40,6 +40,7 @@ class Calendar implements \OCP\Share_Backend_Collection {
 	* The formatItems() function will translate the source returned back into the item
 	*/
 	public function isValidSource($itemSource, $uidOwner) {
+		$itemSource = App::validateItemSource($itemSource,'calendar-');
 		$calendar = App::getCalendar( $itemSource );
 		if ($calendar === false || $calendar['userid'] != $uidOwner) {
 			return false;
@@ -50,6 +51,9 @@ class Calendar implements \OCP\Share_Backend_Collection {
 	public function isShareTypeAllowed($shareType) {
 		return true;
 	}
+	
+	
+	
 	/**
 	* @brief Get a unique name of the item for the specified user
 	* @param string Item
@@ -61,6 +65,7 @@ class Calendar implements \OCP\Share_Backend_Collection {
 	* If it does generate a new name e.g. name_#
 	*/
 	public function generateTarget($itemSource, $shareWith, $exclude = null) {
+		$itemSource = App::validateItemSource($itemSource,'calendar-');
 		$calendar = App::getCalendar( $itemSource );
 		$user_calendars = array();
 		foreach(\OCA\Calendar\Calendar::allCalendars($shareWith) as $user_calendar) {
@@ -92,6 +97,7 @@ class Calendar implements \OCP\Share_Backend_Collection {
 		$calendars = array();
 		if ($format == self::FORMAT_CALENDAR) {
 			foreach ($items as $item) {
+				$item['item_source'] = App::validateItemSource($item['item_source'],'calendar-');	
 				$calendar = App::getCalendar($item['item_source'], false);
 				if(!$calendar) {
 					continue;
@@ -113,6 +119,7 @@ class Calendar implements \OCP\Share_Backend_Collection {
 	}
 
 	public function getChildren($itemSource) {
+		$itemSource = self::validateItemSource($itemSource);		
 		$query = \OCP\DB::prepare('SELECT `id`, `summary` FROM `*PREFIX*clndr_objects` WHERE `calendarid` = ?');
 		$result = $query->execute(array($itemSource));
 		$children = array();

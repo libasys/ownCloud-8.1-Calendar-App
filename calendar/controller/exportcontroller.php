@@ -65,11 +65,12 @@ class ExportController extends Controller {
 				
 				if (isset($rootLinkItem['uid_owner'])) {
 					\OCP\JSON::checkUserExists($rootLinkItem['uid_owner']);	
+					$itemSource =CalendarApp::validateItemSource($linkItem['item_source'],(string)$linkItem['item_type'].'-');
 					if($linkItem['item_type']=='calendar'){
-						$calid=$linkItem['item_source'];
+						$calid=$itemSource;
 					}
 					if($linkItem['item_type']=='event' || $linkItem['item_type']=='todo'){
-						$eventid=$linkItem['item_source'];
+						$eventid=$itemSource;
 					}
 				}
 			}
@@ -123,4 +124,7 @@ class ExportController extends Controller {
 		}
 		
 	}
+	
+	
+
 }

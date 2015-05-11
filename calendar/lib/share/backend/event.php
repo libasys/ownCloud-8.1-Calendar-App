@@ -16,6 +16,7 @@ class Event implements \OCP\Share_Backend {
 	private static $event;
 
 	public function isValidSource($itemSource, $uidOwner) {
+		$itemSource = App::validateItemSource($itemSource,'event-');
 		self::$event = Object::find($itemSource);
 		if (self::$event) {
 			return true;
@@ -23,9 +24,10 @@ class Event implements \OCP\Share_Backend {
 		return false;
 	}
     
-	 
+	
+	
 	public function generateTarget($itemSource, $shareWith, $exclude = null) {
-		
+		$itemSource = App::validateItemSource($itemSource,'event-');
 		if(!self::$event) {
 			self::$event = Object::find($itemSource);
 		}
@@ -41,11 +43,13 @@ class Event implements \OCP\Share_Backend {
 		if ($format == self::FORMAT_EVENT) {
 			
 			foreach ($items as $item) {
+				$item['item_source'] = App::validateItemSource($item['item_source'],'event-');	
+				
 				if(!Object::checkSharedEvent($item['item_source'])){	
 				$event = Object::find($item['item_source']);
 				
 				$event['summary'] = $item['item_target'];
-				$event['item_source'] = $item['item_source'];
+				$event['item_source'] = (int) $item['item_source'];
 				$event['privat'] =false;
 				$event['shared'] =false;
 				$event['isalarm']=$event['isalarm'];

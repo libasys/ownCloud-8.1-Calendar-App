@@ -52,7 +52,8 @@ class PageController extends Controller {
 	 */
 	public function index() {
 			
-		$calendars = CalendarCalendar::allCalendars($this -> userId, false);
+		$calendars = CalendarCalendar::allCalendars($this -> userId, false, false);
+		
 		if( count($calendars) == 0 || (count($calendars) == 1 && $calendars[0]['id']=='birthday_'.$this -> userId)) {
 			CalendarCalendar::addDefaultCalendars($this -> userId);
 			$calendars = CalendarCalendar::allCalendars($this -> userId, true);

@@ -17,16 +17,24 @@ class Calendar{
 	 * @brief Returns the list of calendars for a specific user.
 	 * @param string $uid User ID
 	 * @param boolean $active Only return calendars with this $active state, default(=false) is don't care
+	 * @param boolean $bSubscribe  return calendars with this $issubscribe state, default(=true) is don't care
 	 * @return array
 	 */
-	public static function allCalendars($uid, $active=false) {
+	public static function allCalendars($uid, $active=false, $bSubscribe = true) {
 		$values = array($uid);
 		$active_where = '';
 		if ($active === true) {
 			$active_where = ' AND `active` = ?';
 			$values[] = (int)$active;
 		}
-		$stmt = \OCP\DB::prepare( 'SELECT * FROM `*PREFIX*clndr_calendars` WHERE `userid` = ?' . $active_where );
+		$subscribe_where ='';
+		if ($bSubscribe === false) {
+			$subscribe_where = ' AND `issubscribe` = ?';
+			$values[] = (int)$bSubscribe;
+		}
+		
+		
+		$stmt = \OCP\DB::prepare( 'SELECT * FROM `*PREFIX*clndr_calendars` WHERE `userid` = ?' . $active_where.$subscribe_where );
 		$result = $stmt->execute($values);
 
 		$calendars = array();
@@ -154,7 +162,7 @@ class Calendar{
 		\OCP\Util::emitHook('OC_Calendar', 'addCalendar', $insertid);
 		
 		
-	     $link = \OCP\Util::linkTo('calendar', 'index.php');
+	     $link = \OC::$server->getURLGenerator()->linkToRoute('calendar.page.index');
 		
 		$params=array(
 		    'mode'=>'created',
@@ -270,7 +278,7 @@ class Calendar{
 
 		\OCP\Util::emitHook('OC_Calendar', 'editCalendar', $id);
 		
-		$link = \OCP\Util::linkTo('calendar', 'index.php');
+		$link = \OC::$server->getURLGenerator()->linkToRoute('calendar.page.index');
 		
 		$params=array(
 		    'mode'=>'edited',
@@ -362,11 +370,14 @@ class Calendar{
 		\OCP\Share::unshareAll('calendar', $id);
 
 		\OCP\Util::emitHook('OC_Calendar', 'deleteCalendar', $id);
-		if(\OCP\USER::isLoggedIn() and count(self::allCalendars(\OCP\USER::getUser())) == 0) {
+		$calendars = self::allCalendars(\OCP\USER::getUser(), false, false);
+		if((\OCP\USER::isLoggedIn() && count($calendars) === 0) || (count($calendars) == 1 && $calendars[0]['id']=='birthday_'.\OCP\USER::getUser())) {
 			self::addDefaultCalendars(\OCP\USER::getUser());
 		}
+		
+		
  		
- 		$link = \OCP\Util::linkTo('calendar', 'index.php');
+ 		$link = \OC::$server->getURLGenerator()->linkToRoute('calendar.page.index');
 		
 		$params=array(
 		    'mode'=>'deleted',

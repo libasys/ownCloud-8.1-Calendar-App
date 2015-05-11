@@ -1,9 +1,6 @@
 <?php
 namespace OCA\Calendar\AppInfo;
 
-//require_once __DIR__ . '/bootstrap.php';
-
-
 $app = new Application();
 $c = $app->getContainer();
 // add an navigation entry

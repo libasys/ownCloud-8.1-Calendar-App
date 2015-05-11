@@ -15,12 +15,12 @@
 </td>
 <td width="20px">
   <?php if($_['calendar']['permissions'] & OCP\PERMISSION_SHARE && $_['isShareApi'] === 'yes') { ?>
-  <a href="#" class="share action permanent" data-item-type="calendar" 
-    data-item="<?php p($_['calendar']['id']); ?>" 
+  <a href="#" class="share action permanent icon-share" data-item-type="calendar" 
+    data-item="calendar-<?php p($_['calendar']['id']); ?>" 
     data-link="true"
 	data-possible-permissions="<?php p($_['calendar']['permissions']) ?>"
 	title="<?php p($l->t('Share Calendar')) ?>"
-	style="background:url(<?php print_unescaped(OCP\Util::imagePath('core', 'actions/share.svg')) ?>) no-repeat center;">
+	>
 	</a>
   <?php } ?>
 </td>

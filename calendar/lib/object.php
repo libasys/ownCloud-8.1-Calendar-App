@@ -80,12 +80,13 @@ class Object{
 	 
     public static function getEventSharees(){
    	
-		$SQL='SELECT item_source FROM `*PREFIX*share` WHERE `uid_owner` = ? AND `item_type` = ?';
+		$SQL='SELECT item_source,item_type FROM `*PREFIX*share` WHERE `uid_owner` = ? AND `item_type` = ?';
 		$stmt = \OCP\DB::prepare($SQL);
 		$result = $stmt->execute(array(\OCP\User::getUser(),'event'));
 		$aSharees = '';
 		while( $row = $result->fetchRow()) {
-			$aSharees[$row['item_source']]=1;
+			$itemSource =App::validateItemSource($row['item_source'],(string)$row['item_type'].'-');	
+			$aSharees[$itemSource]=1;
 		}
 		
 		if(is_array($aSharees)) return $aSharees;
@@ -101,7 +102,7 @@ class Object{
 	
 	public static function getCalendarSharees(){
     	
-		$SQL='SELECT item_source,share_with,share_type,permissions FROM `*PREFIX*share` WHERE `uid_owner` = ? AND `item_type` = ?';
+		$SQL='SELECT item_source,share_with,share_type,permissions,item_type FROM `*PREFIX*share` WHERE `uid_owner` = ? AND `item_type` = ?';
 		$stmt = \OCP\DB::prepare($SQL);
 		$result = $stmt->execute(array(\OCP\User::getUser(),'calendar'));
 		$aSharees = '';
@@ -112,7 +113,8 @@ class Object{
 			if($row['share_with'] && $row['share_type'] != 3 ) {$shareWith=': '.$row['share_with'];}
 			if($row['share_with'] && $row['share_type'] == 3 ) {$shareWith=': password protected ';}
 			$shareTypeDescr.=self::shareTypeDescription($row['share_type']).' '.$shareWith.' ('.Calendar::permissionReader($row['permissions']).")<br>";
-			$aSharees[$row['item_source']]=array('myShare'=>1,'shareTypeDescr'=>$shareTypeDescr,'shareTypeIcon' => $shareIcon);
+			$itemSource =App::validateItemSource($row['item_source'],(string)$row['item_type'].'-');	
+			$aSharees[$itemSource]=array('myShare'=>1,'shareTypeDescr'=>$shareTypeDescr,'shareTypeIcon' => $shareIcon);
 		}
 		
 		if(is_array($aSharees)) return $aSharees;
@@ -259,8 +261,8 @@ class Object{
 		 $linkTypeApp='calendar';
 	     if($type=='VTODO') $linkTypeApp='aufgaben';
 		 
-	     $link = \OCP\Util::linkTo($linkTypeApp, 'index.php').'#'.urlencode($object_id);
-		
+	     
+		$link = \OC::$server->getURLGenerator()->linkToRoute($linkTypeApp.'.page.index').'#'.urlencode($object_id);
 		$params=array(
 		    'mode'=>'created',
 		    'link' =>$link,
@@ -324,7 +326,8 @@ class Object{
 		$linkTypeApp='calendar';
 	     if($type=='VTODO') $linkTypeApp='aufgaben';
 		 
-	     $link = \OCP\Util::linkTo($linkTypeApp, 'index.php').'#'.urlencode($object_id);
+	    $link = \OC::$server->getURLGenerator()->linkToRoute($linkTypeApp.'.page.index').'#'.urlencode($object_id);
+
 		
 		$params=array(
 		    'mode'=>'created',
@@ -344,7 +347,7 @@ class Object{
        
 	    $bCheckCalUser=false;
 		$stmt = \OCP\DB::prepare( 'SELECT share_with, share_type FROM `*PREFIX*share` WHERE `item_type`= ? AND `item_source` = ? ' );
-		$result = $stmt->execute(array('calendar',$calid));
+		$result = $stmt->execute(array('calendar','calendar-'.$calid));
         while( $row = $result->fetchRow()) {
 			if($row['share_type'] === 1 && \OC::$server->getGroupManager()->groupExists($row['share_with'])){
 				$group = \OC::$server->getGroupManager()->get($row['share_with']);	
@@ -366,7 +369,7 @@ class Object{
     
 	    $bCheckCalUser=false;
 		$stmt = \OCP\DB::prepare( 'SELECT share_with,share_type FROM `*PREFIX*share` WHERE `item_type`= ? AND `item_source` = ?' );
-		$result = $stmt->execute(array('event',$eventid));
+		$result = $stmt->execute(array('event','event-'.$eventid));
        
 		while( $row = $result->fetchRow()) {
 			if($row['share_type'] === 1 && \OC::$server->getGroupManager()->groupExists($row['share_with'])){
@@ -428,12 +431,12 @@ class Object{
 
         //check Share
         $stmtShare = \OCP\DB::prepare("SELECT COUNT(*) AS COUNTSHARE FROM `*PREFIX*share` WHERE `item_source` = ? AND `item_type`= ? ");
-        $result=$stmtShare->execute(array($id,'event'));
+        $result=$stmtShare->execute(array('event-'.$id,'event'));
 		$row = $result->fetchRow();
 		
         if($row['COUNTSHARE']>=1){
         		$stmtShareUpdate = \OCP\DB::prepare( "UPDATE `*PREFIX*share` SET `item_target`= ? WHERE `item_source` = ? AND `item_type` = ? ");
-		        $stmtShareUpdate->execute(array($summary,$id,'event'));
+		        $stmtShareUpdate->execute(array($summary,'event-'.$id,'event'));
 				
 				$stmt = \OCP\DB::prepare( 'UPDATE `*PREFIX*clndr_objects` SET `objecttype`=?,`startdate`=?,`enddate`=?,`repeating`=?,`summary`=?,`calendardata`=?,`lastmodified`= ?,`isalarm`= ? WHERE `org_objid` = ?' );
 		        $stmt->execute(array($type,$startdate,$enddate,$repeating,$summary,$data,time(),$isAlarm,$id));
@@ -446,8 +449,8 @@ class Object{
 		
 		/****Activity New ***/
 		
-		 $link = \OCP\Util::linkTo('calendar', 'index.php').'#'.urlencode($id);
 		
+		$link = \OC::$server->getURLGenerator()->linkToRoute('calendar.page.index') . '#' . urlencode($id);
 		$params=array(
 		    'mode'=>'edited',
 		    'link' =>$link,
@@ -514,8 +517,8 @@ class Object{
         $linkTypeApp='calendar';
 	     if($type=='VTODO') $linkTypeApp='aufgaben';
 		 
-	     $link = \OCP\Util::linkTo($linkTypeApp, 'index.php').'#'.urlencode($oldobject['calendarid']);
-		
+	    
+		$link = \OC::$server->getURLGenerator()->linkToRoute($linkTypeApp.'.page.index').'#'.urlencode($oldobject['calendarid']);
 		$params=array(
 		    'mode'=>'edited',
 		    'link' =>$link,
@@ -1110,6 +1113,7 @@ class Object{
 			'-PT2H' => '2 '.(string)$l10n->t('Hours before'),
 			'-PT1D' => '1 '.(string)$l10n->t('Days before'),
 			'-PT2D' => '2 '.(string)$l10n->t('Days before'),
+			'-PT1W' => '1 '.(string)$l10n->t('Weeks before'),
 			'OWNDEF'        => (string)$l10n->t('Customize ...')
 		);
 	}
@@ -1139,6 +1143,8 @@ class Object{
 			'minutesafter' => (string)$l10n->t('Minutes after'),
 			'hoursafter'  => (string)$l10n->t('Hours after'),
 			'daysafter'  => (string)$l10n->t('Days after'),
+			'weeksafter'  => (string)$l10n->t('Weeks after'),
+			'weeksbefore'  =>  (string)$l10n->t('Weeks before'),
 			'ondate'  => (string)$l10n->t('on'),
 		);
 	}
@@ -1155,6 +1161,8 @@ class Object{
 			'minutesafter' => array('timedescr'=>'M','timehistory'=>'+PT'),
 			'hoursafter'  => array('timedescr'=>'H','timehistory'=>'+PT'),
 			'daysafter'  => array('timedescr'=>'D','timehistory'=>'+PT'),
+			'weeksafter'  => array('timedescr'=>'W','timehistory'=>'+PT'),
+			'weeksbefore'  => array('timedescr'=>'W','timehistory'=>'-PT'),
 			'ondate'  =>array('timedescr'=>'D','timehistory'=>'+PT'),
 		);
 	}

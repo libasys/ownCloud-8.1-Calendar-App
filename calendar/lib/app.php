@@ -66,6 +66,17 @@ class App {
 		return $calendar;
 	}
 
+
+	public static function validateItemSource($itemSource,$itemType){
+	
+		if(stristr($itemSource,$itemType)){
+			$iTempItemSource=explode($itemType,$itemSource);
+			return $iTempItemSource[1];
+		}else{
+			return $itemSource;
+		}
+	}
+	
 	/**
 	 * @brief returns informations about a calendar
 	 * @param int $id - id of the calendar

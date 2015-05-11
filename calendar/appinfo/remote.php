@@ -51,7 +51,7 @@ $caldavBackend    = new OCA\Calendar\Connector\Sabre\Backend();
 	$server->setBaseUri($baseuri);
 	// Add plugins
 	$defaults = new OC_Defaults();
-	
+	$server->addPlugin(new \OC\Connector\Sabre\MaintenancePlugin());
 	$server->addPlugin(new \Sabre\DAV\Auth\Plugin($authBackend,$defaults->getName()));
 	$server->addPlugin(new \Sabre\CalDAV\Plugin());
 	$server->addPlugin(new \Sabre\DAVACL\Plugin());
