@@ -315,7 +315,7 @@ class Backend extends \Sabre\CalDAV\Backend\AbstractBackend  {
 		$calendar = \OCA\Calendar\Calendar::find($calendarId);
 		$bAccess=true;
 		if($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calendarId);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calendarId);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {	
 				$bAccess=false;
 				$calendarData=null;
@@ -339,7 +339,7 @@ class Backend extends \Sabre\CalDAV\Backend\AbstractBackend  {
 		$calendar = \OCA\Calendar\Calendar::find($calendarId);
 		$bAccess=true;
 		if($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calendarId);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$calendarId);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {	
 				$bAccess=false;
 				\OCP\Util::writeLog('calendar', 'CALDAV -> UPDATE Permission denied! Calendar '.$calendar['displayname'], \OCP\Util::DEBUG);
@@ -361,7 +361,7 @@ class Backend extends \Sabre\CalDAV\Backend\AbstractBackend  {
 		$calendar = \OCA\Calendar\Calendar::find($calendarId);
 		$bAccess=true;
 		if($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calendarId);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$calendarId);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {	
 				$bAccess=false;
 				\OCP\Util::writeLog('calendar', 'CALDAV -> DELETE Permission denied! Calendar '.$calendar['displayname'], \OCP\Util::DEBUG);

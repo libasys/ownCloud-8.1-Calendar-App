@@ -49,7 +49,7 @@ class CalendarObject extends \Sabre\CalDAV\CalendarObject {
 		
 		if($uid != \OCP\USER::getUser()) {
 			$object = \OCA\Calendar\VObject::parse($this->objectData['calendardata']);
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $this->calendarInfo['id']);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$this->calendarInfo['id']);
 			$sharedAccessClassPermissions = \OCA\Calendar\Object::getAccessClassPermissions($object);
 			if ($sharedCalendar && ($sharedCalendar['permissions'] & \OCP\PERMISSION_READ) && ($sharedAccessClassPermissions & \OCP\PERMISSION_READ)) {
 				$readprincipal = 'principals/' . \OCP\USER::getUser();

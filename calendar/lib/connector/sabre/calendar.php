@@ -58,7 +58,7 @@ class Calendar extends \Sabre\CalDAV\Calendar {
          }
 		
 		if($uid != \OCP\USER::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $this->calendarInfo['id']);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$this->calendarInfo['id']);
 			if ($sharedCalendar && ($sharedCalendar['permissions'] & \OCP\PERMISSION_READ)) {
 				$readprincipal = 'principals/' . \OCP\USER::getUser();
 				$writeprincipal = '';
