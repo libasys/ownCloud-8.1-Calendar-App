@@ -66,7 +66,7 @@ class Provider extends \OCP\Search\Provider {
 				$searchAdvanced=false;
 	
 					if($isDate==true && strlen($query)>=5){
-						\OCP\Util::writeLog('calendar','search: ->'.$query, \OCP\Util::DEBUG);
+					//	\OCP\Util::writeLog('calendar','search: ->'.$query, \OCP\Util::DEBUG);
 						$tempQuery=strtotime($query);
 					   $checkDate=date('Y-m-d',$tempQuery);
 					   if(substr_count($object['startdate'],$checkDate)>0){
@@ -110,7 +110,7 @@ class Provider extends \OCP\Search\Provider {
 					}else{
 						$info = $l->t('Date') . ': ' . $start_dt->format('d.m.y H:i') . ' - ' . $end_dt->format('d.m.y H:i');
 					}
-					$link = \OCP\Util::linkTo('calendar', 'index.php').'#'.urlencode($object['id']);
+					$link = \OC::$server->getURLGenerator()->linkToRoute('calendar.page.index').'#'.urlencode($object['id']);
 					
 					$returnData['id']=$object['id'];
 					$returnData['description']=$object['summary'].' '.$info;

@@ -4,6 +4,24 @@
  * later.
  * See the COPYING-README file.
  */
+
+.app-calendar #searchresults {
+	background-color:rgba(255,255,255,1);
+	position:fixed;
+	overflow: auto;
+	height:50%;
+	text-overflow: ellipsis;
+	width:auto;
+	padding-top: 20px;
+	box-sizing: border-box;
+	z-index: 100;
+	/* account for margin-bottom in files list */
+	margin-top: 0px;
+	
+}
+
+
+
 #body-user #header, #body-settings #header {
 	/*background:#3ab1ba;*/
 }
