@@ -110,11 +110,17 @@ class Object{
 		while( $row = $result->fetchRow()) {
 			$shareWith='';
 			$shareIcon='shared.svg';	
-			if($row['share_with'] && $row['share_type'] != 3 ) {$shareWith=': '.$row['share_with'];}
-			if($row['share_with'] && $row['share_type'] == 3 ) {$shareWith=': password protected ';}
-			$shareTypeDescr.=self::shareTypeDescription($row['share_type']).' '.$shareWith.' ('.Calendar::permissionReader($row['permissions']).")<br>";
+			if($row['share_with'] && $row['share_type'] != 3 ) {
+				$shareWith=': '.$row['share_with'];
+				}
+			if($row['share_with'] && $row['share_type'] == 3 ) {
+				$shareWith=': password protected ';
+			}
 			$itemSource =App::validateItemSource($row['item_source'],(string)$row['item_type'].'-');	
-			$aSharees[$itemSource]=array('myShare'=>1,'shareTypeDescr'=>$shareTypeDescr,'shareTypeIcon' => $shareIcon);
+			$shareTypeDescr[$itemSource].=self::shareTypeDescription($row['share_type']).' '.$shareWith.' ('.Calendar::permissionReader($row['permissions']).")<br>";
+			
+			
+			$aSharees[$itemSource]=array('myShare'=>1,'shareTypeDescr'=>$shareTypeDescr[$itemSource]);
 		}
 		
 		if(is_array($aSharees)) return $aSharees;
@@ -216,7 +222,7 @@ class Object{
 	public static function add($id,$data, $shared=false, $eventid=0) {
 		$calendar = Calendar::find($id);
 		if ($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_CREATE)) {
 				throw new \Exception(
 					App::$l10n->t(
@@ -303,7 +309,7 @@ class Object{
 	public static function addFromDAVData($id,$uri,$data) {
 		$calendar = Calendar::find($id);
 		if ($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $id);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_CREATE)) {
 				throw new \Sabre\DAV\Exception\Forbidden(
 					App::$l10n->t(
@@ -409,9 +415,9 @@ class Object{
 				
 			$shareMode=self::checkShareMode($calid);
 			if($shareMode){
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calid); //calid, not objectid !!!! 1111 one one one eleven
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$calid); //calid, not objectid !!!! 1111 one one one eleven
 			}else{
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('event', $id); 
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('event','event-'. $id); 
 			}
 			
 			$sharedAccessClassPermissions = Object::getAccessClassPermissions($oldvobject);
@@ -479,7 +485,7 @@ class Object{
 		$calendar = Calendar::find($cid);
 		$oldvobject = VObject::parse($oldobject['calendardata']);
 		if ($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $cid);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $cid);
 			$sharedAccessClassPermissions = Object::getAccessClassPermissions($oldvobject);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE) || !($sharedAccessClassPermissions & \OCP\PERMISSION_UPDATE)) {
 				throw new \Sabre\DAV\Exception\Forbidden(
@@ -547,9 +553,9 @@ class Object{
 		if ($calendar['userid'] != \OCP\User::getUser()) {
 			$shareMode=self::checkShareMode($calid);
 			if($shareMode){
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calid); //calid, not objectid !!!! 1111 one one one eleven
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calid); //calid, not objectid !!!! 1111 one one one eleven
 			}else{
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('event', $id); 
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('event', 'event-'.$id); 
 			}
 			
 			$sharedAccessClassPermissions = Object::getAccessClassPermissions($oldvobject);
@@ -566,7 +572,7 @@ class Object{
 		
         
 		//DELETE SHARED ONLY EVENT
-		if(\OCP\Share::unshareAll('event', $id)){
+		if(\OCP\Share::unshareAll('event','event-'. $id)){
 			//if($delId=Object::checkSharedEvent($id)){
 				$stmt = \OCP\DB::prepare( 'DELETE FROM `*PREFIX*clndr_objects` WHERE `org_objid` = ?' );
 		        $stmt->execute(array($id));
@@ -606,7 +612,7 @@ class Object{
 		$oldobject = self::findWhereDAVDataIs($cid, $uri);
 		$calendar = Calendar::find($cid);
 		if ($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $cid);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$cid);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_DELETE)) {
 				throw new VObject_DAV_Exception_Forbidden(
 					App::$l10n->t(
@@ -640,7 +646,7 @@ class Object{
 	public static function moveToCalendar($id, $calendarid) {
 		$calendar = Calendar::find($calendarid);
 		if ($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calendarid);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calendarid);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_DELETE)) {
 				throw new \Exception(
 					App::$l10n->t(

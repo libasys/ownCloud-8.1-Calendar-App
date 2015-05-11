@@ -106,7 +106,7 @@ class Calendar implements \OCP\Share_Backend_Collection {
 				if ($parameters['permissions'] == 'rw') {
 					continue; // TODO
 				}
-				$calendar['displaynamename'] = $item['item_target'];
+				$calendar['displayname'] = $item['item_target'];
 				$calendar['permissions'] = $item['permissions'];
 				
 				$calendar['calendarid'] = $calendar['id'];

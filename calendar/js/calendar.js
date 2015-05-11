@@ -782,7 +782,7 @@ Calendar = {
 			});
 			$('.toolTip').tipsy({
 				html : true,
-				gravity : $.fn.tipsy.autoNS
+				gravity:'nw'
 			});
 
 			$("#datepickerNav").datepicker({

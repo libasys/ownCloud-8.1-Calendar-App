@@ -69,7 +69,7 @@ class EventController extends Controller {
 					$calendar_id = $id;
 					
 				}else{
-					if(\OCP\Share::getItemSharedWithBySource('calendar', $id) === false){
+					if(\OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id) === false){
 						exit;
 					}
 				}
@@ -415,9 +415,9 @@ class EventController extends Controller {
 		if ($calendar['userid'] != $this->userId) {
 			$shareMode=Object::checkShareMode($calid);
 			if($shareMode){
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calid);
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calid);
 			}else{
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('event', $id); 
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('event','event-'. $id); 
 			}
 			
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & $cPERMISSIONS)){
@@ -512,7 +512,7 @@ class EventController extends Controller {
 		
 		foreach($calendars as $calendar) {
 			if($calendar['userid'] != $this -> userId) {
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calendar['id']);
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calendar['id']);
 				if ($sharedCalendar && ($sharedCalendar['permissions'] & \OCP\PERMISSION_CREATE)) {
 					array_push($calendar_options, $calendar);
 				}

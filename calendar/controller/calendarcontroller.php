@@ -228,7 +228,7 @@ class CalendarController extends Controller {
 		
 		$shared = false;
 		if ($calendar['userid'] != $this -> userId) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $calendarid);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calendarid);
 			if ($sharedCalendar && ($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {
 				$shared = true;
 			}
@@ -510,24 +510,27 @@ class CalendarController extends Controller {
 						 $rightsOutput='';
 						 $share='';
 						 $checkBox='';
+						 
 						  $isActiveUserCal='';
 						  $addCheckClass='';
+						  $sharedescr='';
 						 if($activeCal === $calInfo['id']){
 						 	$isActiveUserCal='isActiveCal';
 							 $addCheckClass='isActiveUserCal';
 						 }
 						  if((is_array($mySharees) && array_key_exists($calInfo['id'], $mySharees)) && $mySharees[$calInfo['id']]['myShare']) {
-						 	$share='<img class="svg toolTip" title="<b>'. $this->l10n->t('Shared with').'</b><br>'.$mySharees[$calInfo['id']]['shareTypeDescr'].'" style="margin-top:3px;margin-bottom:-3px;margin-right:2px;" src="'.\OCP\Util::imagePath('core', 'actions/shared.svg').'" />'; 	
+						 	$sharedescr=$mySharees[$calInfo['id']]['shareTypeDescr'];	
+						 	$share='<i class="ioc ioc-share toolTip" title="<b>'. $this->l10n->t('Shared with').'</b><br>'.$sharedescr.'"></i>'; 	
 						 }
 						   $displayName='<span class="descr">'.$share.$calInfo['displayname'].'</span>';
 						   $checked=$calInfo['active'] ? ' checked="checked"' : '';
 						 
 						  $notice='';
 				         if($calInfo['userid'] != $this->userId){
-				  	      	if(\OCP\Share::getItemSharedWithByLink('calendar',$calInfo['id'],$calInfo['userid'])){
+				  	      	if(\OCP\Share::getItemSharedWithByLink('calendar','calendar-'.$calInfo['id'],$calInfo['userid'])){
 				         		$notice='<b>Notice</b><br>This calendar is also shared by Link for public!<br>';
-								
 				         	}
+							
 							$calShare=$calInfo['active'];
 							if($this -> configInfo ->getUserValue($this->userId, 'calendar', 'calendar_'.$calInfo['id'])!=''){
 								$calShare= $this -> configInfo ->getUserValue($this->userId, 'calendar', 'calendar_'.$calInfo['id']);

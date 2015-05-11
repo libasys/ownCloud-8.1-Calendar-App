@@ -59,7 +59,7 @@ class App {
 			}
 		}
 		if ($security === true && $shared === true) {
-			if (\OCP\Share::getItemSharedWithBySource('calendar', $id) || \OCP\Share::getItemSharedWithByLink('calendar', $id, $calendar['userid'])) {
+			if (\OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id) || \OCP\Share::getItemSharedWithByLink('calendar', 'calendar-'.$id, $calendar['userid'])) {
 				return $calendar;
 			}
 		}
@@ -556,7 +556,7 @@ class App {
 				}
 				return $permissions_all;
 			} else {
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $id);
 				if ($sharedCalendar) {
 					return $sharedCalendar['permissions'];
 				}
@@ -573,8 +573,8 @@ class App {
 				return $permissions_all;
 			} else {
 				//$object = Object::find($id);
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $object['calendarid']);
-				$sharedEvent = \OCP\Share::getItemSharedWithBySource('event', $id);
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$object['calendarid']);
+				$sharedEvent = \OCP\Share::getItemSharedWithBySource('event','event-'.$id);
 				$calendar_permissions = 0;
 				$event_permissions = 0;
 				if ($sharedCalendar) {
@@ -584,7 +584,7 @@ class App {
 					$event_permissions = $sharedEvent['permissions'];
 				}
 
-				$sharedByLinkCalendar = \OCP\Share::getItemSharedWithByLink('calendar', $object['calendarid'], $cal['userid']);
+				$sharedByLinkCalendar = \OCP\Share::getItemSharedWithByLink('calendar', 'calendar-'.$object['calendarid'], $cal['userid']);
 
 				if ($sharedByLinkCalendar) {
 					$calendar_permissions = $sharedByLinkCalendar['permissions'];

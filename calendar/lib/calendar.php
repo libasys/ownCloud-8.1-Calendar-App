@@ -115,9 +115,9 @@ class Calendar{
 			$userExists=\OC::$server->getUserManager()->userExists($user);	
 				
 			if(!$userExists){
-				$sharedCalendar=\OCP\Share::getItemSharedWithByLink('calendar',$id,$row['userid']);
+				$sharedCalendar=\OCP\Share::getItemSharedWithByLink('calendar','calendar-'.$id,$row['userid']);
 			}else{
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id);
 			}
 			
 			if ((!$sharedCalendar || !(isset($sharedCalendar['permissions']) && $sharedCalendar['permissions'] & \OCP\PERMISSION_READ))) {
@@ -255,7 +255,7 @@ class Calendar{
 		// Need these ones for checking uri
 		$calendar = self::find($id);
 		if($calendar['userid'] != \OCP\User::getUser()) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {
 				throw new \Exception(
 					App::$l10n->t(
@@ -305,7 +305,7 @@ class Calendar{
 		if($id!='birthday_'. \OCP\User::getUser()){	
 			$calendar = self::find($id);
 			if ($calendar['userid'] != \OCP\User::getUser()) {
-				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id);
 				
 				if($sharedCalendar){
 					\OCP\Config::setUserValue(\OCP\USER::getUser(), 'calendar', 'calendar_'.$id, $active);
@@ -352,7 +352,7 @@ class Calendar{
 		$group = \OC::$server->getGroupManager()->get('admin');
 		$user = \OCP\User::getUser();
 		if($calendar['userid'] != $user && !$group->inGroup($user)) {
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $id);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_DELETE)) {
 				throw new \Exception(
 					App::$l10n->t(
@@ -367,7 +367,7 @@ class Calendar{
 		$stmt = \OCP\DB::prepare( 'DELETE FROM `*PREFIX*clndr_objects` WHERE `calendarid` = ?' );
 		$stmt->execute(array($id));
 
-		\OCP\Share::unshareAll('calendar', $id);
+		\OCP\Share::unshareAll('calendar','calendar-'. $id);
 
 		\OCP\Util::emitHook('OC_Calendar', 'deleteCalendar', $id);
 		$calendars = self::allCalendars(\OCP\USER::getUser(), false, false);
@@ -405,7 +405,7 @@ class Calendar{
 		$user = \OCP\User::getUser();
 		if($calendar['userid'] != $user && !$group->inGroup($user)) {
 		
-			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', $id1);
+			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $id1);
 			if (!$sharedCalendar || !($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {
 				throw new \Exception(
 					App::$l10n->t(
@@ -525,18 +525,19 @@ class Calendar{
 	
 	public static function permissionReader($iPermission){
 			
-			$l =  \OC::$server->getL10N('core');
+			$l =  \OC::$server->getL10N('calendar');
+			
 			
 			$aPermissionArray=array(
-			   16 => $l->t('share'),
-			   8 => $l->t('delete'),
-			   4 => $l->t('create'),
-			   2 => $l->t('update'),
-			   1 => 'lesen',
+			   16 =>(string) $l->t('share'),
+			   8 => (string)$l->t('delete'),
+			   4 => (string)$l->t('create'),
+			   2 =>(string) $l->t('update'),
+			   1 =>(string) $l->t('readonly')
 			);
 			
-			if($iPermission==1) return 'readonly';
-			if($iPermission==31) return 'full access';
+			if($iPermission==1) return (string) $l->t('readonly');
+			if($iPermission==31) return (string) $l->t('full access');
 			
 			$outPutPerm='';
 			foreach($aPermissionArray as $key => $val){

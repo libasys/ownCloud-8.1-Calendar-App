@@ -290,6 +290,8 @@
     "Sharees" : "Freigaben",
     "VTODO" : "Aufgabe",
     "VEVENT" : "Termin",
+    "readonly" : "lesen",
+     "full access" : "Vollzugriff",
     "Add Reminder, Repeat" : "Erinnerung, Wiederholung hinzufügen",
     "Notice" : "Notizen",
     "Tags" : "Schlagwörter",
