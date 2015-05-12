@@ -8,6 +8,7 @@
 namespace OCA\Calendar\Share\Backend;
 
 use OCA\Calendar\Object;
+use OCA\Calendar\App;
 
 class Event implements \OCP\Share_Backend {
 
