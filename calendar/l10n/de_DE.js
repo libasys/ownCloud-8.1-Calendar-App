@@ -162,6 +162,7 @@ OC.L10N.register(
 "Save" : "Speichern",
 "Submit" : "Bestätigen",
 "Cancel" : "Abbrechen",
+"Subscribe" : "Abonnieren",
 "Add":"Hinzufügen",
 "Add Event":"Termin hinzufügen",
 "Edit an event" : "Ereignis bearbeiten",

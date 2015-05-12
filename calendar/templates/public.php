@@ -15,7 +15,7 @@
 		</a>
 			
 		<div class="header-right">
-			<span><a href="<?php print_unescaped($_['webcallink']); ?>" class="button">Abonnieren</a></span>
+			<span><a href="<?php print_unescaped($_['webcallink']); ?>" class="button"><?php p($l->t('Subscribe'));?></a></span>
 			<span id="details"><?php p($l->t('%s shared the calendar %s with you',
 						array($_['displayName'], $_['calendarName']))) ?></span>
 		</div>
@@ -46,7 +46,7 @@
 	</div>
 	<div class="rightControls" style="text-align:left;margin-right:10px;margin-top:2px;line-height:45px;">
 		<label for="timezone" class="bold" style="float:left;"><?php p($l->t('Timezone'));?></label>&nbsp;&nbsp;
-	<select style="display:none;fonts-size:14px;"  id="timezone" name="timezone" >
+	<select style="display:none;font-size:12px;"  id="timezone" name="timezone" >
 				<?php
 				$continent = '';
 				foreach($_['timezones'] as $timezone):
