@@ -102,28 +102,46 @@ class Object{
 	
 	public static function getCalendarSharees(){
     	
-		$SQL='SELECT item_source,share_with,share_type,permissions,item_type FROM `*PREFIX*share` WHERE `uid_owner` = ? AND `item_type` = ?';
+		$SQL='SELECT item_source,share_with,share_type,permissions,item_type FROM `*PREFIX*share` 
+		WHERE `uid_owner` = ? AND `item_type` = ? 
+		ORDER BY `item_source` ASC
+		';
 		$stmt = \OCP\DB::prepare($SQL);
 		$result = $stmt->execute(array(\OCP\User::getUser(),'calendar'));
 		$aSharees = '';
-		$shareTypeDescr='';
+		
 		while( $row = $result->fetchRow()) {
 			$shareWith='';
-			$shareIcon='shared.svg';	
+			$itemSource = App::validateItemSource($row['item_source'],(string)$row['item_type'].'-');
+			
 			if($row['share_with'] && $row['share_type'] != 3 ) {
 				$shareWith=': '.$row['share_with'];
-				}
+			}
+			
 			if($row['share_with'] && $row['share_type'] == 3 ) {
 				$shareWith=': password protected ';
 			}
-			$itemSource =App::validateItemSource($row['item_source'],(string)$row['item_type'].'-');	
-			$shareTypeDescr[$itemSource].=self::shareTypeDescription($row['share_type']).' '.$shareWith.' ('.Calendar::permissionReader($row['permissions']).")<br>";
 			
 			
-			$aSharees[$itemSource]=array('myShare'=>1,'shareTypeDescr'=>$shareTypeDescr[$itemSource]);
+			$shareDescr = self::shareTypeDescription($row['share_type']).' '.$shareWith.' ('.Calendar::permissionReader($row['permissions']).")<br>";
+			//$aSharees[][$itemSource]=array('myShare'=>1,'shareTypeDescr'=>$shareDescr);
+			$aSharees[]=['itemSource' => $itemSource, 'descr' => $shareDescr];
 		}
 		
-		if(is_array($aSharees)) return $aSharees;
+		if(is_array($aSharees)){
+			$aReturn=[];
+			$oldId='';
+			foreach($aSharees as $shareInfo){
+				if($shareInfo['itemSource'] != $oldId){
+					$aReturn[$shareInfo['itemSource']] = $shareInfo['descr'];
+				}else{
+					$aReturn[$shareInfo['itemSource']] .= $shareInfo['descr'];
+				}
+				$oldId = $shareInfo['itemSource'];
+			}	
+				
+			return $aReturn;
+		} 
 		else return false;
     }
     

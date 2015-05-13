@@ -71,7 +71,7 @@ class App {
 	
 		if(stristr($itemSource,$itemType)){
 			$iTempItemSource=explode($itemType,$itemSource);
-			return $iTempItemSource[1];
+			return (int)$iTempItemSource[1];
 		}else{
 			return $itemSource;
 		}

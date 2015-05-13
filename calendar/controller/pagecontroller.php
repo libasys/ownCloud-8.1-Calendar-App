@@ -79,12 +79,17 @@ class PageController extends Controller {
 			$this->configInfo->setUserValue($this->userId, 'calendar', 'currentview', "fourweeks");
 		}
 		
+		\OCP\Util::addScript('calendar','loaderimport');
+		\OCP\Util::addStyle('calendar', '3rdparty/jquery.miniColors');
+		\OCP\Util::addscript('calendar', '3rdparty/jquery.miniColors.min');
 		\OCP\Util::addScript('calendar', '3rdparty/fullcalendar');
 		\OCP\Util::addStyle('calendar', '3rdparty/fullcalendar');
 		\OCP\Util::addStyle('calendar', '3rdparty/fontello/css/animation');
 		\OCP\Util::addStyle('calendar', '3rdparty/fontello/css/fontello');
 		\OCP\Util::addScript('calendar','jquery.scrollTo.min');
 		\OCP\Util::addScript('calendar','timepicker');
+		
+		
 		\OCP\Util::addScript("calendar", "3rdparty/chosen.jquery.min");
 		\OCP\Util::addScript('calendar','jquery.nicescroll.min');
 		\OCP\Util::addStyle("calendar", "3rdparty/chosen");

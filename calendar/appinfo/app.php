@@ -24,6 +24,14 @@ $c->getServer()->getNavigationManager()->add($navigationEntry);
 \OCA\Calendar\Hooks::register();
 
 \OCP\Util::addScript('calendar','alarm');
-\OCP\Util::addScript('calendar','loaderimport');
-\OCP\Util::addStyle('calendar', '3rdparty/jquery.miniColors');
-\OCP\Util::addscript('calendar', '3rdparty/jquery.miniColors.min');
+
+$request = $c->query('Request');
+if (isset($request->server['REQUEST_URI'])) {
+		
+	$url = $request->server['REQUEST_URI'];
+	if (preg_match('%index.php/apps/files(/.*)?%', $url)	|| preg_match('%index.php/s/(/.*)?%', $url)) {
+		\OCP\Util::addScript('calendar','loaderimport');
+		\OCP\Util::addStyle('calendar', '3rdparty/jquery.miniColors');
+		\OCP\Util::addscript('calendar', '3rdparty/jquery.miniColors.min');
+	}
+}

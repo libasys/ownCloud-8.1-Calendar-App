@@ -518,8 +518,8 @@ class CalendarController extends Controller {
 						 	$isActiveUserCal='isActiveCal';
 							 $addCheckClass='isActiveUserCal';
 						 }
-						  if((is_array($mySharees) && array_key_exists($calInfo['id'], $mySharees)) && $mySharees[$calInfo['id']]['myShare']) {
-						 	$sharedescr=$mySharees[$calInfo['id']]['shareTypeDescr'];	
+						  if((is_array($mySharees) && array_key_exists($calInfo['id'], $mySharees))) {
+						 	$sharedescr=$mySharees[$calInfo['id']];	
 						 	$share='<i class="ioc ioc-share toolTip" title="<b>'. $this->l10n->t('Shared with').'</b><br>'.$sharedescr.'"></i>'; 	
 						 }
 						   $displayName='<span class="descr">'.$share.$calInfo['displayname'].'</span>';
