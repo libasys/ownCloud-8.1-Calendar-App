@@ -30,5 +30,5 @@ New Features:
 - New/ Edit event GUI changed
 - Timezone support (daylight/ standard) for repeating events (if supported!)
 - Working Search function with additional search options like: today, tomorrow
-
+- activity log
 
