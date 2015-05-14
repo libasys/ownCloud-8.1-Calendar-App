@@ -1159,7 +1159,6 @@ Calendar = {
 				resizable : false,
 				title : t('calendar', 'Add Event'),
 				width : 350,
-				height : 200,
 				modal : true,
 				buttons : [{
 					text : t('core', 'Add'),
@@ -1194,10 +1193,12 @@ Calendar = {
 			return false;
 		},
 		openImportDialog : function(DATA) {
-
+			$("#dialogSmall").html('');
 			var selCal = $('<select name="calendar" id="calendarAdd"></select>');
 			$.each(Calendar.calendarConfig['mycalendars'], function(i, elem) {
-				if(elem['id'] != 'birthday_'+oc_current_user){
+				var createEvent = (elem['permissions'] & OC.PERMISSION_CREATE) ? true : false;
+				
+				if(elem['id'] != 'birthday_'+oc_current_user && elem['issubscribe'] == false && createEvent !== false){
 					var option = $('<option value="' + elem['id'] + '">' + elem['name'] + '</option>');
 					selCal.append(option);
 				}
@@ -1233,7 +1234,6 @@ Calendar = {
 				resizable : false,
 				title : t('calendar', 'Add Event'),
 				width : 450,
-				height : 300,
 				modal : true,
 				buttons : [{
 					text : t('core', 'Add'),
@@ -1300,7 +1300,11 @@ Calendar = {
 			$('#event').dialog({
 				width : 400,
 				height : 'auto',
-
+				beforeClose: function( event, ui ) {
+					if(OC.Share.droppedDown){
+						OC.Share.hideDropDown();
+					}
+				},
 				close : function(event, ui) {
 					if ($('#haveshareaction').val() == '1') {
 
@@ -1361,13 +1365,12 @@ Calendar = {
 			$('#showEvent-delete').on('click', function() {
 				var delink = $(this).data('link');
 
-				$("#dialogSmall").html(t('calendar', 'Are you sure?')+'<br />');
+				$("#dialogSmall").text(t('calendar', 'Are you sure?'));
 
 				$("#dialogSmall").dialog({
 					resizable : false,
 					title : t('calendar', 'Delete Event'),
 					width : 210,
-					height :150,
 					modal : true,
 					buttons : [{
 						text : t('calendar', 'No'),
@@ -1493,8 +1496,7 @@ Calendar = {
 				$("#dialogSmall").dialog({
 					resizable : false,
 					title : t('calendar', 'Delete Event'),
-					width : 200,
-					height : 160,
+					width : 210,
 					modal : true,
 					buttons : [{
 						text : t('calendar', 'No'),
@@ -1774,6 +1776,11 @@ Calendar = {
 				width : 450,
 				title : t('calendar', 'Edit an event'),
 				height : 'auto',
+				beforeClose: function( event, ui ) {
+					if(OC.Share.droppedDown){
+						OC.Share.hideDropDown();
+					}
+				},
 				closeOnEscape : true,
 				close : function(event, ui) {
 					$('#event').dialog('destroy').remove();
@@ -2998,11 +3005,13 @@ $(document).ready(function() {
 	
 	$(document).on('click', '#event a.share', function(event) {
 		event.stopPropagation();
-
+		
 		$('#event #dropdown').css({
 			'top' : $(event.target).offset().top + 40,
 			'left' : $('#event').offset().left
 		});
+		
+		return true;
 	});
 	
 	
@@ -3059,6 +3068,9 @@ $(document).ready(function() {
 			popup.addClass($('#appsettings').hasClass('topright') ? 'topright' : 'bottomleft');
 		}
 		if(popup.is(':visible')) {
+			if(OC.Share.droppedDown){
+				OC.Share.hideDropDown();
+			}
 			popup.hide().remove();
 		} else {
 			var arrowclass = $('#appsettings').hasClass('topright') ? 'up' : 'left';
@@ -3071,6 +3083,9 @@ $(document).ready(function() {
 					
 					popup.prepend('<span class="arrow '+arrowclass+'"></span><h2>'+t('core', 'Settings')+'</h2><a class="close svg"></a>').show();
 					popup.find('.close').bind('click', function() {
+						if(OC.Share.droppedDown){
+							OC.Share.hideDropDown();
+						}
 						popup.remove();
 					});
 					$.getScript(OC.filePath('calendar', 'js', 'settings.js'))

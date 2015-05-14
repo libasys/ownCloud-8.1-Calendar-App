@@ -68,27 +68,6 @@
   transform: translate(0, 0);
 }
 
- #controls .button{
-	
-	height: 36px;
-	line-height:36px;
-	padding:0;
-	
-	padding-left:8px;
-	padding-right:8px;
-	
-}
-
-#controls button i.ioc{
-	font-size:18px;
-	line-height:32px;
-	
-}
- #controls button i.ioc-next, #controls button i.ioc-previous{
-	font-size:22px;
-	line-height:32px;
-	
-}
 
 .ioc-rotate-90 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=1);

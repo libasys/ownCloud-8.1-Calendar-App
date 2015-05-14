@@ -489,7 +489,7 @@ class CalendarController extends Controller {
 				$activeCal=$this -> configInfo -> getUserValue($this->userId, 'calendar', 'choosencalendar');
 				$outputAbo='';
 				$output='<div id="leftcontentInner">
-							<div class="view navigation-left" style="float:none;">
+							<div class="view navigation-left button-group" style="float:none;">
 							<button class="button" data-action="agendaDay" data-view="true" data-weekends="true">'.$this->l10n->t('Day').'</button>
 							<button class="button" data-action="agendaThreeDays" data-view="true" data-weekends="true">'.$this->l10n->t('3-Days').'</button>	
 							<button class="button" data-action="agendaWorkWeek" data-view="true" data-weekends="false">'.$this->l10n->t('W-Week').'</button>			

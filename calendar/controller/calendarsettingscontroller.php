@@ -141,6 +141,7 @@ class CalendarSettingsController extends Controller {
 					'id'=>$calendar['id'],
 					'name'=>$calendar['displayname'],
 					'issubscribe' => (int) $calendar['issubscribe'],
+					'permissions' => (int) $calendar['permissions'],
 				];
 				
 				$myRefreshChecker[$calendar['id']]=$calendar['ctag'];

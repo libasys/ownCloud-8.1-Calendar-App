@@ -20,13 +20,16 @@
 	
 }
 
-
+#controls{
+	background-color:#f4f4f4;
+}
 
 #body-user #header, #body-settings #header {
 	/*background:#3ab1ba;*/
 }
 #app-content{
 	background-color:#fff;
+
 	
 }
 #calendarList #dropdown{
@@ -140,10 +143,7 @@ table#calendarList i.ioc{
 .view.navigation-left{
 	display:none;
 }
-.view.navigation-left button{
-	margin-top:2px;
-	width:70px;
-}
+
 span.colorCal,.task .calCol,.task .priority{
 	width:12px;
 	height:12px;
@@ -175,8 +175,9 @@ span.colorCal-list{
 	position:relative;
 }
 #calendarnavActive.button-info, #tasknavActive.button-info, #controls .view button.active, .view.navigation-left button.active{
-	color:#598527;
+	border:1px solid #008000;
 	background-color:#fff;
+	
 }
 
 #errorbox{
@@ -377,6 +378,7 @@ margin-right:auto;
 	width:190px;
 	right:0;
 	display:block;
+	padding-right:5px;
 	text-align:right;
 	
 }
@@ -814,8 +816,8 @@ cursor:pointer;
 	display:block;
 	float:left;
 	font-size:14px;
-	background:#fff;
-	border-bottom:1px solid #ccc;
+	
+	border-bottom:1px solid #cfcfcf;
 	color:#313131;
 	 text-overflow: ellipsis; 
    -o-text-overflow: ellipsis;
@@ -1051,8 +1053,8 @@ button.ui-multiselect{
 	background:#f4f4f4;
 }
 
+/**Customized Dialog Buttons**/
 .cancelDialog, .okDialog{
-	border-radius:6px;
 	min-width:50px;
 	margin:0;
 	padding:0;
@@ -1503,46 +1505,16 @@ label {
 }
 
 #event #dropdown{
-	left:0;
+	
 	position:fixed;
 	z-index:600;
 }
-#event #dropdown #shareWithList{
-	display:block;
-}
+
 
 
 /*CUSTOMIZE UI DIALOG*/
 
-.ui-dialog .ui-dialog-titlebar.ui-widget-header{
- 	border-radius:0;
- 	border:none;
- height:30px;
- color:#fff;
- }
- .ui-dialog .ui-dialog-titlebar-close{
- 	margin:0;
- 	margin-top:-14px;
- }
 
-ul.ui-widget-header {
-	background:none;
-	border:none;
-	top:5px;
-}
-.ui-dialog .ui-widget-header button, .ui-dialog #actions button {
-	min-width:30px;
-	height:30px;
-	line-height:24px;
-	text-align:center;
-	padding:0;
-	padding-left:5px;
-	padding-right:5px;
-}
-.ui-dialog	#actions .button-group.first{
-	width:60%;
-		
-}
 
 .ui-accordion-header.ui-accordion-header-active {
 	border:1px solid #ccc;
@@ -1559,7 +1531,7 @@ ul.ui-widget-header {
 	padding-right:10px;
 	color:#616576;
 	overflow:auto;
-	background-color:#fff;
+	
 	
 }
 
@@ -1584,77 +1556,23 @@ ul.ui-widget-header {
 }
 
 /*ADDING BUTTON GROUP*/
-.button-group {
-  position: relative;
-  *margin-left: .3em;
-  *zoom: 1;
-  float:none;
-  
-}
-
-#controls .button-group{
-	margin-top:8px;
-	margin-left:4px;
-	margin-right:4px;
-}
-
-.button-group:before,
-.button-group:after {
-  display: table;
-  content: "";
-}
-
-.button-group:after {
-  clear: both;
-}
-
-.button-group:first-child {
-  margin-left: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-.button-group > .button:last-child{
-	border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-}
-
-.button-group{
-  display: inline-block;
-    padding: 0;
-    margin: 0;
-    /* IE hacks */
-    zoom: 1;
-    *display: inline;
-  margin-left: 0px;
-  padding-bottom:5px;
-}
 
 .button-group > .button, .button-group > button {
   position: relative;
-  float: left;
+  float: none;
   margin: 0;
   padding:0;
   font-family:"Helvetica Neue", arial;
   font-weight:300;
   font-size:14px;
+  line-height:22px;
   padding: 5px 7px;
   border:1px solid #CFCFCF;
-margin-left: -1px;
- box-shadow:none;
-  -webkit-border-radius: 0;
-     -moz-border-radius:0;
-          border-radius: 0;
+  box-shadow:none;
+ margin:4px 2px;
+}
+.button-group > .button i.ioc, .button-group > button i.ioc {
+	font-size:18px;
+	line-height:14px;
 }
 
-
-
-
-
-
-.button-group > .button:hover,
-.button-group > .button:focus,
-.button-group > .button:active,
-.button-group > .button.active {
-  z-index: 2;
-}
