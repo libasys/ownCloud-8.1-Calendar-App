@@ -8,6 +8,7 @@
 	<input type="hidden" name="mailNotificationEnabled" id="mailNotificationEnabled" value="<?php p($_['mailNotificationEnabled']) ?>" />
     <input type="hidden" name="allowShareWithLink" id="allowShareWithLink" value="<?php p($_['allowShareWithLink']) ?>" />
 	<input type="hidden" name="mailPublicNotificationEnabled"  value="<?php p($_['mailPublicNotificationEnabled']) ?>" />
+	<input type="hidden" id="haveshareaction" value="0" />
 	<?php
 	if(is_array($_['sReminderTrigger'])){
 		foreach($_['sReminderTrigger'] as $reminderInfo){
@@ -122,8 +123,10 @@
 		<table>
 			<tr>
 				<th class="leftDescr" style="vertical-align: top;"><i style="margin-top:-3px;" class="ioc ioc-notice" title="<?php p($l->t("Notice"));?>"></i></th>
-				<td style="white-space:normal; font-style: italic; color:#808080;">
+				<td style="white-space:normal;">
+					<div class="showevent-descr">
 					<?php p(isset($_['description']) ? $_['description'] : '') ?>
+					</div>
 				 </td>	
 					</tr>
 		</table> 

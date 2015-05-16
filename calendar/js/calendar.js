@@ -421,14 +421,22 @@ Calendar = {
 				} else {
 					//onDate
 					sReminderTxt = t('calendar', 'on');
+					
 					var sTemp = sReminder.split('DATE-TIME:');
 					var sDateTime = sTemp[1].split('T');
 					var sYear = sDateTime[0].substring(0, 4);
 					var sDay = sDateTime[0].substring(4, 6);
 					var sMonth = sDateTime[0].substring(6, 8);
-					var sHour = sDateTime[1].substring(0, 2);
-					var sMinute = sDateTime[1].substring(2, 4);
-					sReminderTxt = sReminderTxt + ' ' + sDay + '.' + sMonth + '.' + sYear + ' ' + sHour + ':' + sMinute;
+				    var sHour='';
+				    var sMinute='';
+				    var sHM='';
+				    
+				    if(sDateTime.length > 1){
+						 sHour = sDateTime[1].substring(0, 2);
+						 sMinute = sDateTime[1].substring(2, 4);
+						 sHM =  sHour + ':' + sMinute;
+					}
+					sReminderTxt = sReminderTxt + ' ' + sDay + '.' + sMonth + '.' + sYear + ' ' +sHM;
 
 				}
 
@@ -1279,7 +1287,7 @@ Calendar = {
 		},
 		startShowEventDialog : function() {
 			Calendar.UI.loading(false);
-
+			
 			$('#fullcalendar').fullCalendar('unselect');
 
 			Calendar.UI.lockTime();
@@ -1307,7 +1315,6 @@ Calendar = {
 				},
 				close : function(event, ui) {
 					if ($('#haveshareaction').val() == '1') {
-
 					Calendar.Util.touchCal($('#eventid').val());
 				}
 				$('#event').dialog('destroy').remove();
@@ -1427,6 +1434,7 @@ Calendar = {
 				}
 			});
 			OC.Share.loadIcons('event');
+			
 			return false;
 		},
 		startEventDialog : function() {
@@ -1766,6 +1774,9 @@ Calendar = {
 			});
 
 			$('#closeDialog').on('click', function() {
+				if ($('#haveshareaction').val() == '1') {
+					Calendar.Util.touchCal($('#eventid').val());
+				}
 				$('#event').dialog('destroy').remove();
 				return false;
 			});
@@ -1783,6 +1794,9 @@ Calendar = {
 				},
 				closeOnEscape : true,
 				close : function(event, ui) {
+					if ($('#haveshareaction').val() == '1') {
+						Calendar.Util.touchCal($('#eventid').val());
+					}
 					$('#event').dialog('destroy').remove();
 					return false;
 				}
@@ -3005,7 +3019,7 @@ $(document).ready(function() {
 	
 	$(document).on('click', '#event a.share', function(event) {
 		event.stopPropagation();
-		
+		$('#event #haveshareaction').val('1');
 		$('#event #dropdown').css({
 			'top' : $(event.target).offset().top + 40,
 			'left' : $('#event').offset().left

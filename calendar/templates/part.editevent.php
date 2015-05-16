@@ -8,6 +8,7 @@
 		<input type="hidden" name="mailNotificationEnabled" id="mailNotificationEnabled" value="<?php p($_['mailNotificationEnabled']) ?>" />
     	<input type="hidden" name="allowShareWithLink" id="allowShareWithLink" value="<?php p($_['allowShareWithLink']) ?>" />
 		<input type="hidden" name="mailPublicNotificationEnabled"  value="<?php p($_['mailPublicNotificationEnabled']) ?>" />
+		<input type="hidden" id="haveshareaction" value="0" />
 <?php print_unescaped($this->inc("part.eventform")); ?>
 </form>
 	<br style="clear: both;" /><br />

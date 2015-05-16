@@ -113,6 +113,17 @@
 	
 }
 
+#event .showevent-descr{
+	height:80px;
+	width:100%;
+	display:block;
+	position:relative;
+	overflow:auto;
+	font-style: italic;
+	color:#808080;
+	margin-bottom:10px;
+}
+
 #event.show-event .exdatelistrow{
 	background:none;
 	color:#000;
