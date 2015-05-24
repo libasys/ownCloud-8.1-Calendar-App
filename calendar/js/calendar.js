@@ -878,7 +878,7 @@ Calendar = {
 					$('#showDayOfMonth').show();
 					$('#datepickerDayMore').show();
 					$('#DayListMore').removeClass('moveTopDayListMore');
-					$('#DayListMore').height($(window).height() - $('#controls').height() - $('#header').height() - 310);
+					$('#DayListMore').height($(window).height() - $('#controls').height() - $('#header').height() - 280);
 					$('#DayMore').height($(window).height() - $('#controls').height() - $('#header').height()-20);
 				} else {
 					$('#datepickerNav').show();
@@ -913,6 +913,7 @@ Calendar = {
             $("#fullcalendar").height(($(window).height()-100));
 			$('#fullcalendar').width(calWidth-20);
 			$('#fullcalendar').fullCalendar('option', 'height', $(window).height() - $('#controls').height() - $('#header').height() - 15);
+			
 			$('#controls').width($(window).width());
 		},
 		setTimeline : function() {
@@ -1532,6 +1533,11 @@ Calendar = {
 			$('#from').datetimepicker({
 				altField : '#fromtime',
 				dateFormat : 'dd-mm-yy',
+				timeOnlyTitle: t('calendar','Choose Time'),
+				timeText: t('calendar','Time'),
+				hourText: t('calendar','Hour'),
+				minuteText: t('calendar','Minute'),
+				secondText: t('calendar','Second'),
 				firstDay: Calendar.calendarConfig['firstDay'],
 				stepMinute : 5,
 				minDate : null,
@@ -1577,6 +1583,11 @@ Calendar = {
 				hour : ToTime[0],
 				minute : ToTime[1],
 				minDate : null,
+				timeOnlyTitle: t('calendar','Choose Time'),
+				timeText: t('calendar','Time'),
+				hourText: t('calendar','Hour'),
+				minuteText: t('calendar','Minute'),
+				secondText: t('calendar','Second'),
 				addSliderAccess : true,
 				sliderAccessArgs : {
 					touchonly : false
@@ -1620,6 +1631,11 @@ Calendar = {
 				dateFormat : 'dd-mm-yy',
 				stepMinute : 5,
 				numberOfMonths : 1,
+				timeOnlyTitle: t('calendar','Choose Time'),
+				timeText: t('calendar','Time'),
+				hourText: t('calendar','Hour'),
+				minuteText: t('calendar','Minute'),
+				secondText: t('calendar','Second'),
 				addSliderAccess : true,
 				sliderAccessArgs : {
 					touchonly : false

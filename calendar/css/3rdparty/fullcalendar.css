@@ -13,6 +13,7 @@
 .fc table {
 	border-collapse: collapse;
 	border-spacing: 0;
+	
 	}
 	
 html .fc,
@@ -117,11 +118,29 @@ html .fc,
 /* Cell Styles
 ------------------------------------------------------------------------*/
 
-.fc-widget-header,    /* <th>, usually */
-.fc-widget-content {  /* <td>, usually */
-	border: 1px solid #ddd;
+.fc-widget-header   /* <th>, usually */
+ {  /* <td>, usually */
+	border-bottom: 1px solid #E7E7DE;
 	}
-	
+.fc-widget-header:first-child{  
+	border-bottom: none;
+	}	
+.fc-widget-content{  /* <td>, usually */
+	border: 1px solid #E7E7DE;
+}	
+.fc-widget-content.fc-first{
+	border-left: 1px solid #fff;
+	border-right: 1px solid #fff;
+	border-bottom:none;
+	border-top:none;
+}
+.fc-widget-content.fc-last{
+	border-right:1px solid #fff;
+}
+.fc-view-month .fc-widget-content.fc-last{
+	border-right:1px solid #E7E7DE;
+}
+
 .fc-state-highlight { /* <td> today cell */ /* TODO: add .fc-today to <th> */
 	background: #fcf8e3;
 	}
@@ -161,6 +180,7 @@ html .fc,
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;
 	}
+
 
 /*
 	Our default prev/next buttons use HTML entities like &lsaquo; &rsaquo; &laquo; &raquo;
@@ -312,9 +332,7 @@ a.fc-event,
 .fc-event-hori {
 	border-width: 0px 0;
 	margin-bottom: 2px;
-	
-	
-	}
+}
 
 .fc-ltr .fc-event-hori.fc-event-start,
 .fc-rtl .fc-event-hori.fc-event-end {
@@ -536,7 +554,6 @@ table.fc-border-separate {
 
 .fc-event-vert {
 	border-width: 0 0px;
-	
 	border-left-width: 5px;
 	opacity:1;
 	}

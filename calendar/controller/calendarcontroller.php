@@ -520,7 +520,7 @@ class CalendarController extends Controller {
 						 }
 						  if((is_array($mySharees) && array_key_exists($calInfo['id'], $mySharees))) {
 						 	$sharedescr=$mySharees[$calInfo['id']];	
-						 	$share='<i class="ioc ioc-share toolTip" title="<b>'. $this->l10n->t('Shared with').'</b><br>'.$sharedescr.'"></i>'; 	
+						 	$share='<i class="ioc ioc-share toolTip" title="<b>'. $this->l10n->t('Shared with').'</b><br>'.$sharedescr.'"></i> '; 	
 						 }
 						   $displayName='<span class="descr">'.$share.$calInfo['displayname'].'</span>';
 						   $checked=$calInfo['active'] ? ' checked="checked"' : '';

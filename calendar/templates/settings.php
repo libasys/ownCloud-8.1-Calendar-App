@@ -58,7 +58,7 @@
 	<table class="nostyle">
 		<tr>
 			<td>
-				<label for="timezone" class="bold"><?php p($l->t('Timezone'));?></label>
+				<label for="timezone"><?php p($l->t('Timezone'));?></label>
 				&nbsp;&nbsp;
 			</td>
 			<td>
@@ -106,7 +106,7 @@
 		
 		<tr>
 			<td>
-				<label for="timeformat" class="bold"><?php p($l->t('Time format'));?></label>
+				<label for="timeformat" ><?php p($l->t('Time format'));?></label>
 				&nbsp;&nbsp;
 			</td>
 			<td>
@@ -134,7 +134,7 @@
 		</tr>
 		<tr>
 			<td>
-				<label for="firstday" class="bold"><?php p($l->t('Start week on'));?></label>
+				<label for="firstday" ><?php p($l->t('Start week on'));?></label>
 				&nbsp;&nbsp;
 			</td>
 			<td>
@@ -167,7 +167,7 @@
 		</tr>
 		<tr class="advancedsettings">
 			<td colspan="2">
-				<label for="" class="bold"><?php p($l->t('Cache'));?></label><br />
+				<label for="" ><?php p($l->t('Cache'));?></label><br />
 				
 				<?php 
 				  $cssCached='style="background-color:#DC143C;color:#FFFFFF;text-shadow:#fff 0px 0px 0px;"';

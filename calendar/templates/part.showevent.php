@@ -16,8 +16,8 @@
 		}
 	}
 	?>
-		<br />		
-			<div style="position:absolute;right:5px;margin-top:-12px;float:right;display:block;">
+			
+			<div style="position:absolute;right:5px;margin-top:0px;float:right;display:block;">
 		<?php if($_['permissions'] & OCP\PERMISSION_SHARE && $_['isShareApi'] === 'yes') { ?>
 		
 			<a href="#" class="share action permanent icon-share" data-item-type="event" 

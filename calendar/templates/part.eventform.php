@@ -1,11 +1,11 @@
-<br />
+
 <div style="width:100%;float:left;display:block;">
 <table width="100%">
 		<tr>
 			<td>
 				<input type="hidden" name="categories" id="categories" value="<?php p($_['categories']); ?>" />
 				<input type="hidden" name="calendar" id="hiddenCalSelection" value="<?php p($_['calendar']); ?>">
-				<input type="text" style="width:85%; font-size:16px; color:#0098E4;padding:5px;"  placeholder="<?php p($l->t("Title of the Event"));?>" value="<?php p(isset($_['title']) ? $_['title'] : '') ?>" maxlength="100" name="title" id="event-title" autofocus="autofocus"/>
+				<input type="text" style="width:85%; font-size:16px; color:#555;padding:5px;"  placeholder="<?php p($l->t("Title of the Event"));?>" value="<?php p(isset($_['title']) ? $_['title'] : '') ?>" maxlength="100" name="title" id="event-title" autofocus="autofocus"/>
 			    
 			    <div id="sCalSelect" class="combobox">
 			    <div class="selector">Please select</div>
@@ -63,7 +63,7 @@
 						}
 					?>
 					
-					<span id="ldatetime" style="color:#0098E4;font-weight:normal;"></span>
+					<span id="ldatetime" style="color:#555;font-weight:normal;"></span>
 					 
 					</h3>
 				<div>
