@@ -182,8 +182,14 @@
 	margin-bottom:10px;
 }
 
-#event.show-event .exdatelistrow{
-	background:none;
+#event.show-event ul.exdatelist{
+	background:#fff;
+	margin:0;
+	padding:0;
+	border:none;
+}
+#event.show-event li.exdatelistrow{
+	background:#fff;
 	color:#000;
 	font-size:12px;
 	float:left;
@@ -192,6 +198,8 @@
 	line-height:16px;
 	margin:0;
 	padding:0;
+	border:none;
+	border-radius:none;
 }
 #event.show-event .leftDescr{
 	line-height:24px;

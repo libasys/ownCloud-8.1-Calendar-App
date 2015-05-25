@@ -107,7 +107,7 @@
 					<tr>
 						<th class="leftDescr" style="vertical-align: top;"><i style="color:#A81700;" class="ioc ioc-info-1"></i> <?php p($l->t("Exception"));?></th>
 						<td>
-				<ul>
+				<ul class="exdatelist">
 		         <?php foreach($_['exDate'] as $key => $value): ?>
 				   <li class="exdatelistrow" data-exdate="<?php p($key); ?>"><?php p($value); ?><?php if($_['permissions'] & OCP\PERMISSION_DELETE) { ?> <i class="ioc ioc-delete" style="cursor:pointer"></i><?php } ?></li>
 				   	<?php endforeach; ?>
