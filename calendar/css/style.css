@@ -649,7 +649,12 @@ color:#999;
 font-size:12px;	
 }
 
-
+#leftcontent h3{
+	height:24px;
+	line-height:24px;
+	margin-top:0px;
+	margin-bottom:0px;
+}
 
 #rightCalendarNav h3{
 	width:140px;
@@ -694,12 +699,7 @@ table.fc-header,.fc-header-title h2,table.fc-header tr:hover,.fc-header-title h2
 
 
 
-#datepickerNav{
-	width:99%;
-	padding:0;
-	margin:0;
-	margin-top:20px;
-}
+
 .ui-datepicker{
 	width: 250px;
 	padding:0;
@@ -853,6 +853,17 @@ table.fc-header,.fc-header-title h2,table.fc-header tr:hover,.fc-header-title h2
 .ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
 
 
+#datepickerNav{
+	width:99%;
+	padding:0;
+	margin:0;
+	margin-top:5px;
+	
+}
+#datepickerNav .ui-datepicker{
+	box-shadow:none;
+}
+
 table.fc-header tr:hover{
 	background-color:none;
 	
@@ -925,7 +936,7 @@ cursor:pointer;
 	display:block;
 	float:left;
 	font-size:12px;
-	
+	padding-left:5px;
 	border-bottom:1px solid #EEEEEE;
 	color:#313131;
 	 text-overflow: ellipsis; 

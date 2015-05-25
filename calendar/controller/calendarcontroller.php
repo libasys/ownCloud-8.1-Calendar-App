@@ -501,8 +501,8 @@ class CalendarController extends Controller {
 						  <button class="button"  data-action="next" data-view="false" data-weekends="false"><i class="ioc ioc-next"></i></button>	
 				
 			  </div>	
-				<div id="datepickerNav"></div>	
-								<h3><i class="ioc ioc-calendar"></i>&nbsp;'.$this->l10n->t('Calendar').'</h3>
+				<div id="datepickerNav"></div>
+					<h3><i class="ioc ioc-calendar"></i>&nbsp;'.$this->l10n->t('Calendar').'</h3>
 								<ul id="calendarList">';
 				
 				   foreach($calendars as $calInfo){
@@ -553,7 +553,7 @@ class CalendarController extends Controller {
 						 }
 					}
 				   if($outputAbo!=''){
-				   	  $outputAbo='<br style="clear:both;"><h3><i class="ioc ioc-rss-alt"></i>&nbsp;'.$this->l10n->t('Subscription').'</h3><ul>'.$outputAbo.'</ul>';
+				   	  $outputAbo='<br style="clear:both;"><br /><h3><i class="ioc ioc-rss-alt"></i>&nbsp;'.$this->l10n->t('Subscription').'</h3><ul>'.$outputAbo.'</ul>';
 				   }
 				   $output.='</ul>'.$outputAbo.'<br />
 				   <br style="clear:both;">
