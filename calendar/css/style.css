@@ -447,6 +447,16 @@ margin-right:auto;
 	width:68%;
 	text-align:center;
 	display:block;
+	
+}
+
+.centerControls .view{
+	margin-left:auto;
+	margin-right:auto;
+	position:relative;
+	float:none;
+	display:inline-block;
+	
 }
 
 .rightControls{
@@ -943,7 +953,7 @@ cursor:pointer;
 	line-height:30px;
 	display:block;
 	float:left;
-	font-size:12px;
+	font-size:14px;
 	padding-left:5px;
 	border-bottom:1px solid #EEEEEE;
 	color:#313131;
