@@ -447,7 +447,7 @@ class CalendarController extends Controller {
 						$response = new JSONResponse($params);
 						return $response;	
 				   }
-					
+					//\OCP\Util::writeLog('calendar', 'FILE IMPORT-> '.$file, \OCP\Util::DEBUG);
 					$file = \Sabre\VObject\StringUtil::convertToUTF8($file);
 					$import = new \OCA\Calendar\Import($file);
 					
@@ -485,7 +485,7 @@ class CalendarController extends Controller {
 		//make it as template
 		if($leftNavAktiv === 'true'){
 				$calendars = CalendarCalendar::allCalendars($this->userId, false);
-				$mySharees=Object::getCalendarSharees();
+				//$mySharees=Object::getCalendarSharees();
 				$activeCal=$this -> configInfo -> getUserValue($this->userId, 'calendar', 'choosencalendar');
 				$outputAbo='';
 				$output='<div id="leftcontentInner">
@@ -504,6 +504,8 @@ class CalendarController extends Controller {
 				<div id="datepickerNav"></div>
 					<h3><i class="ioc ioc-calendar"></i>&nbsp;'.$this->l10n->t('Calendar').'</h3>
 								<ul id="calendarList">';
+				   
+				   $bShareApi = \OC::$server->getAppConfig()->getValue('core', 'shareapi_enabled', 'yes');
 				
 				   foreach($calendars as $calInfo){
 				         	
@@ -518,18 +520,38 @@ class CalendarController extends Controller {
 						 	$isActiveUserCal='isActiveCal';
 							 $addCheckClass='isActiveUserCal';
 						 }
+							/*
 						  if((is_array($mySharees) && array_key_exists($calInfo['id'], $mySharees))) {
 						 	$sharedescr=$mySharees[$calInfo['id']];	
 						 	$share='<i class="ioc ioc-share toolTip" title="<b>'. $this->l10n->t('Shared with').'</b><br>'.$sharedescr.'"></i> '; 	
-						 }
-						   $displayName='<span class="descr">'.$share.$calInfo['displayname'].'</span>';
+						 }*/
+						 	$shareLink='';
+						  if($calInfo['permissions'] & \OCP\PERMISSION_SHARE && $bShareApi === 'yes') { 
+							  $shareLink='<a href="#" class="share icon-share" 
+							  	data-item-type="calendar" 
+							    data-item="calendar-'.$calInfo['id'].'" 
+							    data-link="true"
+							    data-title="'.$calInfo['displayname'].'"
+								data-possible-permissions="'.$calInfo['permissions'].'"
+								title="'.(string) $this->l10n->t('Share Calendar').'"
+								style="float:right;"
+								>
+								</a>';
+						  }
+						   $displayName='<span class="descr">'.$calInfo['displayname'].'</span>'.$shareLink;
 						   $checked=$calInfo['active'] ? ' checked="checked"' : '';
 						 
 						  $notice='';
+						  $shareInfo ='';
 				         if($calInfo['userid'] != $this->userId){
-				  	      	if(\OCP\Share::getItemSharedWithByLink('calendar','calendar-'.$calInfo['id'],$calInfo['userid'])){
-				         		$notice='<b>Notice</b><br>This calendar is also shared by Link for public!<br>';
-				         	}
+				  	      	if($shareLink === ''){	
+					  	      	if(\OCP\Share::getItemSharedWithByLink('calendar','calendar-'.$calInfo['id'],$calInfo['userid'])){
+					         		$notice='<b>Notice</b><br>This calendar is also shared by Link for public!<br>';
+					         	}
+								
+								$rightsOutput=CalendarCalendar::permissionReader($calInfo['permissions']);
+								$shareInfo='<i style="float:right;" class="toolTip ioc ioc-info-1" title="'.$notice.(string) $this->l10n->t('by') . ' ' .$calInfo['userid'].'<br />('.$rightsOutput.')"></i>';
+							}
 							
 							$calShare=$calInfo['active'];
 							if($this -> configInfo ->getUserValue($this->userId, 'calendar', 'calendar_'.$calInfo['id'])!=''){
@@ -537,17 +559,19 @@ class CalendarController extends Controller {
 							}
 							$checked=$calShare ? ' checked="checked"' : '';
 							
-				  	        $rightsOutput=CalendarCalendar::permissionReader($calInfo['permissions']);	
-				  	        $displayName='<span class="toolTip" title="'.$notice.'('.$rightsOutput.')">'.$calInfo['displayname'].' (' . $this->l10n->t('by') . ' ' .$calInfo['userid'].')</span>';
+				  	        	
+				  	        $displayName='<span class="descr">'.$calInfo['displayname'].'</span>'.$shareLink.$shareInfo;
 				           // $checkBox='';
 						 }
 						 
 				 	    $checkBox='<input class="activeCalendarNav regular-checkbox" data-id="'.$calInfo['id'].'" style="float:left;" id="edit_active_'.$calInfo['id'].'" type="checkbox" '.$checked.' /><label style="float:left;margin-right:5px;" for="edit_active_'.$calInfo['id'].'"></label>';
 				 		 
+				 		 
+						 
 						 if($calInfo['issubscribe'] == false){
 					   	 		$output.='<li data-id="'.$calInfo['id'].'" class="calListen '.$isActiveUserCal.'">'.$checkBox.'<div class="colCal iCalendar '.$addCheckClass.'" style="cursor:pointer;background:'.$calInfo['calendarcolor'].'">&nbsp;</div> '.$displayName.'</li>';
 						 }else{
-						   $refreshImage='<i title="refresh"  class="refreshSubscription ioc ioc-refresh" style="cursor:pointer;">&nbsp;</i>';
+						   $refreshImage='<i title="refresh"  class="refreshSubscription ioc ioc-refresh" style="cursor:pointer;float:right;">&nbsp;</i>';
 				 			$outputAbo.='<li data-id="'.$calInfo['id'].'" class="calListen '.$isActiveUserCal.'">'.$checkBox.'<div class="colCal" style="cursor:pointer;background:'.$calInfo['calendarcolor'].'">&nbsp;</div> '.$refreshImage.$displayName.'</li>';
 							
 						 }
@@ -556,14 +580,14 @@ class CalendarController extends Controller {
 				   	  $outputAbo='<br style="clear:both;"><br /><h3><i class="ioc ioc-rss-alt"></i>&nbsp;'.$this->l10n->t('Subscription').'</h3><ul>'.$outputAbo.'</ul>';
 				   }
 				   $output.='</ul>'.$outputAbo.'<br />
-				   <br style="clear:both;">
+				   <br style="clear:both;"><br />
 				   <h3 data-id="lCategory" style=" cursor:pointer; line-height:24px;" ><label id="showCategory"><i style="font-size:22px;" class="ioc ioc-chevron-down ioc-rotate-270"></i>&nbsp;<i class="ioc ioc-tags"></i>&nbsp;'.$this->l10n->t('Tags').'</label> 
 				   	 	
 				   
 				   </h3>
 					 <ul id="categoryCalendarList">
 					 </ul>
-					          </div>
+					  </div>
 					     ';
 						 
 					return $output;

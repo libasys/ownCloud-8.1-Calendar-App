@@ -69,9 +69,6 @@ class CalendarSettingsController extends Controller {
 		}
 		
 		$params =[
-			'mailNotificationEnabled' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_allow_mail_notification', 'yes'),
-			'allowShareWithLink' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_allow_links', 'yes'),
-			'mailPublicNotificationEnabled' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_allow_public_notification', 'no'),
 			'timezone' => $this -> configInfo -> getUserValue($this -> userId,'calendar','timezone',''),
 			'timezones' => \DateTimeZone::listIdentifiers(),
 			'calendars' => $calendars,

@@ -55,10 +55,12 @@ class ImportController extends Controller {
 			
 		$pPath = $this -> params('path');	
 		$pFile = $this -> params('filename');
+		$pIsDragged = $this->params('isDragged');
 		
 		$params=[
 			'path' => $pPath,
 			'filename' => $pFile,
+			'isDragged' => $pIsDragged
 		];
 		
 		$response = new TemplateResponse('calendar', 'part.import',$params, '');  
@@ -107,6 +109,8 @@ class ImportController extends Controller {
 		$pCalcolor = $this -> params('calcolor');
 		$pId = $this -> params('id');
 		$pOverwrite = $this -> params('overwrite');
+		$pIsDragged = $this->params('isDragged');
+		
 		\OC::$server->getSession()->close();
 		
 		
@@ -119,7 +123,15 @@ class ImportController extends Controller {
 				return $response;	
 		}
 		
-		$file = \OC\Files\Filesystem::file_get_contents($pPath . '/' . $pFile);
+		if($pIsDragged === 'true') {
+			//OCP\JSON::error(array('error'=>'404'));
+			$file = explode(',', $pFile);
+			$file = end($file);
+			$file = base64_decode($file);
+		}else{
+			$file = \OC\Files\Filesystem::file_get_contents($pPath . '/' . $pFile);
+		}
+		
 		if(!$file) {
 				$params = [
 					'status' => 'error',
@@ -159,6 +171,7 @@ class ImportController extends Controller {
 			if($newcal) {
 				$id = CalendarCalendar::addCalendar($this -> userId, strip_tags($pCalname),'VEVENT,VTODO,VJOURNAL',null,0,strip_tags($pCalcolor));
 				CalendarCalendar::setCalendarActive($id, 1);
+				
 			}
 		}else{
 			$id=	$pId;
@@ -187,6 +200,7 @@ class ImportController extends Controller {
 				return $response;		
 		}
 		$count = $import->getCount();
+		
 		if($count == 0) {
 			if($newcal) {
 				CalendarCalendar::deleteCalendar($id);
@@ -202,6 +216,7 @@ class ImportController extends Controller {
 				$params = [
 					'status' => 'success',
 					'message' => $count . ' ' . $this->l10n -> t('events has been saved in the new calendar'). ' ' .  strip_tags($pCalname),
+					'eventSource' => CalendarCalendar::getEventSourceInfo(CalendarCalendar::find($id))
 				];
 				
 				$response = new JSONResponse($params);
@@ -210,12 +225,14 @@ class ImportController extends Controller {
 				$params = [
 					'status' => 'success',
 					'message' => $count . ' ' . $this->l10n -> t('events has been saved in your calendar'),
+					'eventSource' => '',
 				];
 				
 				$response = new JSONResponse($params);
 				return $response;		
 			}
 		}
+		
 		
 	}
 

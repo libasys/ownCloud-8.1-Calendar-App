@@ -79,7 +79,7 @@ class PageController extends Controller {
 			$this->configInfo->setUserValue($this->userId, 'calendar', 'currentview', "fourweeks");
 		}
 		
-		\OCP\Util::addScript('calendar','loaderimport');
+		
 		\OCP\Util::addStyle('calendar', '3rdparty/jquery.miniColors');
 		\OCP\Util::addscript('calendar', '3rdparty/jquery.miniColors.min');
 		\OCP\Util::addScript('calendar', '3rdparty/fullcalendar');
@@ -102,6 +102,7 @@ class PageController extends Controller {
 		}
 		
 		\OCP\Util::addScript('calendar', 'calendar');
+		\OCP\Util::addScript('calendar','loaderimport');
 		\OCP\Util::addStyle('calendar', 'style');
 		\OCP\Util::addStyle("calendar", "mobile");
 		\OCP\Util::addScript('calendar','jquery.multi-autocomplete');
@@ -162,6 +163,10 @@ class PageController extends Controller {
 			'buttonTaskAktive' => $pButtonTaskAktive,
 			'taskOutput' => $pTaskOutput,
 			'rightnavAktiv' =>$pRightnavAktiv,
+			'mailNotificationEnabled' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_allow_mail_notification', 'yes'),
+			'allowShareWithLink' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_allow_links', 'yes'),
+			'mailPublicNotificationEnabled' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_allow_public_notification', 'no'),
+			
 		];
 		
 		$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();

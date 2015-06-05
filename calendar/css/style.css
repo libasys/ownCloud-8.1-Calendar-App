@@ -49,6 +49,15 @@
 	line-height:20px;
 	text-shadow:none;
 }
+.ui-dialog-titlebar.ui-widget-header .ui-dialog-titlebar-close .ui-icon-closethick{
+	background-repeat: no-repeat;
+	background-position: center;
+	top:2px;
+	width: 26px;
+	height: 26px;
+	background-size:24px 24px;
+	background-image: url('../../../core/img/actions/close.svg');
+}
 
 .ui-dialog-titlebar.ui-widget-header .ui-dialog-title{
 	line-height:24px;
@@ -68,6 +77,63 @@
 	
 }
 
+#dropdown{
+	position:fixed;
+	right:0;
+	top:45px;
+	z-index:400;
+	height:100%;
+	max-width:350px;
+	color:#555;
+	border-radius:none;
+	background-color:#f4f4f4;
+	box-shadow:-1px 1px 8px rgba(0,0,0,0.5);
+}
+
+#dropdown #infoShare{
+	position:relative;
+	display:block;
+	width:100%;
+	font-size:16px;
+	line-height: 30px;
+	height:30px;
+	border-bottom:1px solid #BBBBBB;
+	padding-bottom:5px;
+	margin-bottom:5px;
+}
+ #dropdown #infoShare div{
+	position:relative;
+	margin-left:5px;
+}
+#dropdown #infoShare #dropClose
+{
+	position:absolute;
+	top:-10px;
+	right:-10px;
+	width:30px;
+	cursor:pointer;
+	height:30px;
+	font-size:22px;
+}
+
+#dropdown label,
+#dropdown span,
+#dropdown a{
+	color:#555;
+	line-height:20px;
+}
+
+#dropdown a.icon-info{
+	float:right;
+	
+	display:inline;
+	width:20px;
+	height:26px;
+	margin:0;
+	padding:0;
+	margin-top:5px;
+	min-height:26px;
+}
 
 #controls{
 	background-color:#fff;
@@ -81,11 +147,7 @@
 
 	
 }
-#calendarList #dropdown{
-	width:350px;
-	left:0px;
-	margin-top:30px;
-}
+
 
 #appsettings_popup{
 	min-width:400px;
@@ -396,7 +458,7 @@ margin-right:auto;
 }
 #app-navigation li > a{
 	display: block;
-	width: 98%;
+	width: auto;
 	line-height:normal;
 	 padding:5px 0px;
 	overflow: hidden;
@@ -404,6 +466,8 @@ margin-right:auto;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	color: #313131;
+	opacity:0.7;
+	margin-top:-6px;
 }
 
 #app-navigation .active,
@@ -415,6 +479,7 @@ margin-right:auto;
 #app-navigation .selected,
 #app-navigation .selected a {
 	background-color: transparent;
+	color:#555;
 }
 
 
@@ -957,10 +1022,21 @@ cursor:pointer;
 	padding-left:5px;
 	border-bottom:1px solid #EEEEEE;
 	color:#313131;
+	
+}
+#leftcontent li.calListen span.descr{
+	
+	width:140px;
+	display:block;
+	float:left;
+	white-space:nowrap;
 	 text-overflow: ellipsis; 
    -o-text-overflow: ellipsis;
    overflow:hidden;
+	line-height:30px;
 }
+
+
 #categoryCalendarList li{
 	padding:0;
 	line-height:24px;
@@ -1580,12 +1656,6 @@ label {
 .noEventFound{
 	font-size:14px;
 	color:#C67605;
-}
-
-#event #dropdown{
-	
-	position:fixed;
-	z-index:600;
 }
 
 

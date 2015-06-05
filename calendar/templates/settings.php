@@ -9,9 +9,6 @@
 
 ?>
 <div id="calendarSettingsContainer">
-<input type="hidden" name="mailNotificationEnabled" id="mailNotificationEnabled" value="<?php p($_['mailNotificationEnabled']) ?>" />
-<input type="hidden" name="allowShareWithLink" id="allowShareWithLink" value="<?php p($_['allowShareWithLink']) ?>" />
-<input type="hidden" name="mailPublicNotificationEnabled"  value="<?php p($_['mailPublicNotificationEnabled']) ?>" />
 
 <h2 ><?php p($l->t('Your calendars')); ?></h2>
 <div id="myCalendarsList" class="settings-div">
@@ -19,7 +16,7 @@
 	<?php
 	$option_calendars = $_['calendars'];
 	$mySharees=$_['mySharedCalendars'];
-	$isShareApiActive= $_['isShareApiActive'];
+	
 	
 	for($i = 0; $i < count($option_calendars); $i++) {
 		print_unescaped("<tr data-id='".\OCP\Util::sanitizeHTML($option_calendars[$i]['id'])."' data-calname='".\OCP\Util::sanitizeHTML($option_calendars[$i]['displayname'])."'>");
@@ -33,18 +30,17 @@
 		}
 		
 		$tmpl->assign('shared', $shared);
-		$tmpl -> assign('isShareApi', $isShareApiActive);
 		$tmpl->printpage();
 		print_unescaped("</tr>");
 	}
 	?>
 	<tr>
-		<td colspan="6">
+		<td colspan="5">
 			<input type="button" value="<?php p($l->t('New Calendar')) ?>" id="newCalendar" />
 		</td>
 	</tr>
 	<tr>
-		<td colspan="6">
+		<td colspan="5">
 			<p style="margin: 0 auto;width: 90%;">
 				<input style="display:none;width: 90%;float: left;" type="text" id="caldav_url" title="<?php p($l->t("CalDav Link")); ?>">
 				<img id="caldav_url_close" style="height: 20px;vertical-align: middle;display: none;" src="<?php p(OCP\Util::imagePath('core', 'actions/delete.svg')) ?>" alt="close"/>

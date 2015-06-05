@@ -38,7 +38,7 @@
 						<a href="#" class="share action permanent icon-share" style="float:left;margin-top:2px;" data-item-type="event" 
 						    data-item="event-<?php p($_['eventid']) ?>" 
 						    data-link="true"
-						    data-eventname="<?php p($_['title']) ?>"
+						    data-title="<?php p($_['title']) ?>"
 							data-possible-permissions="<?php p( $_['permissions']) ?>"
 							title="<?php p($l->t('Share Event')) ?>"
 							>

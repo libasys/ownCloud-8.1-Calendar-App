@@ -6,7 +6,7 @@
  * See the COPYING-README file.
  */
 
-Calendar = {
+var Calendar = {
 	firstLoading : true,
 	calendarConfig:null,
 	init:function(){
@@ -763,6 +763,8 @@ Calendar = {
 						}
 					});
 				});
+				
+				OC.Share.loadIcons('calendar');
 			});
 		},
 		calViewEventHandler : function() {
@@ -2744,7 +2746,8 @@ Calendar = {
 
 						var reader = new FileReader();
 						reader.onload = function(event) {
-							Calendar.UI.openImportDialog(event.target.result);
+							Calendar.Import.Store.isDragged = true;
+							Calendar.Import.Dialog.open(event.target.result);
 
 							//Calendar_Import.Dialog.open(event.target.result);
 							//$('#fullcalendar').fullCalendar('refetchEvents');
@@ -3033,18 +3036,81 @@ $(window).resize(_.debounce(function() {
 
 $(document).ready(function() {
 	
-	$(document).on('click', '#event a.share', function(event) {
+	$(document).on('click', '#dropdown #dropClose', function(event) {
+		event.preventDefault();
 		event.stopPropagation();
-		$('#event #haveshareaction').val('1');
-		$('#event #dropdown').css({
-			'top' : $(event.target).offset().top + 40,
-			'left' : $('#event').offset().left
-		});
+		OC.Share.hideDropDown();
+		return false;
+	});
 		
-		return true;
+	$(document).on('click', 'a.share', function(event) {
+	//	if (!OC.Share.droppedDown) {
+		event.preventDefault();
+		event.stopPropagation();
+		var itemType = $(this).data('item-type');
+		var AddDescr =t('calendar','Calendar')+' ';
+		var sService ='';
+		if(itemType === 'calendar'){
+			AddDescr=t('calendar','Calendar')+' ';
+			sService = 'calendar';
+		}
+		if(itemType === 'event'){
+			AddDescr=t('calendar','Event')+' ';
+			sService = 'event';
+			$('#event #haveshareaction').val('1');
+		}
+		
+		var itemSource = $(this).data('title');
+			  itemSource = '<div>'+AddDescr+itemSource+'</div><div id="dropClose"><i class="ioc ioc-close" style="font-size:22px;"></i></div>';
+			  
+		if (!$(this).hasClass('shareIsOpen') && $('a.share.shareIsOpen').length === 0) {
+			$('#infoShare').remove();
+			$( '<div id="infoShare">'+itemSource+'</div>').prependTo('#dropdown');
+				
+		}else{
+			$('a.share').removeClass('shareIsOpen');
+			$(this).addClass('shareIsOpen');
+			//OC.Share.hideDropDown();
+		}
+		//if (!OC.Share.droppedDown) {
+			$('#dropdown').css('opacity',0);
+			$('#dropdown').animate({
+				'opacity': 1,
+			},500);
+		//}
+    
+		(function() {
+			
+			var targetShow = OC.Share.showDropDown;
+			
+			OC.Share.showDropDown = function() {
+				var r = targetShow.apply(this, arguments);
+				$('#infoShare').remove();
+				$( '<div id="infoShare">'+itemSource+'</div>').prependTo('#dropdown');
+				
+				return r;
+			};
+			if($('#linkText').length > 0){
+				$('#linkText').val($('#linkText').val().replace('public.php?service='+sService+'&t=','index.php/apps/calendar/s/'));
+	
+				var target = OC.Share.showLink;
+				OC.Share.showLink = function() {
+					var r = target.apply(this, arguments);
+					
+					$('#linkText').val($('#linkText').val().replace('public.php?service='+sService+'&t=','index.php/apps/calendar/s/'));
+					
+					return r;
+				};
+			}
+		})();
+		if (!$('#linkCheckbox').is(':checked')) {
+				$('#linkText').hide();
+		}
+		return false;
+		//}
 	});
 	
-	
+
 	
 	Calendar.init();
 	//Calendar.UI.initScroll();

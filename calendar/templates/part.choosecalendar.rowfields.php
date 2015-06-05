@@ -13,17 +13,7 @@
    ?>
   <label for="active_<?php p($_['calendar']['id']) ?>"><?php p($displayName) ?></label>
 </td>
-<td width="20px">
-  <?php if($_['calendar']['permissions'] & OCP\PERMISSION_SHARE && $_['isShareApi'] === 'yes') { ?>
-  <a href="#" class="share action permanent icon-share" data-item-type="calendar" 
-    data-item="calendar-<?php p($_['calendar']['id']); ?>" 
-    data-link="true"
-	data-possible-permissions="<?php p($_['calendar']['permissions']) ?>"
-	title="<?php p($l->t('Share Calendar')) ?>"
-	>
-	</a>
-  <?php } ?>
-</td>
+
 <td width="20px">
 <?php
 if($_['calendar']['userid'] == OCP\USER::getUser()){

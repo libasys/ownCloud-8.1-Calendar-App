@@ -58,5 +58,5 @@ $(document).ready(function(){
 
 });
 
-OC.Share.loadIcons('calendar');
+
 
