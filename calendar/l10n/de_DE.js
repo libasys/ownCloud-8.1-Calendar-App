@@ -145,7 +145,6 @@ OC.L10N.register(
 "Cal." : "Kal.",
 "Week" : "Woche",
 "Month" : "Monat",
-"Today" : "Heute",
 "Day" : "Tag",
 "3-Days" : "3 Tage",
  "W-Week" : "A-Woche",

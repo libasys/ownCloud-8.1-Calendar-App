@@ -140,6 +140,7 @@ footer{
 	border:1px solid #ccc;
 	padding:10px;
 	border-radius:8px;
+	line-height:22px;
 	box-shadow:0 0 1em rgba(0, 0, 0, .5);
 	min-height:300px;
 	min-width:300px;
@@ -147,10 +148,17 @@ footer{
 .shareevent tr:hover{
 	background-color:transparent;
 }
+
 th.leftDescr{
 	width:30px;
 	line-height:24px;
-	
+	padding:0;
+	margin:0;
+}
+
+.shareevent th.leftDescr{
+	width:120px;
+	line-height:22px;
 	padding:0;
 	margin:0;
 }

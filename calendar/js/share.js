@@ -531,228 +531,232 @@ CalendarShare={
 		},
    }	
 };
-$.fullCalendar.views.list = ListView;
-function ListView(element, calendar) {
-	var $this = this;
 
-	// imports
-	jQuery.fullCalendar.views.month.call($this, element, calendar);
-	//jQuery.fullCalendar.BasicView.call(t, element, calendar, 'month');
-	var opt = $this.opt;
-	var trigger = $this.trigger;
-	var eventElementHandlers = $this.eventElementHandlers;
-	var reportEventElement = $this.reportEventElement;
-	var formatDate = calendar.formatDate;
-	var formatDates = calendar.formatDates;
-	var addDays = $.fullCalendar.addDays;
-	var cloneDate = $.fullCalendar.cloneDate;
-	//var clearTime =  $.fullCalendar.clearTime;
-	var skipHiddenDays = $this.skipHiddenDays;
-
-	function clearTime(d) {
-		d.setHours(0);
-		d.setMinutes(0);
-		d.setSeconds(0);
-		d.setMilliseconds(0);
-		return d;
-	}
-
-	function skipWeekend(date, inc, excl) {
-		inc = inc || 1;
-		while (!date.getDay() || (excl && date.getDay() == 1 || !excl && date.getDay() == 6)) {
-			addDays(date, inc);
+if($.fullCalendar !== undefined){
+	
+	function ListView(element, calendar) {
+		var $this = this;
+	
+		// imports
+		jQuery.fullCalendar.views.month.call($this, element, calendar);
+		//jQuery.fullCalendar.BasicView.call(t, element, calendar, 'month');
+		var opt = $this.opt;
+		var trigger = $this.trigger;
+		var eventElementHandlers = $this.eventElementHandlers;
+		var reportEventElement = $this.reportEventElement;
+		var formatDate = calendar.formatDate;
+		var formatDates = calendar.formatDates;
+		var addDays = $.fullCalendar.addDays;
+		var cloneDate = $.fullCalendar.cloneDate;
+		//var clearTime =  $.fullCalendar.clearTime;
+		var skipHiddenDays = $this.skipHiddenDays;
+	
+		function clearTime(d) {
+			d.setHours(0);
+			d.setMinutes(0);
+			d.setSeconds(0);
+			d.setMilliseconds(0);
+			return d;
 		}
-		return date;
-	}
-
-	// overrides
-	$this.name = 'list';
-	$this.render = render;
-	$this.renderEvents = renderEvents;
-	$this.setHeight = setHeight;
-	$this.setWidth = setWidth;
-	$this.clearEvents = clearEvents;
-
-	function setHeight(height, dateChanged) {
-	}
-
-	function setWidth(width) {
-	}
-
-	function clearEvents() {
-		//this.reportEventClear();
-	}
-
-	// main
-	function sortEvent(a, b) {
-		return a.start - b.start;
-	}
-
-	function render(date, delta) {
-		
-		var viewDays = moment(date.toISOString(), "YYYY-MM").daysInMonth();
-		
-		if (delta) {
-			addDays(date, delta * viewDays);
-		}
-
-		var start = cloneDate(date, true);
-		viewDays = moment(start.toISOString(), "YYYY-MM").daysInMonth();
-		start.setDate(1);
-		
-		var end = addDays(cloneDate(start), viewDays);
-
-		var visStart = cloneDate(start);
-		skipHiddenDays(visStart);
-
-		var visEnd = cloneDate(end);
-		skipHiddenDays(visEnd, -1, true);
-
-		$this.title = formatDate(start, opt('titleFormat', 'month'));
-		$this.start = start;
-		$this.end = end;
-		$this.visStart = visStart;
-		$this.visEnd = visEnd;
-
-	}
-
-	function eventsOfThisDay(events, theDate) {
-		var start = cloneDate(theDate, true);
-		var end = addDays(cloneDate(start), 1);
-		var retArr = new Array();
-
-		$.each(events, function(i, value) {
-			var event_end = $this.eventEnd(events[i]);
-			if (events[i].start < end && event_end >= start) {
-				retArr.push(events[i]);
+	
+		function skipWeekend(date, inc, excl) {
+			inc = inc || 1;
+			while (!date.getDay() || (excl && date.getDay() == 1 || !excl && date.getDay() == 6)) {
+				addDays(date, inc);
 			}
-		});
-		return retArr;
-	}
-
-	function renderEvent(event) {
-		if (event.allDay) {//all day event
-			var time = opt('allDayText');
-		} else {
-
-			var time = formatDates(event.start, event.end, opt('timeFormat', 'agenda'));
+			return date;
 		}
-		var classes = ['fc-event', 'fc-list-event'];
-		classes = classes.concat(event.className);
-
-		if (event.source) {
-			classes = classes.concat(event.source.className || []);
+	
+		// overrides
+		$this.name = 'list';
+		$this.render = render;
+		$this.renderEvents = renderEvents;
+		$this.setHeight = setHeight;
+		$this.setWidth = setWidth;
+		$this.clearEvents = clearEvents;
+	
+		function setHeight(height, dateChanged) {
 		}
-
-		var bgColor = '#D4D5AA';
-		var color = '#000000';
-		if ( typeof CalendarShare.calendarConfig['calendarcolors'][event.calendarid] != 'undefined') {
-			bgColor = CalendarShare.calendarConfig['calendarcolors'][event.calendarid]['bgcolor'];
-			color = CalendarShare.calendarConfig['calendarcolors'][event.calendarid]['color'];
+	
+		function setWidth(width) {
 		}
-		var imgBday = '';
-		if (event.bday) {
-			imgBday=CalendarShare.Util.addIconsCal('Happy Birthday', 'birthday-cake', '14');
-
+	
+		function clearEvents() {
+			//this.reportEventClear();
 		}
-		var imgReminder = '';
-		if (event.isalarm) {
-		   imgReminder=CalendarShare.Util.addIconsCal(t('calendar', 'Reminder'), 'clock', '14');
+	
+		// main
+		function sortEvent(a, b) {
+			return a.start - b.start;
 		}
-
-		var imgShare = '';
-		if (event.shared) {
-			 imgShare=CalendarShare.Util.addIconsCal(t('core', 'Shared'), 'share', '14');
+	
+		function render(date, delta) {
+			
+			var viewDays = moment(date.toISOString(), "YYYY-MM").daysInMonth();
+			
+			if (delta) {
+				addDays(date, delta * viewDays);
+			}
+	
+			var start = cloneDate(date, true);
+			viewDays = moment(start.toISOString(), "YYYY-MM").daysInMonth();
+			start.setDate(1);
+			
+			var end = addDays(cloneDate(start), viewDays);
+	
+			var visStart = cloneDate(start);
+			skipHiddenDays(visStart);
+	
+			var visEnd = cloneDate(end);
+			skipHiddenDays(visEnd, -1, true);
+	
+			$this.title = formatDate(start, opt('titleFormat', 'month'));
+			$this.start = start;
+			$this.end = end;
+			$this.visStart = visStart;
+			$this.visEnd = visEnd;
+	
 		}
-
-		var imgPrivate = '';
-
-		if (event.privat == 'private') {
-			imgPrivate=CalendarShare.Util.addIconsCal(t('calendar', 'Show As'), 'lock', '14');
-		}
-		if (event.privat == 'confidential') {
-			imgPrivate=CalendarShare.Util.addIconsCal(t('calendar', 'Show As'), 'eye', '14');
-		}
-		eventLocation = '';
-		if (event.location != '' && event.location != null && typeof event.location != 'undefined') {
-
-			eventLocation = '<span class="location">' + event.location + '</span>';
-		}
-		var imgRepeating = '';
-		if (event.isrepeating) {
-		    imgRepeating=CalendarShare.Util.addIconsCal(t('calendar', 'Repeat'), 'repeat', '14');
-		}
-
-		var Kategorien = '';
-		if (event.categories.length > 0) {
-
-			Kategorien = '<div style="float:right;margin-top:2px;" class="categories">';
-
-			$(event.categories).each(function(i, category) {
-				Kategorien += '<a class="catColPrev" style="background-color:#ccc;color:#555;" title="'+category+'">' + category.substring(0, 1) + '</a>';
-				
+	
+		function eventsOfThisDay(events, theDate) {
+			var start = cloneDate(theDate, true);
+			var end = addDays(cloneDate(start), 1);
+			var retArr = new Array();
+	
+			$.each(events, function(i, value) {
+				var event_end = $this.eventEnd(events[i]);
+				if (events[i].start < end && event_end >= start) {
+					retArr.push(events[i]);
+				}
 			});
-			Kategorien += '</div>';
+			return retArr;
 		}
-		var html = '<tr class="fc-list-row">' + '<td>&nbsp;</td>' + '<td class="fc-list-time ">' + time + '</td>' + '<td>&nbsp;</td>' + '<td class="fc-list-event">' + '<span id="list' + event.id + '"' + ' class="' + classes.join(' ') + '"' + '>' + '<span class="colorCal-list" style="margin-top:6px;background-color:' + bgColor + ';">' + '&nbsp;' + '</span>' + '<span class="list-icon">' + imgBday + imgShare + ' ' + imgPrivate + ' ' + imgRepeating + ' ' + imgReminder + '&nbsp;' + '</span>' + '<span class="fc-event-title">' + escapeHTML(event.title) + '</span>' + '<span>' + Kategorien + '</span>' + '<span>' + eventLocation + '</span>' + '</span>' + '</td>' + '</tr>';
-
-		return html;
-	}
-
-	function renderDay(date, events) {
-
-		var today = clearTime(new Date());
-
-		var addTodayClass = '';
-		if (+date == +today) {
-			addTodayClass = 'fc-list-today';
-
-		}
-
-		var dayRows = $('<tr>' + '<td colspan="4" class="fc-list-date ' + addTodayClass + '">' + '&nbsp;<span>' + formatDate(date, opt('titleFormat', 'day')) + '</span>' + '</td>' + '</tr>');
-
-		$.each(events, function(i, value) {
-
-			var event = events[i];
-			var eventElement = $(renderEvent(event));
-			triggerRes = trigger('eventRender', event, event, eventElement);
-			if (triggerRes === false) {
-				eventElement.remove();
+	
+		function renderEvent(event) {
+			if (event.allDay) {//all day event
+				var time = opt('allDayText');
 			} else {
-				if (triggerRes && triggerRes !== true) {
-					eventElement.remove();
-					eventElement = $(triggerRes);
-				}
-				$.merge(dayRows, eventElement);
-				eventElementHandlers(event, eventElement);
-				reportEventElement(event, eventElement);
+	
+				var time = formatDates(event.start, event.end, opt('timeFormat', 'agenda'));
 			}
-		});
-		return dayRows;
-	}
-
-	function renderEvents(events, modifiedEventId) {
-		events = events.sort(sortEvent);
-
-		var table = $('<table class="fc-list-table" align="center"></table>');
-		var total = events.length;
-		if (total > 0) {
-			var date = cloneDate($this.visStart);
-			while (date <= $this.visEnd) {
-				var dayEvents = eventsOfThisDay(events, date);
-				if (dayEvents.length > 0) {
-					table.append(renderDay(date, dayEvents));
-				}
-				date = addDays(date, 1);
+			var classes = ['fc-event', 'fc-list-event'];
+			classes = classes.concat(event.className);
+	
+			if (event.source) {
+				classes = classes.concat(event.source.className || []);
 			}
-		} else {
-			table = $('<div>').text('No Events');
-
+	
+			var bgColor = '#D4D5AA';
+			var color = '#000000';
+			if ( typeof CalendarShare.calendarConfig['calendarcolors'][event.calendarid] != 'undefined') {
+				bgColor = CalendarShare.calendarConfig['calendarcolors'][event.calendarid]['bgcolor'];
+				color = CalendarShare.calendarConfig['calendarcolors'][event.calendarid]['color'];
+			}
+			var imgBday = '';
+			if (event.bday) {
+				imgBday=CalendarShare.Util.addIconsCal('Happy Birthday', 'birthday-cake', '14');
+	
+			}
+			var imgReminder = '';
+			if (event.isalarm) {
+			   imgReminder=CalendarShare.Util.addIconsCal(t('calendar', 'Reminder'), 'clock', '14');
+			}
+	
+			var imgShare = '';
+			if (event.shared) {
+				 imgShare=CalendarShare.Util.addIconsCal(t('core', 'Shared'), 'share', '14');
+			}
+	
+			var imgPrivate = '';
+	
+			if (event.privat == 'private') {
+				imgPrivate=CalendarShare.Util.addIconsCal(t('calendar', 'Show As'), 'lock', '14');
+			}
+			if (event.privat == 'confidential') {
+				imgPrivate=CalendarShare.Util.addIconsCal(t('calendar', 'Show As'), 'eye', '14');
+			}
+			eventLocation = '';
+			if (event.location != '' && event.location != null && typeof event.location != 'undefined') {
+	
+				eventLocation = '<span class="location">' + event.location + '</span>';
+			}
+			var imgRepeating = '';
+			if (event.isrepeating) {
+			    imgRepeating=CalendarShare.Util.addIconsCal(t('calendar', 'Repeat'), 'repeat', '14');
+			}
+	
+			var Kategorien = '';
+			if (event.categories.length > 0) {
+	
+				Kategorien = '<div style="float:right;margin-top:2px;" class="categories">';
+	
+				$(event.categories).each(function(i, category) {
+					Kategorien += '<a class="catColPrev" style="background-color:#ccc;color:#555;" title="'+category+'">' + category.substring(0, 1) + '</a>';
+					
+				});
+				Kategorien += '</div>';
+			}
+			var html = '<tr class="fc-list-row">' + '<td>&nbsp;</td>' + '<td class="fc-list-time ">' + time + '</td>' + '<td>&nbsp;</td>' + '<td class="fc-list-event">' + '<span id="list' + event.id + '"' + ' class="' + classes.join(' ') + '"' + '>' + '<span class="colorCal-list" style="margin-top:6px;background-color:' + bgColor + ';">' + '&nbsp;' + '</span>' + '<span class="list-icon">' + imgBday + imgShare + ' ' + imgPrivate + ' ' + imgRepeating + ' ' + imgReminder + '&nbsp;' + '</span>' + '<span class="fc-event-title">' + escapeHTML(event.title) + '</span>' + '<span>' + Kategorien + '</span>' + '<span>' + eventLocation + '</span>' + '</span>' + '</td>' + '</tr>';
+	
+			return html;
 		}
-
-		this.element.html(table);
-	}
-
+	
+		function renderDay(date, events) {
+	
+			var today = clearTime(new Date());
+	
+			var addTodayClass = '';
+			if (+date == +today) {
+				addTodayClass = 'fc-list-today';
+	
+			}
+	
+			var dayRows = $('<tr>' + '<td colspan="4" class="fc-list-date ' + addTodayClass + '">' + '&nbsp;<span>' + formatDate(date, opt('titleFormat', 'day')) + '</span>' + '</td>' + '</tr>');
+	
+			$.each(events, function(i, value) {
+	
+				var event = events[i];
+				var eventElement = $(renderEvent(event));
+				triggerRes = trigger('eventRender', event, event, eventElement);
+				if (triggerRes === false) {
+					eventElement.remove();
+				} else {
+					if (triggerRes && triggerRes !== true) {
+						eventElement.remove();
+						eventElement = $(triggerRes);
+					}
+					$.merge(dayRows, eventElement);
+					eventElementHandlers(event, eventElement);
+					reportEventElement(event, eventElement);
+				}
+			});
+			return dayRows;
+		}
+	
+		function renderEvents(events, modifiedEventId) {
+			events = events.sort(sortEvent);
+	
+			var table = $('<table class="fc-list-table" align="center"></table>');
+			var total = events.length;
+			if (total > 0) {
+				var date = cloneDate($this.visStart);
+				while (date <= $this.visEnd) {
+					var dayEvents = eventsOfThisDay(events, date);
+					if (dayEvents.length > 0) {
+						table.append(renderDay(date, dayEvents));
+					}
+					date = addDays(date, 1);
+				}
+			} else {
+				table = $('<div>').text('No Events');
+	
+			}
+	
+			this.element.html(table);
+		}
+	
+	};
+	$.fullCalendar.views.list = ListView;
 }
 
 var  liveReminderCheck=function(){
@@ -797,20 +801,20 @@ $(window).resize(_.debounce(function() {
 	if (resizeTimeout)
 		clearTimeout(resizeTimeout);
 	resizeTimeout = setTimeout(function() {
+		if($("#fullcalendar").length === 1){
+			var heightToSet=0;
+			if(CalendarShare.defaultConfig['footer'] === true){
+				heightToSet+=50; 
+			}
+			if(CalendarShare.defaultConfig['header'] === true){
+				heightToSet+=80; 
+			}
+			$("#fullcalendar").height(($(window).height()-heightToSet));
+			
+			$('#fullcalendar').width($(window).width()-$('#leftcontent').width()-25);
 		
-		var heightToSet=0;
-		if(CalendarShare.defaultConfig['footer'] === true){
-			heightToSet+=50; 
+			$('#fullcalendar').fullCalendar('option', 'height', $(window).height() - $('#controls').height() - $('#header').height()-45 );
 		}
-		if(CalendarShare.defaultConfig['header'] === true){
-			heightToSet+=80; 
-		}
-		$("#fullcalendar").height(($(window).height()-heightToSet));
-		
-		$('#fullcalendar').width($(window).width()-$('#leftcontent').width()-25);
-	
-		$('#fullcalendar').fullCalendar('option', 'height', $(window).height() - $('#controls').height() - $('#header').height()-45 );
-
 	
 	}, 500);
 }));
