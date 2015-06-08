@@ -170,7 +170,7 @@ class PageController extends Controller {
 		];
 		
 		$csp = new \OCP\AppFramework\Http\ContentSecurityPolicy();
-		$csp->addAllowedImageDomain(':data');
+		$csp->addAllowedImageDomain('*');
 		
 		
 		$response = new TemplateResponse('calendar', 'calendar', $params);
