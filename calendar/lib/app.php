@@ -678,14 +678,12 @@ class App {
 	 * @return (array) $output - readable output
 	 */
 	public static function generateEventOutput(array $event, $start, $end, $list = false) {
-		//	\OCP\Util::writeLog('calendar', __METHOD__.' event: '.print_r($event['summary'], true), \OCP\Util::DEBUG);
+
 		if (!isset($event['calendardata']) && !isset($event['vevent'])) {
 			return false;
 		}
 		if (!isset($event['calendardata']) && isset($event['vevent'])) {
 			$event['calendardata'] = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:ownCloud's Internal iCal System\n" . $event['vevent'] -> serialize() . "END:VCALENDAR";
-
-			//\OCP\Util::writeLog('kontakte','HOOK: -> FOUND', \OCP\Util::DEBUG);
 		}
 		
 		
@@ -741,11 +739,10 @@ class App {
 			$event['privat'] = false;
 			if (isset($vevent -> CLASS) && ($vevent -> CLASS -> getValue() === 'PRIVATE')) {
 				$event['privat'] = 'private';
-				//\OCP\Util::writeLog('calendar','private: ->'.$event['privat'], \OCP\Util::DEBUG);
 			}
+			
 			if (isset($vevent -> CLASS) && ($vevent -> CLASS -> getValue() === 'CONFIDENTIAL')) {
 				$event['privat'] = 'confidential';
-				//\OCP\Util::writeLog('calendar','private: ->'.$event['privat'], \OCP\Util::DEBUG);
 			}
 
 			$allday = ($vevent -> DTSTART -> getValueType() == 'DATE') ? true : false;
@@ -754,7 +751,7 @@ class App {
 			if (array_key_exists('calendarid', $event)) {
 				$calid = $event['calendarid'];
 			}
-
+			/*
 			$eventPerm = '';
 
 			if (array_key_exists('permissions', $event)) {
@@ -762,14 +759,28 @@ class App {
 			}
 
 			$location = (!is_null($vevent -> LOCATION) && $vevent -> LOCATION -> getValue() != '') ? $vevent -> getAsString('LOCATION') : '';
-
+			*/
+			
 			$bDay = false;
 			if (array_key_exists('bday', $event)) {
 				$bDay = $event['bday'];
 			}
 
 			$lastmodified = ($last_modified) ? $last_modified -> getDateTime() -> format('U') : 0;
-			$staticoutput = array('id' => (int)$event['id'], 'title' => $SUMMARY, 'description' => isset($vevent -> DESCRIPTION) ? strtr($vevent -> DESCRIPTION -> getValue(), array('\,' => ',', '\;' => ';')) : '', 'lastmodified' => $lastmodified, 'categories' => $vevent -> getAsArray('CATEGORIES'), 'calendarid' => (int)$calid, 'rightsoutput' => $eventPerm, 'location' => $location, 'bday' => $bDay, 'shared' => $event['shared'], 'privat' => $event['privat'], 'isrepeating' => false, 'isalarm' => $event['isalarm'], 'orgevent' => $event['orgevent'], 'allDay' => $allday);
+			$staticoutput = array(
+				'id' => (int)$event['id'],
+				'title' => $SUMMARY, 
+				'lastmodified' => $lastmodified, 
+				'categories' => $vevent -> getAsArray('CATEGORIES'), 
+				'calendarid' => (int)$calid, 
+				'bday' => $bDay, 
+				'shared' => $event['shared'], 
+				'privat' => $event['privat'], 
+				'isrepeating' => false, 
+				'isalarm' => $event['isalarm'], 
+				'orgevent' => $event['orgevent'], 
+				'allDay' => $allday
+			);
 
 			if (Object::isrepeating($id) && Repeat::is_cached_inperiod($event['id'], $start, $end)) {
 				$cachedinperiod = Repeat::get_inperiod($id, $start, $end);
@@ -811,7 +822,6 @@ class App {
 
 				}
 			}
-			//\OCP\Util::writeLog('calendar', __METHOD__.' event: '.print_r($event['summary'], true) . ' done', \OCP\Util::DEBUG);
 			return $output;
 		} catch(\Exception $e) {
 			$uid = 'unknown';

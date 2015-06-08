@@ -7,17 +7,22 @@ body{
 }
 #fullcalendar{
 	top:88px;
+	padding-left:10px;
 }
 #leftcontent{
 	top:88px;
 }
 
-.chzn-container{
-	margin-top:10px;
-}
+
 #datepickerNav{
 	width:250px;
 }
+
+.fc-view-list{
+	overflow:auto;
+	height:auto;
+}
+
 #leftcontent{
 	width:255px;
 }
@@ -27,6 +32,10 @@ body{
 	padding:0;
 	margin:0;
 }
+#view button.active{
+	background:#fff;
+}
+
 footer{
 	position:absolute;
 	bottom:0;
@@ -36,30 +45,44 @@ footer{
 .leftControls{
 	position:relative;
 	float:left;
-	width:16%;
-	
+	width:25%;
 	display:block;
 	
 }
 .centerControls{
 	position:relative;
-	left:16%;
 	float:left;
-	
-	width:45%;
+	width:50%;
 	text-align:center;
-	display:block;
+	display:inline-block;
 	
 }
 .rightControls{
-	position:absolute;
+	position:relative;
 	float:left;
-	width:290px;
+	min-width:23%;
 	right:0;
-	display:block;
+	display:inline-block;
 	text-align:right;
 	
 }
+.rightControls label{
+	text-align:right;
+	position:relative;
+	
+	font-size:14px;
+	display:inline-block;
+	line-height:20px;
+	width:auto;
+	height:20px;
+
+}
+.chzn-container{
+	margin-top:10px;
+	text-align:left;
+	width:120px;
+}
+
 #eventPublic .noticeShareShow{
 	display:block;
 	width:96%;
@@ -81,10 +104,10 @@ footer{
 	float:right;
 }
 
-.header-right a{
+.header-right span a.button{
 	border:1px solid #ccc;
-	background:transparent;
-	color:#fff;
+	background:#fff;
+	color:#000;
 }
 
 .header-right a:hover{
@@ -133,4 +156,20 @@ th.leftDescr{
 }
 .shareevent a{
 	text-decoration:underline;
+}
+
+@media only screen and (max-width: 768px) {
+	.rightControls{
+		display:none;
+	}
+	.leftControls{
+		width:10%;
+	}
+	#leftcontent{
+		display:none;
+		width:0;
+	}
+	.centerControls{
+		width:90%;
+	}
 }

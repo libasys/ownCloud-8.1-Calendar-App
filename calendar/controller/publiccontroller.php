@@ -169,6 +169,7 @@ class PublicController extends Controller {
 					\OCP\Util::addStyle('calendar', 'style');
 					\OCP\Util::addStyle('calendar', 'share');
 					\OCP\Util::addScript('calendar', 'share');
+					\OCP\Util::addScript('calendar', 'share.config');
 					
 					$timezone=\OC::$server->getSession()->get('public_link_timezone');
 					

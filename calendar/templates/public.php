@@ -31,22 +31,12 @@
 	</div>
 	<div class="centerControls">
 		
-		<div id="view" class="button-group" style="margin: 5px 3px;float:none;">
-		<button class="button" data-action="prev" data-view="false" data-weekends="false"><i class="ioc ioc-previous"></i></button>		
-		<button class="button" data-action="agendaDay" data-view="true" data-weekends="true"><?php p($l->t('Day'));?></button>
-		<button class="button" data-action="agendaThreeDays" data-view="true" data-weekends="true"><?php p($l->t('3-Days'));?></button>	
-		<button class="button" data-action="agendaWorkWeek" data-view="true" data-weekends="false"><?php p($l->t('W-Week'));?></button>			
-		<button class="button" data-action="agendaWeek" data-view="true" data-weekends="true"><?php p($l->t('Week'));?></button>
-	  <button class="button" data-action="month" data-view="true" data-weekends="true"><?php p($l->t('Month'));?></button>
-	   <button class="button" data-action="list" data-view="true" data-weekends="true"><i class="ioc ioc-list" title="<?php p($l->t('List'));?>"></i></button>
-	  <button class="button"  data-action="next" data-view="false" data-weekends="false"><i class="ioc ioc-next"></i></button>	
-			
-	  </div>
+		<div id="view" class="button-group" style="margin: 5px 3px;float:none;"></div>
   
 	</div>
-	<div class="rightControls" style="text-align:left;margin-right:10px;margin-top:2px;line-height:45px;">
-		<label for="timezone" class="bold" style="float:left;"><?php p($l->t('Timezone'));?></label>&nbsp;&nbsp;
-	<select style="display:none;font-size:12px;"  id="timezone" name="timezone" >
+	<div class="rightControls">
+		<label for="timezone"><?php p($l->t('Timezone'));?></label>&nbsp;&nbsp;
+	<select style="display:none;width:130px;"  id="timezone" name="timezone" >
 				<?php
 				$continent = '';
 				foreach($_['timezones'] as $timezone):
