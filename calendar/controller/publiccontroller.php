@@ -156,18 +156,21 @@ class PublicController extends Controller {
 					}
 				
 				if($itemType == 'calendar'){
-					\OCP\Util::addScript('calendar', '3rdparty/fullcalendar');
-					\OCP\Util::addStyle('calendar', '3rdparty/fullcalendar');
-					\OCP\Util::addScript('calendar', '3rdparty/jstz-1.0.4.min');	
-					\OCP\Util::addScript('calendar','jquery.scrollTo.min');
-					\OCP\Util::addScript('calendar','timepicker');
-					\OCP\Util::addScript("calendar", "3rdparty/chosen.jquery.min");
+					\OCP\Util::addStyle('calendar', '3rdparty/fullcalendar');	
 					\OCP\Util::addStyle("calendar", "3rdparty/chosen");
-					\OCP\Util::addScript('calendar','jquery.nicescroll.min');
 					\OCP\Util::addStyle('calendar', '3rdparty/fontello/css/animation');
 					\OCP\Util::addStyle('calendar', '3rdparty/fontello/css/fontello');
+					\OCP\Util::addStyle('calendar', '3rdparty/jquery.webui-popover');
 					\OCP\Util::addStyle('calendar', 'style');
 					\OCP\Util::addStyle('calendar', 'share');
+					
+					\OCP\Util::addScript('calendar', '3rdparty/jstz-1.0.4.min');		
+					\OCP\Util::addScript('calendar', '3rdparty/fullcalendar');
+					\OCP\Util::addScript('calendar','jquery.scrollTo.min');
+					\OCP\Util::addScript('calendar','timepicker');
+					\OCP\Util::addScript("calendar", "3rdparty/jquery.webui-popover");
+					\OCP\Util::addScript("calendar", "3rdparty/chosen.jquery.min");
+					\OCP\Util::addScript('calendar','jquery.nicescroll.min');
 					\OCP\Util::addScript('calendar', 'share');
 					\OCP\Util::addScript('calendar', 'share.config');
 					
@@ -204,8 +207,8 @@ class PublicController extends Controller {
 			
 		}//end token
 		
-		
-		$response = new TemplateResponse('core', '404','','guest');
+		$params=[];
+		$response = new TemplateResponse('core', '404',$params,'guest');
 		return $response;
 		
 	}
@@ -343,6 +346,7 @@ class PublicController extends Controller {
 			'agendatime' => 'HH:mm { - HH:mm}',
 			'defaulttime' => 'HH:mm',
 			'firstDay' => '1',
+			'calendarId' => $calendar['id'],
 			'eventSources' => $eventSources,
 			'calendarcolors'=> $calendarInfo,
 			'myRefreshChecker'=> $myRefreshChecker,
@@ -372,7 +376,8 @@ class PublicController extends Controller {
 			case 'month':
 			case 'agendaWorkWeek':
 			case 'agendaThreeDays':
-			case 'fourWeeks':					
+			case 'fourWeeks':
+			case 'year':							
 			case 'list':
 				$this->session->set('public_currentView', $view);
 				break;
@@ -393,7 +398,7 @@ class PublicController extends Controller {
 	
 	private function getPublicEvent($itemSource, $shareOwner, $token){
 				
-			$itemSource = CalendarApp :: validateItemSource($itemSource,'event-');
+			$itemSource = CalendarApp::validateItemSource($itemSource,'event-');
 				
 			$data = CalendarApp::getEventObject($itemSource, false, false);
 			$object = VObject::parse($data['calendardata']);

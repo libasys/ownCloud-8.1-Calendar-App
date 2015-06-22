@@ -161,6 +161,42 @@
 				<br /><span class="msg msgFd"></span>
 			</td>
 		</tr>
+		<tr>
+			<td>
+				<label for="firstday" ><?php p($l->t('Active Views'));?></label>
+				&nbsp;&nbsp;
+			</td>
+			<td>
+			<input class="viewsettings regular-checkbox" type="checkbox" name="agendaDay" id="vday" <?php ($_['userConfig']->{'agendaDay'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			
+			<label for="vday"></label>&nbsp; <label style="width:36px;display:inline-block;"><?php p($l->t('Day')); ?></label>
+			
+			<input class="viewsettings regular-checkbox" type="checkbox" name="agendaThreeDays" id="v3day" <?php ($_['userConfig']->{'agendaThreeDays'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			<label for="v3day"></label>&nbsp;
+			<label for="v3day" style="width:36px;display:inline-block;"><?php p($l->t('3-Days')); ?></label>
+			
+			<input class="viewsettings regular-checkbox" type="checkbox" name="agendaWorkWeek" id="vworkweek" <?php ($_['userConfig']->{'agendaWorkWeek'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			<label for="vworkweek"></label>&nbsp;
+			<label for="vworkweek" style="width:54px;display:inline-block;"><?php p($l->t('W-Week')); ?></label>
+			
+			<input class="viewsettings regular-checkbox" type="checkbox" name="agendaWeek" id="vweek" <?php ($_['userConfig']->{'agendaWeek'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			<label for="vweek"></label>&nbsp;
+			<label for="vweek" style="width:50px;display:inline-block;"><?php p($l->t('Week')); ?></label>
+			<br />
+			<input class="viewsettings regular-checkbox" type="checkbox" name="month" id="vmonth" <?php ($_['userConfig']->{'month'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			<label for="vmonth"></label>&nbsp;
+			<label for="vmonth" style="width:36px;display:inline-block;"><?php p($l->t('Month')); ?></label>
+			
+			<input class="viewsettings regular-checkbox" type="checkbox" name="year" id="vyear" <?php ($_['userConfig']->{'year'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			<label for="vyear"></label>&nbsp;
+			<label for="vyear" style="width:36px;display:inline-block;"><?php p($l->t('Year')); ?></label>
+			
+			<input class="viewsettings regular-checkbox" type="checkbox" name="list" id="vlist" <?php ($_['userConfig']->{'list'} === 'true')?print_unescaped('checked="checked"') :''; ?> >
+			<label for="vlist"></label>&nbsp;
+			<label for="vlist" style="width:54px;display:inline-block;"><?php p($l->t('List')); ?></label>
+			
+			</td>
+		</tr>
 		<tr class="advancedsettings">
 			<td colspan="2">
 				<label for="" ><?php p($l->t('Cache'));?></label><br />

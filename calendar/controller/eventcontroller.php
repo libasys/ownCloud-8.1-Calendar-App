@@ -222,6 +222,9 @@ class EventController extends Controller {
 	public function addCategorieToEvent() {
 				
 		$id = $this -> params('id');
+		$pStart = $this -> params('viewstart');
+		$pEnd = $this -> params('viewend');
+		
 		$aCheckPermissions =$this->checkPermissions($id, \OCP\PERMISSION_UPDATE);
 		if($aCheckPermissions['status'] === 'success'){
 			$category = $this -> params('category');
@@ -254,10 +257,24 @@ class EventController extends Controller {
 			Object::edit($id, $vcalendar->serialize());
 			\OCA\Calendar\Repeat::update($id);
 			$lastmodified = $vevent->__get('LAST-MODIFIED')->getDateTime();
-			$params=[
-				'status' =>$aCheckPermissions['status'],
+			
+			$editedEvent = CalendarApp::getEventObject($id, false, false);
+			
+			$start = new \DateTime($pStart);
+			$end = new \DateTime($pEnd);
+			
+		    $events = CalendarApp::generateEventOutput($editedEvent, $start, $end);
+			
+			$params = [
+				'status' => 'success',
 				'lastmodified' => (int)$lastmodified->format('U'),
-			];
+				'data' =>[
+					'id' => $id,
+					'events' => $events 
+				]
+				];
+			
+			
 		}else{
 			$params = [
 				'status' =>$aCheckPermissions['status'],
@@ -293,6 +310,9 @@ class EventController extends Controller {
 		
 		$id = $this -> params('id');
 		$choosenDate = $this -> params('choosendate');
+		$pStart = $this -> params('viewstart');
+		$pEnd = $this -> params('viewend');
+		
 		$data = CalendarApp::getEventObject($id, false, false);
 		$vcalendar = VObject::parse($data['calendardata']);
 		$vevent = $vcalendar->VEVENT;
@@ -320,9 +340,19 @@ class EventController extends Controller {
 		Object::edit($id, $vcalendar->serialize());
 		\OCA\Calendar\Repeat::update($id);
 		
-		$params=[
-			'message' => $output,
-		];	
+		$editedEvent = CalendarApp::getEventObject($id, false, false);
+			
+		$start = new \DateTime($pStart);
+		$end = new \DateTime($pEnd);
+		
+	    $events = CalendarApp::generateEventOutput($editedEvent, $start, $end);
+		
+		$params = ['status' => 'success',
+			'data' =>[
+				'id' => $id,
+				'events' => $events 
+			]
+			];
 		
 		$response = new JSONResponse();
 		$response -> setData($params);
@@ -638,6 +668,9 @@ class EventController extends Controller {
     public function newEvent() {
     	
 		$postRequestAll = $this -> getParams();
+		$pStart = $this -> params('viewstart');
+		$pEnd = $this -> params('viewend');
+		
 		$calId = $this -> params('calendar');
 		
 		
@@ -649,8 +682,21 @@ class EventController extends Controller {
 			
 		}else{
 			$vcalendar = Object::createVCalendarFromRequest($postRequestAll);
-			Object::add($calId, $vcalendar->serialize());
-			$params = ['status' => 'success'];
+			$id = Object::add($calId, $vcalendar->serialize());
+			
+			$editedEvent = CalendarApp::getEventObject($id, false, false);
+			
+			$start = new \DateTime($pStart);
+			$end = new \DateTime($pEnd);
+			
+		    $events = CalendarApp::generateEventOutput($editedEvent, $start, $end);
+			
+			$params = ['status' => 'success',
+			'data' =>[
+				'id' => $id,
+				'events' => $events 
+			]
+			];
 			$response = new JSONResponse($params);
 			return $response;
 			}
@@ -814,7 +860,7 @@ class EventController extends Controller {
         'description' => $editInfo['description'],
         'link' => $editInfo['link'],
         'addSingleDeleteButton' => $editInfo['addSingleDeleteButton'],
-        'choosendate' => date('Ymd',$editInfo['choosenDate']),
+        'choosendate' => $choosenDate,
         'isShareApi' => \OC::$server->getAppConfig()->getValue('core', 'shareapi_enabled', 'yes'),
         'repeat' => $editInfo['rrule']['repeat'],
         'mailNotificationEnabled' => \OC::$server->getAppConfig() -> getValue('core', 'shareapi_allow_mail_notification', 'yes'),
@@ -839,6 +885,9 @@ class EventController extends Controller {
      */
     public function editEvent() {
     	$id = $this -> params('id');
+		$pStart = $this -> params('viewstart');
+		$pEnd = $this -> params('viewend');
+		
 		$postRequestAll = $this -> getParams();
 		$calId = $this -> params('calendar');
 		$lastmodified = $this -> params('lastmodified');
@@ -863,7 +912,19 @@ class EventController extends Controller {
 			if ($data['calendarid'] != $calId) {
 				Object::moveToCalendar($id, $calId);
 			}
-			$params = ['status' => 'success'];
+			$editedEvent = CalendarApp::getEventObject($id, false, false);
+			
+			$start = new \DateTime($pStart);
+			$end = new \DateTime($pEnd);
+			
+		    $events = CalendarApp::generateEventOutput($editedEvent, $start, $end);
+			
+			$params = ['status' => 'success',
+			'data' =>[
+				'id' => $id,
+				'events' => $events 
+			]
+			];
 			$response = new JSONResponse($params);
 			return $response;
 			
@@ -871,6 +932,28 @@ class EventController extends Controller {
 			
 			
     }
+
+	/**
+	 * @PublicPage
+	 * @NoCSRFRequired
+	 */
+	public function getQuickInfoEvent(){
+		 $id = $this -> params('id');
+		 $data = CalendarApp::getEventObject($id, false, false);
+		$start = new \DateTime($data['startdate']);
+	    $showdate = $start -> format('Y-m-d H:i:s');
+		 
+		 $params = ['status' => 'success',
+			'data' =>[
+				'id' => $id,
+				'startdate' => $showdate 
+			]
+			];
+		
+		$response = new JSONResponse();
+		$response -> setData($params);
+		return $response;
+	}
 	
 	/**
 	 * @PublicPage
@@ -897,8 +980,10 @@ class EventController extends Controller {
             $choosenDate = $choosenDate;
         } else {
             $choosenDate = $dtstart -> getDateTime() -> format('Ymd');
+			
         }
-        
+        $showdate = $dtstart -> getDateTime() -> format('Y-m-d H:i:s');
+		
         $organzier='';
         if($vevent->ORGANIZER){
             $organizerVal=$vevent -> getAsString('ORGANIZER');
@@ -1158,6 +1243,7 @@ class EventController extends Controller {
                 'attendees' => $attendees,
                 'addSingleDeleteButton' => $addSingleDeleteButton,
                 'choosendate' => $choosenDate,
+                 'showdate' => $showdate,
                 'repeat' => $repeat['repeat'],
                 'repeat_rules' => isset($repeat['repeat_rules']) ? $repeat['repeat_rules'] : '',
                 'repeatInfo' => $pRepeatInfo
@@ -1187,6 +1273,8 @@ class EventController extends Controller {
 	 */
 	public function deleteSingleRepeatingEvent() {
 		$id = $this -> params('id');
+		$pStart = $this -> params('viewstart');
+		$pEnd = $this -> params('viewend');
 		$choosenDate = $this -> params('choosendate');
 		$choosenDate=date('Ymd',$choosenDate);
 		$choosenDate1=$choosenDate;
@@ -1217,13 +1305,23 @@ class EventController extends Controller {
 				}
 		}
 		
-		$output='success';
+		
 		\OCA\Calendar\Repeat::update($id);
 		Object::edit($id, $vcalendar->serialize());
 		
-		$params=[
-			'message' => $output,
-		];	
+		$editedEvent = CalendarApp::getEventObject($id, false, false);
+			
+		$start = new \DateTime($pStart);
+		$end = new \DateTime($pEnd);
+		
+	    $events = CalendarApp::generateEventOutput($editedEvent, $start, $end);
+		
+		$params = ['status' => 'success',
+			'data' =>[
+				'id' => $id,
+				'events' => $events 
+			]
+			];
 		
 		$response = new JSONResponse();
 		$response -> setData($params);

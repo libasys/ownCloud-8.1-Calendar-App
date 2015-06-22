@@ -5,8 +5,8 @@
 	
 <?php print_unescaped($this->inc("part.eventform")); ?>
 </form>
-	<br style="clear: both;" /><br />
-	<div id="actions" style="float:left;border-top:1px solid #bbb;width:100%;padding-top:5px;;padding-bottom:5px;">
+	<br style="clear: both;" />
+	<div id="actions" style="float:left;width:100%;padding-top:10px;padding-bottom:5px;">
 		
 	<div  class="button-group" style="float:right;">
 		<button id="closeDialog" class="button"><?php p($l->t("Cancel"));?></button> 

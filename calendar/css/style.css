@@ -6,12 +6,14 @@
  */
 
 .app-calendar #searchresults {
-	background-color:rgba(255,255,255,1);
+	background-color:rgba(255,255,255,0.9);
+	box-shadow:-1px 1px 8px rgba(0,0,0,0.5);
 	position:fixed;
 	overflow: auto;
-	height:50%;
+	height:100%;
 	text-overflow: ellipsis;
-	width:auto;
+	width:300px;
+	right:0;
 	padding-top: 20px;
 	box-sizing: border-box;
 	z-index: 100;
@@ -28,6 +30,7 @@
 	border:none;
 	padding:5px;
 	border-radius:8px;
+	z-index:2500;
 }
 .ui-dialog-titlebar.ui-widget-header{
 	border:none;
@@ -81,7 +84,6 @@
 	position:fixed;
 	right:0;
 	top:45px;
-	z-index:400;
 	height:100%;
 	max-width:350px;
 	color:#555;
@@ -150,7 +152,7 @@
 
 
 #appsettings_popup{
-	min-width:400px;
+	min-width:420px;
 	color:#666666;
 	font-weight:normal;
 	font-size:12px;
@@ -231,6 +233,13 @@
 	color:#555555;
 	font-size:13px;
 	
+}
+#event.show-event #actions{
+	display:none;
+}
+
+#event.show-event:hover #actions{
+	display:block;
 }
 
 #event .showevent-descr{
@@ -560,7 +569,12 @@ button.category{margin:0 3px;}
 .calendar-colorpicker-color{display:inline-block;width:20px;height:20px;margin-right:2px;cursor:pointer;border:2px solid transparent;}
 .calendar-colorpicker-color.active{border:2px solid black;}
 
-#event {padding: 0;margin: 0;}
+#event {
+	position:relative; 
+	padding: 0;
+	margin: 0;
+	overflow:hidden;
+	}
 
 .sharedby li .shareactions { float: right; }
 /*
@@ -668,7 +682,7 @@ button.category{margin:0 3px;}
      background:transparent;
      color:#313131;
      font-size:14px;
-     width:60%;
+     width:auto;
      display:block;
      float:left;
      
@@ -1114,8 +1128,9 @@ li.taskListRow .addImages{
 	padding:0;
 	margin:0;
 }
-li.taskListRow .addImages img,li.taskListRow .addImagesNoDate img{
+li.taskListRow .addImages i.ioc,li.taskListRow .addImagesNoDate i.ioc{
 	margin-right:1px;
+	font-size:12px;
 }
 
 li.taskListRow .description{
@@ -1414,16 +1429,17 @@ label {
 }
 
 .regular-checkbox:checked + label:after, .isActiveUserCal:after,.isSelectedCheckbox:after {
-	content: '\2714';
-	font-size: 18px;
+	font-family:"fontello";
+	content: '\e865';
+	font-size: 16px;
 	position: absolute;
-	top: -3px;
-	left: 3px;
+	top: 0px;
+	left: 2px;
 	color: #99a1a7;
 }
 
 #leftcontent .regular-checkbox:checked + label:after,#leftcontent .isActiveUserCal:after,#leftcontent .isSelectedCheckbox:after{
-	top:-7px;
+	top:-4px;
 }
 
 .isActiveUserCal:after {
@@ -1662,8 +1678,8 @@ label {
 
 /*CUSTOMIZE UI DIALOG*/
 
-.ui-accordion-header.ui-accordion-header-active {
-	border:1px solid #ccc;
+.ui-accordion-header.ui-accordion-header-active, .ui-accordion-header.ui-accordion-header {
+	border:1px solid #e7e7e7;
 }
 .ui-accordion-content{
 	background:#f4f4f4;

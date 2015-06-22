@@ -88,13 +88,14 @@ class PageController extends Controller {
 		\OCP\Util::addStyle('calendar', '3rdparty/fontello/css/fontello');
 		\OCP\Util::addScript('calendar','jquery.scrollTo.min');
 		\OCP\Util::addScript('calendar','timepicker');
-		
+		\OCP\Util::addScript("calendar", "3rdparty/jquery.webui-popover");
 		
 		\OCP\Util::addScript("calendar", "3rdparty/chosen.jquery.min");
 		\OCP\Util::addScript('calendar','jquery.nicescroll.min');
 		\OCP\Util::addStyle("calendar", "3rdparty/chosen");
 		\OCP\Util::addScript('calendar', '3rdparty/tag-it');
 		\OCP\Util::addStyle('calendar', '3rdparty/jquery.tagit');
+		\OCP\Util::addStyle('calendar', '3rdparty/jquery.webui-popover');
 		
 		if($this->configInfo->getUserValue($this->userId, 'calendar', 'timezone') == null || $this->configInfo->getUserValue($this->userId, 'calendar', 'timezonedetection') == 'true'){
 			\OCP\Util::addScript('calendar', '3rdparty/jstz-1.0.4.min');	

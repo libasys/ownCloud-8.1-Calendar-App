@@ -6,9 +6,13 @@
 </td>
 <td id="<?php p(OCP\USER::getUser()) ?>_<?php p($_['calendar']['id']) ?>">
  <?php
-        $displayName=$_['calendar']['displayname'];
+        $displayName=$_['calendar']['displayname'].' (ID '.$_['calendar']['id'].')';
+		if($_['calendar']['id'] === 'birthday_'.OCP\USER::getUser()){
+			 $displayName=$_['calendar']['displayname'];
+		}
+			
          if($_['calendar']['userid'] != OCP\USER::getUser()){
-  	        $displayName=$_['calendar']['displayname'].' (' . OCA\Calendar\App::$l10n->t('by') . ' ' .$_['calendar']['userid'].')';
+  	        $displayName=$_['calendar']['displayname'].' (ID '.$_['calendar']['id'].') (' . OCA\Calendar\App::$l10n->t('by') . ' ' .$_['calendar']['userid'].')';
         }
    ?>
   <label for="active_<?php p($_['calendar']['id']) ?>"><?php p($displayName) ?></label>

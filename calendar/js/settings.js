@@ -1,5 +1,22 @@
 $(document).ready(function(){
 	    
+		$('.viewsettings').change( function(){
+			$.post( OC.generateUrl('apps/calendar/calendarsettingssaveuserview'), {
+				'checked' : $(this).is(':checked'),
+				'name' : $(this).attr('name')
+			}, function(jsondata){
+				if(jsondata.status == 'success'){
+					Calendar.calendarConfig['userconfig'][jsondata.data.name]= jsondata.data.checked;
+					if(jsondata.data.checked === 'true'){
+						$('.view button[data-action="'+jsondata.data.name+'"]').show();
+					}else{
+						$('.view button[data-action="'+jsondata.data.name+'"]').hide();
+					}
+				}
+				//OC.msg.finishedSaving('.msgTzd', jsondata);
+			});
+			return false;
+		});
 		
 		$('#timeformat').chosen();
 		$('#firstday').chosen();

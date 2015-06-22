@@ -68,6 +68,15 @@ class CalendarSettingsController extends Controller {
 			}
 		}
 		
+		
+		if ($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'userconfig')) {	
+			$userConfig = json_decode($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'userconfig'));
+		}else{
+			//Guest Config Public Page	
+			$userConfig='{"agendaDay":"true","agendaThreeDays":"false","agendaWorkWeek":"false","agendaWeek":"true","month":"true","year":"false","list":"false"}';
+			$userConfig = json_decode($userConfig);
+		}
+		
 		$params =[
 			'timezone' => $this -> configInfo -> getUserValue($this -> userId,'calendar','timezone',''),
 			'timezones' => \DateTimeZone::listIdentifiers(),
@@ -78,6 +87,7 @@ class CalendarSettingsController extends Controller {
 			'timezonedetection' => $this -> configInfo -> getUserValue($this -> userId,'calendar','timezonedetection'),
 			'firstday' => $this -> configInfo -> getUserValue($this -> userId,'calendar','firstday', 'mo'),
 			'allCalendarCached' => $allcached,
+			'userConfig' => $userConfig
 		];	
 			
 		$response = new TemplateResponse('calendar', 'settings', $params, '');
@@ -153,6 +163,13 @@ class CalendarSettingsController extends Controller {
 				'textColor' => 'white',
 				'editable' => 'false');
 				
+		if ($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'userconfig')) {	
+			$userConfig = json_decode($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'userconfig'));
+		}else{
+			//Guest Config Public Page	
+			$userConfig='{"agendaDay":"true","agendaThreeDays":"false","agendaWorkWeek":"false","agendaWeek":"true","month":"true","year":"false","list":"false"}';
+			$userConfig = json_decode($userConfig);
+		}
 		
     	$params = [
 			'status' => 'success',
@@ -166,6 +183,8 @@ class CalendarSettingsController extends Controller {
 			'calendarcolors'=> $calendarInfo,
 			'mycalendars'=> $myCalendars,
 			'myRefreshChecker'=> $myRefreshChecker,
+			'choosenCalendar' => $this -> configInfo -> getUserValue($this->userId, 'calendar', 'choosencalendar'),
+			'userConfig' => $userConfig,
 		];
 		
 		$response = new JSONResponse($params);
@@ -173,6 +192,35 @@ class CalendarSettingsController extends Controller {
 		return $response;
     }
 	
+	/**
+	 * @NoAdminRequired
+	 * 
+	 */
+	public function saveUserViewSettings() {
+		$checked = $this -> params('checked');
+		$pName = $this -> params('name');	
+		
+		
+		$userConfig = '';
+		if(!$this -> configInfo  -> getUserValue($this -> userId, 'calendar', 'userconfig')){
+			$userConfig='{"agendaDay":"true","agendaThreeDays":"false","agendaWorkWeek":"false","agendaWeek":"true","month":"true","year":"false","list":"false"}';
+			$userConfig = json_decode($userConfig);
+		}else{
+			$userConfig = json_decode($this -> configInfo  -> getUserValue($this -> userId, 'calendar', 'userconfig'));
+		}
+
+		$userConfig ->$pName = $checked;
+		
+		$this -> configInfo -> setUserValue($this -> userId, 'calendar', 'userconfig',json_encode($userConfig));
+		$data = [
+			'status' => 'success',
+			'data' => ['name' => $pName,'checked' => $checked],
+			'msg' => 'Saving success!'
+		];	
+		$response = new JSONResponse();
+		$response -> setData($data);
+		return $response;
+	}
 	
 	/**
      * @NoAdminRequired

@@ -244,6 +244,7 @@ class CalendarController extends Controller {
 		$params = [
 				'status' => 'success',
 				'eventSource' => CalendarCalendar::getEventSourceInfo($calendar),
+				'calid' => $calendarid,
 				'countEvents'=> false,
 				'page' => $calendarRow->render(),
 			];
@@ -490,12 +491,14 @@ class CalendarController extends Controller {
 				$outputAbo='';
 				$output='<div id="leftcontentInner">
 							<div class="view navigation-left button-group" style="float:none;">
-							<button class="button" data-action="agendaDay" data-view="true" data-weekends="true">'.$this->l10n->t('Day').'</button>
-							<button class="button" data-action="agendaThreeDays" data-view="true" data-weekends="true">'.$this->l10n->t('3-Days').'</button>	
-							<button class="button" data-action="agendaWorkWeek" data-view="true" data-weekends="false">'.$this->l10n->t('W-Week').'</button>			
-							<button class="button" data-action="agendaWeek" data-view="true" data-weekends="true">'.$this->l10n->t('Week').'</button>
-						  <button class="button" data-action="month" data-view="true" data-weekends="true">'.$this->l10n->t('Month').'</button>
-						   <button class="button"data-action="list" data-view="true" data-weekends="true"><i class="ioc ioc-list" title="'.$this->l10n->t('List').'"></i></button>
+							<button class="button viewaction" data-action="agendaDay" data-view="true" data-weekends="true">'.$this->l10n->t('Day').'</button>
+							<button class="button viewaction" data-action="agendaThreeDays" data-view="true" data-weekends="true">'.$this->l10n->t('3-Days').'</button>	
+							<button class="button viewaction" data-action="agendaWorkWeek" data-view="true" data-weekends="false">'.$this->l10n->t('W-Week').'</button>			
+							<button class="button viewaction" data-action="agendaWeek" data-view="true" data-weekends="true">'.$this->l10n->t('Week').'</button>
+						  <button class="button viewaction" data-action="month" data-view="true" data-weekends="true">'.$this->l10n->t('Month').'</button>
+						   <button class="button viewaction" data-action="list" data-view="true" data-weekends="true"><i class="ioc ioc-list" title="'.$this->l10n->t('List').'"></i></button>
+						   	<button class="button viewaction" data-action="year" data-view="true" data-weekends="true">'.$this->l10n->t('Year').'</button>
+						   
 						   <br />
 						   <button class="button" data-action="prev" data-view="false" data-weekends="false"><i class="ioc ioc-previous"></i></button>		
 						  <button class="button"  data-action="next" data-view="false" data-weekends="false"><i class="ioc ioc-next"></i></button>	
@@ -550,7 +553,7 @@ class CalendarController extends Controller {
 					         	}
 								
 								$rightsOutput=CalendarCalendar::permissionReader($calInfo['permissions']);
-								$shareInfo='<i style="float:right;" class="toolTip ioc ioc-info-1" title="'.$notice.(string) $this->l10n->t('by') . ' ' .$calInfo['userid'].'<br />('.$rightsOutput.')"></i>';
+								$shareInfo='<i style="float:right;" class="toolTip ioc ioc-info" title="'.$notice.(string) $this->l10n->t('by') . ' ' .$calInfo['userid'].'<br />('.$rightsOutput.')"></i>';
 							}
 							
 							$calShare=$calInfo['active'];
@@ -581,7 +584,7 @@ class CalendarController extends Controller {
 				   }
 				   $output.='</ul>'.$outputAbo.'<br />
 				   <br style="clear:both;"><br />
-				   <h3 data-id="lCategory" style=" cursor:pointer; line-height:24px;" ><label id="showCategory"><i style="font-size:22px;" class="ioc ioc-chevron-down ioc-rotate-270"></i>&nbsp;<i class="ioc ioc-tags"></i>&nbsp;'.$this->l10n->t('Tags').'</label> 
+				   <h3 data-id="lCategory" style=" cursor:pointer; line-height:24px;" ><label id="showCategory"><i style="font-size:22px;" class="ioc ioc-angle-down ioc-rotate-270"></i>&nbsp;<i class="ioc ioc-tags"></i>&nbsp;'.$this->l10n->t('Tags').'</label> 
 				   	 	
 				   
 				   </h3>
@@ -609,7 +612,8 @@ class CalendarController extends Controller {
 			case 'month':
 			case 'agendaWorkWeek':
 			case 'agendaThreeDays':
-			case 'fourWeeks':					
+			case 'fourWeeks':
+			case 'year':						
 			case 'list':
 				$this->configInfo->setUserValue($this -> userId, 'calendar', 'currentview', $view);
 				break;

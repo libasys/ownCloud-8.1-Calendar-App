@@ -46,7 +46,7 @@ footer{
 	position:relative;
 	float:left;
 	width:25%;
-	display:block;
+	display:none;
 	
 }
 .centerControls{
@@ -62,7 +62,7 @@ footer{
 	float:left;
 	min-width:23%;
 	right:0;
-	display:inline-block;
+	display:none;
 	text-align:right;
 	
 }
@@ -92,6 +92,12 @@ footer{
 	border-radius:8px;
 	border:1px solid #ccc;
 	padding:5px;
+}
+#header{
+	display:none;
+}
+footer{
+	display:none;
 }
 .header-right{
 	

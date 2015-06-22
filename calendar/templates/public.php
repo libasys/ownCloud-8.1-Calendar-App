@@ -67,9 +67,7 @@
 </div>
 
 	<div id="fullcalendar" data-token="<?php p($_['sharingToken'])?>"></div>
-	<div id="dialog_message" style="width:0;height:0;top:0;left:0;display:none;"></div>	
-<div id="dialog" style="width:0;height:0;top:0;left:0;display:none;"></div>
-<div id="dialog_holder" style="width:0;height:0;top:0;left:0;display:none;"></div>
+
 	<footer>
 		<p class="info">
 			<?php print_unescaped($theme->getLongFooter()); ?>

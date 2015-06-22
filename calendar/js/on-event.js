@@ -38,23 +38,26 @@ $(document).on('click', '#allday_checkbox', function () {
 	Calendar.UI.lockTime();
 });
 
-
+/*
 $(document).on('click', '#submitNewEvent', function () {
 	Calendar.UI.validateEventForm($(this).data('link'));
 });
+
+$(document).on('click', '#editEvent-submit', function () {
+	Calendar.UI.validateEventForm($(this).data('link'));
+});*/
 
 $(document).on('click', '#allday_checkbox', function () {
 	Calendar.UI.lockTime();
 });
 
-$(document).on('click', '#editEvent-submit', function () {
-	Calendar.UI.validateEventForm($(this).data('link'));
-});
+
 
 /**NEW**/
+/*
 $(document).on('click', '#editEvent-delete-single', function () {
 	Calendar.UI.submitDeleteEventSingleForm($(this).data('link'));
-});
+});*/
 
 $(document).on('click', '#editEvent-export', function () {
 	window.location = $(this).data('link');

@@ -11,8 +11,8 @@
 		<input type="hidden" id="haveshareaction" value="0" />
 <?php print_unescaped($this->inc("part.eventform")); ?>
 </form>
-	<br style="clear: both;" /><br />
-	<div id="actions" style="float:left;border-top:1px solid #bbb;width:100%;padding-top:5px;padding-bottom:5px;">
+	<br style="clear: both;" />
+	<div id="actions" style="float:left;width:100%;padding-top:10px;padding-bottom:5px;">
 		
 		<div  class="button-group first" style="float:left;">
 		 <?php 
@@ -25,7 +25,8 @@
 		<?php if($_['permissions'] & OCP\PERMISSION_DELETE) { ?>
 		  	<button id="editEvent-delete" class="button"  data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteEvent')) ?>"><?php p($DeleteButtonTitle);?> <i class="ioc ioc-ban text-danger"></i></button> 
 		   <?php if($_['addSingleDeleteButton'] ) { ?>
-			<button id="editEvent-delete-single" class="button" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteSingleRepeatingEvent')) ?>"><?php p($l->t("Event"));?> <i class="ioc ioc-ban text-danger"></i></button> 
+				<button class="button" id="editEvent-delete-single" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteSingleRepeatingEvent')) ?>"><?php p($l->t("Event"));?> <i class="ioc ioc-ban text-danger"></i></button> 
+
 			<?php } ?>
 		<?php } ?>
 			<button id="editEvent-export" class="button" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.export.exportEvents')) ?>?eventid=<?php p($_['eventid']) ?>"><?php p($l->t("Export"));?> <i style="color:#000;" class="ioc ioc-export"></i></button> 

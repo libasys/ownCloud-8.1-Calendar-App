@@ -3,6 +3,8 @@
 <table width="100%">
 		<tr>
 			<td>
+				<input type="hidden" name="viewstart" id="viewstart" value="" />
+				<input type="hidden" name="viewend" id="viewend" value="" />
 				<input type="hidden" name="categories" id="categories" value="<?php p($_['categories']); ?>" />
 				<input type="hidden" name="calendar" id="hiddenCalSelection" value="<?php p($_['calendar']); ?>">
 				<input type="text" style="width:85%; font-size:16px; color:#555;padding:5px;"  placeholder="<?php p($l->t("Title of the Event"));?>" value="<?php p(isset($_['title']) ? $_['title'] : '') ?>" maxlength="100" name="title" id="event-title" autofocus="autofocus"/>
@@ -31,7 +33,7 @@
 		</tr>
 		<tr>
 			<td>
-			<input type="text" style="width:85%;font-size:14px;font-family:Arial, fontello;float:left;"  placeholder="&#xe831; <?php p($l->t("Location of the Event"));?>" value="<?php p(isset($_['location']) ? $_['location'] : '') ?>" maxlength="100"  name="location" />
+			<input type="text" style="width:85%;font-size:14px;font-family:Arial, fontello;float:left;"  placeholder="&#xe852; <?php p($l->t("Location of the Event"));?>" value="<?php p(isset($_['location']) ? $_['location'] : '') ?>" maxlength="100"  name="location" />
              <?php  if(isset($_['eventid']) && $_['eventid'] !='new'){
              		 if($_['permissions'] & OCP\PERMISSION_SHARE && $_['isShareApi'] === 'yes') { ?>
 		
@@ -188,9 +190,9 @@
 				</div>
 				<h3><?php p($l->t("Notice"));?><span class="lnotice ioc ioc-checkmark"></span>, <?php p($l->t("Tags"));?><span class="ltag ioc ioc-checkmark"></span> <?php p($l->t("or"));?> <?php p($l->t("URL"));?><span class="lurl ioc ioc-checkmark"></span> <?php p($l->t("Add"));?></h3>
 				<div>
-					<input type="text" style="font-family:Arial, fontello;width:100%;font-size:14px;" size="200" placeholder="&#xe82e; <?php p($l->t("URL"));?>" value="<?php p(isset($_['link']) ? $_['link'] : '') ?>" maxlength="200"  name="link" />
+					<input type="text" style="font-family:Arial, fontello;width:100%;font-size:14px;" size="200" placeholder="&#xe84f; <?php p($l->t("URL"));?>" value="<?php p(isset($_['link']) ? $_['link'] : '') ?>" maxlength="200"  name="link" />
 					<br />
-					<textarea style="width:100%;height: 30px;font-family:Arial, fontello;font-size:14px;"  placeholder="&#xe817; <?php p($l->t("Description of the Event"));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
+					<textarea style="width:100%;height: 30px;font-family:Arial, fontello;font-size:14px;"  placeholder="&#xe845; <?php p($l->t("Description of the Event"));?>" name="description"><?php p(isset($_['description']) ? $_['description'] : '') ?></textarea>
 					<br />
 					<ul id="tagmanager" style="width:100%;line-height:20px;margin-top:6px;margin-bottom:5px;"></ul>
 				</div>

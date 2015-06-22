@@ -36,7 +36,26 @@ class Provider extends \OCP\Search\Provider {
 		$allowedCommands=array('#ra'=>1,'#dt'=>1);	
 			
 		$calendars = \OCA\Calendar\Calendar::allCalendars(\OCP\USER::getUser(), true);
-		if(count($calendars)==0 || !\OCP\App::isEnabled('calendar')) {
+		$activeCalendars = '';
+		$config = \OC::$server->getConfig();	
+		
+			foreach($calendars as $calendar) {
+				$isAktiv= $calendar['active'];
+				
+				if($config -> getUserValue(\OCP\USER::getUser(), 'calendar', 'calendar_'.$calendar['id'])!=''){
+				    $isAktiv=$config -> getUserValue(\OCP\USER::getUser(), 'calendar', 'calendar_'.$calendar['id']);
+			    }	
+				if(!array_key_exists('active', $calendar)){
+					$isAktiv= 1;
+				}
+				if($isAktiv == 1 && (int) $calendar['issubscribe'] === 0) {
+					$activeCalendars[] = $calendar;
+				}
+			}
+		
+		
+		
+		if(count($activeCalendars)==0 || !\OCP\App::isEnabled('calendar')) {
 			//return false;
 		}
 		$results=array();
@@ -57,12 +76,14 @@ class Provider extends \OCP\Search\Provider {
 			//\OCP\Util::writeLog('calendar','VALID DATE FOUND', \OCP\Util::DEBUG);
 		}
 		
-		foreach($calendars as $calendar) {
+		foreach($activeCalendars as $calendar) {
 			$objects = \OCA\Calendar\Object::all($calendar['id']);
 			foreach($objects as $object) {
 				if($object['objecttype']!='VEVENT') {
 					continue;
 				}
+				
+				
 				$searchAdvanced=false;
 	
 					if($isDate==true && strlen($query)>=5){
@@ -94,6 +115,16 @@ class Provider extends \OCP\Search\Provider {
 				if(substr_count(strtolower($object['summary']), strtolower($query)) > 0 || $searchAdvanced==true) {
 					$calendardata =  \OCA\Calendar\VObject::parse($object['calendardata']);
 					$vevent = $calendardata->VEVENT;
+					if (\OCA\Calendar\Object::getowner($object['id']) !== \OCP\USER::getUser()) {
+						if (isset($vevent -> CLASS) && $vevent -> CLASS -> getValue() === 'CONFIDENTIAL') {
+							continue;
+						}
+						if (isset($vevent -> CLASS) && ($vevent -> CLASS -> getValue() === 'PRIVATE' || $vevent -> CLASS -> getValue() === '')) {
+							continue;
+						}
+					}
+					
+					
 					$dtstart = $vevent->DTSTART;
 					$dtend = \OCA\Calendar\Object::getDTEndFromVEvent($vevent);
 					$start_dt = $dtstart->getDateTime();

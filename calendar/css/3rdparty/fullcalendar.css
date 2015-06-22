@@ -617,3 +617,59 @@ table.fc-border-separate {
 	}
 	
 	
+
+/* year view */
+
+.fc-year-main-table {
+	border-spacing: 5px;
+	}
+.fc-year-main-table tr:hover{
+	background-color:transparent;
+}
+.fc-year-monthly-td {
+	text-align: center;
+	}
+
+.fc-year-month-separator {
+	width: 15px;
+	}
+
+.fc-year-monthly-footer {
+	}
+
+.fc-year-monthly-header {
+	border: thin solid #dddddd;
+	border-bottom: none;
+	}
+
+.fc-view-year .fc-event-inner {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	}
+
+.fc-year-monthly-name {
+	margin-top: 16px;
+	line-height: 24px;
+	}
+
+.fc-year-monthly-name.fc-first {
+	margin-top: 0;
+	}
+
+.fc-year-monthly-name a {
+	color: black;
+	font-size: 15px;
+	font-weight: bold;
+	text-decoration: none;
+	}
+
+.fc-year-main-table .fc-first {
+	border-left: none;
+}
+.fc-year-main-table .fc-widget-content.fc-last{
+	border-right:1px solid #E7E7DE;
+}
+
+.fc-year-main-table .fc-last {
+	/*border-right:1px solid red;*/
+}

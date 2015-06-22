@@ -70,6 +70,8 @@ class Import{
 	 * @brief var saves the userid
 	 */
 	private $userid;
+	
+	private $cache;
 
 	/*
 	 * public methods
@@ -86,6 +88,7 @@ class Import{
 		$this->ical = $ical;
 		$this->abscount = 0;
 		$this->count = 0;
+		$this->cache = \OC::$server->getCache();
 		//fix for multiple subcalendars
 		if(substr_count($ical, 'BEGIN:VCALENDAR') > 1){
 			$ical = substr_replace($ical, '**##++FancyReplacementForFirstOccurrenceOfTheSearchPattern++##**', 0, 15);
@@ -146,7 +149,7 @@ class Import{
 			}
 			$this->updateProgress(intval(($this->abscount / $numofcomponents)*100));
 		}
-		\OC\Cache::remove($this->progresskey);
+		$this->cache->remove($this->progresskey);
 		return true;
 	}
 
@@ -371,7 +374,7 @@ class Import{
 	private function updateProgress($percentage) {
 		$this->progress = $percentage;
 		if($this->cacheprogress) {
-			\OC\Cache::set($this->progresskey, $this->progress, 300);
+			$this->cache->set($this->progresskey, $this->progress, 300);
 		}
 		return true;
 	}

@@ -69,8 +69,8 @@ class App {
 
 	public static function validateItemSource($itemSource,$itemType){
 	
-		if(stristr($itemSource,$itemType)){
-			$iTempItemSource=explode($itemType,$itemSource);
+		if(stristr($itemSource, $itemType)){
+			$iTempItemSource = explode($itemType,$itemSource);
 			return (int)$iTempItemSource[1];
 		}else{
 			return $itemSource;
@@ -102,15 +102,12 @@ class App {
 	 * @return mixed - bool / array
 	 */
 	public static function getEventObject($id, $security = true, $shared = false) {
-		$event = Object::find($id);
 		if ($shared === true || $security === true) {
-			$permissions = self::getPermissions($id, self::EVENT);
-			\OCP\Util::writeLog('contacts', __METHOD__ . ' id: ' . $id . ', permissions: ' . $permissions, \OCP\Util::DEBUG);
 			if (self::getPermissions($id, self::EVENT)) {
-				return $event;
+				return  Object::find($id);
 			}
 		} else {
-			return $event;
+			return  Object::find($id);
 		}
 
 		return false;
@@ -568,7 +565,8 @@ class App {
 			
 			$object = Object::find($id);
 			$cal = Calendar::find($object['calendarid']);
-
+			
+	
 			if ($cal['userid'] == \OCP\USER::getUser()) {
 				if ($cal['issubscribe']) {
 					$permissions_all = \OCP\PERMISSION_READ;
@@ -590,8 +588,8 @@ class App {
 				}
 				
 				if(!\OCP\USER::isLoggedIn()){
+					//\OCP\Util::writeLog('calendar', __METHOD__ . ' id: ' . $id . ', NOT LOGGED IN: ', \OCP\Util::DEBUG);		
 					$sharedByLinkCalendar = \OCP\Share::getItemSharedWithByLink('calendar', 'calendar-'.$object['calendarid'], $cal['userid']);
-	
 					if ($sharedByLinkCalendar) {
 						$calendar_permissions = $sharedByLinkCalendar['permissions'];
 						$event_permissions = 0;

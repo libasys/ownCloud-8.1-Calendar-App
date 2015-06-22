@@ -34,13 +34,14 @@ use \OCP\AppFramework\Http\TemplateResponse;
 use \OCP\IRequest;
 use \OCP\Share;
 use \OCP\IConfig;
+use \OCP\ICache;
 
 class ImportController extends Controller {
 
 	private $userId;
 	private $l10n;
 	private $configInfo;
-
+	
 	public function __construct($appName, IRequest $request, $userId, $l10n, IConfig $settings) {
 		parent::__construct($appName, $request);
 		$this -> userId = $userId;
@@ -115,9 +116,10 @@ class ImportController extends Controller {
 		
 		
 		if (isset($pProgresskey) && isset($pGetprogress)) {
+				
 				$params = [
 					'status' => 'success',
-					'percent' => \OC\Cache::get($pProgresskey),
+					'percent' => \OC::$server->getCache()->get($pProgresskey),
 				];
 				$response = new JSONResponse($params);
 				return $response;	

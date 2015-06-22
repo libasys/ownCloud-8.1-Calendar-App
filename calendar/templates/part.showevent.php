@@ -2,6 +2,7 @@
 	<input type="hidden" id="eventid" name="eventid" value="<?php p($_['eventid']) ?>">
 	<input type="hidden" name="lastmodified" value="<?php p($_['lastmodified']) ?>">
 	<input type="hidden" name="choosendate" id="choosendate" value="<?php p($_['choosendate']) ?>">
+	<input type="hidden" name="showdate" id="showdate" value="<?php p($_['showdate']) ?>">
 	<input type="hidden" name="perm" id="perm" value="<?php p($_['permissions']) ?>">
 	<input type="hidden" name="calendar" id="shareCalid" value="<?php p($_['calendar_options'][0]['id']) ?>">
 	<input type="hidden" name="sRuleRequest" id="sRuleRequest" value="<?php p($_['repeat_rules']); ?>" />
@@ -160,7 +161,7 @@
 	<?php if($_['eventid'] != 'new') { print_unescaped($this->inc('part.subscriber')); } ?>
 </div>
 -->
-<div id="actions" style="float:left;border-top:1px solid #bbb;width:100%;padding-top:4px;">
+<div id="actions" style="float:left;width:100%;padding-top:5px;">
 <div  class="button-group" style="width:46.5%; float:left;">
     <?php 
 		       $DeleteButtonTitle=$l->t("Delete");

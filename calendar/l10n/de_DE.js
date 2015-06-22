@@ -150,6 +150,7 @@ OC.L10N.register(
  "W-Week" : "A-Woche",
 "List" : "Liste",
 "Today" : "Heute",
+"Year" : "Jahr",
 "Settings" : "Einstellungen",
 "Your calendars" : "Ihre Kalender",
 "CalDav Link" : "CalDAV-Link",
