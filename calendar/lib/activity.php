@@ -25,6 +25,8 @@ namespace OCA\Calendar;
 class Activity implements \OCP\Activity\IExtension {
 
 	const FILTER_CALENDAR = 'calendar';
+	const FILTER_SHARECALENDAR = 'sharescal';
+	const FILTER_UNSHARECALENDAR = 'unsharescal';
 	
 	const TYPE_SHARED_EVENT_CREATED = 'shared_event_created';
 	const TYPE_SHARED_EVENT_EDITED = 'shared_event_edited';
@@ -291,17 +293,17 @@ class Activity implements \OCP\Activity\IExtension {
 					self::FILTER_CALENDAR => [
 					'id' => self::FILTER_CALENDAR,
 					'name' => $l->t('calendar'),
-					'url' =>\OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => 'calendar')),
+					'url' =>\OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => self::FILTER_CALENDAR)),
 					],
-					'sharescal' => [
-					'id' => 'sharescal',
-					'name' => $l->t('Sharees').' '.$l->t('calendar'),
-					'url' => \OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => 'sharescal')),
+					self::FILTER_SHARECALENDAR => [
+					'id' => self::FILTER_SHARECALENDAR,
+					'name' => $l->t('Sharees Calendar'),
+					'url' => \OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => self::FILTER_SHARECALENDAR)),
 					],
-					'unsharescal' => [
-					'id' => 'unsharescal',
-					'name' => 'Aufgehobene '.$l->t('Sharees').' '.$l->t('calendar'),
-					'url' => \OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => 'unsharescal')),
+					self::FILTER_UNSHARECALENDAR => [
+					'id' => self::FILTER_UNSHARECALENDAR,
+					'name' => $l->t('Suspendend Sharees Calendar'),
+					'url' => \OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => self::FILTER_UNSHARECALENDAR)),
 					],
 				],
 				'top' => [],
@@ -315,8 +317,8 @@ class Activity implements \OCP\Activity\IExtension {
 	 * @return boolean
 	 */
 	public function isFilterValid($filterValue) {
-		//return $filterValue === self::FILTER_CALENDAR;
-		return true;
+		return $filterValue === self::FILTER_CALENDAR || $filterValue === self::FILTER_SHARECALENDAR || $filterValue === self::FILTER_UNSHARECALENDAR;
+		//return true;
 	}
 
 	/**

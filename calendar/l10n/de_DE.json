@@ -294,6 +294,8 @@
     "VEVENT" : "Termin",
     "readonly" : "lesen",
      "full access" : "Vollzugriff",
+     "Sharees Calendar" : "Freigaben Kalender",
+     "Suspendend Sharees Calendar" : "Aufgehobene Freigaben Kalender",
     "Add Reminder, Repeat" : "Erinnerung, Wiederholung hinzufügen",
     "Notice" : "Notizen",
     "Tags" : "Schlagwörter",
