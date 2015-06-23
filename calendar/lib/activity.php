@@ -331,14 +331,14 @@ class Activity implements \OCP\Activity\IExtension {
 	 * @return array|false
 	 */
 	public function getQueryForFilter($filter) {
-		if ($filter === 'calendar') {
-			return array('`app` = ?', array('calendar'));
+		if ($filter === self::FILTER_CALENDAR) {
+			return ['`app` = ?', ['calendar']];
 		}
-		if ($filter === 'sharescal') {
-			return array('`app` = ? AND `type` = ?', array('calendar','shared_calendar'));
+		if ($filter === self::FILTER_SHARECALENDAR) {
+			return ['`app` = ? AND `type` = ?',['calendar', self::TYPE_SHARED_CALENDAR]];
 		}
-		if ($filter === 'unsharescal') {
-			return array('`app` = ? AND `type` = ?', array('calendar','unshared_calendar'));
+		if ($filter === self::FILTER_UNSHARECALENDAR) {
+			return ['`app` = ? AND `type` = ?', ['calendar', self::TYPE_UNSHARED_CALENDAR]];
 		}
 
 		return false;
