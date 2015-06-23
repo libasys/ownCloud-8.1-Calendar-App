@@ -23,13 +23,13 @@
 		 ?> 
 		 	
 		<?php if($_['permissions'] & OCP\PERMISSION_DELETE) { ?>
-		  	<button id="editEvent-delete" class="button"  data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteEvent')) ?>"><?php p($DeleteButtonTitle);?> <i class="ioc ioc-ban text-danger"></i></button> 
+		  	<button id="editEvent-delete" class="button"  data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteEvent')) ?>"><?php p($DeleteButtonTitle);?> <i class="ioc ioc-block text-danger"></i></button> 
 		   <?php if($_['addSingleDeleteButton'] ) { ?>
-				<button class="button" id="editEvent-delete-single" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteSingleRepeatingEvent')) ?>"><?php p($l->t("Event"));?> <i class="ioc ioc-ban text-danger"></i></button> 
+				<button class="button" id="editEvent-delete-single" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteSingleRepeatingEvent')) ?>"><?php p($l->t("Event"));?> <i class="ioc ioc-block text-danger"></i></button> 
 
 			<?php } ?>
 		<?php } ?>
-			<button id="editEvent-export" class="button" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.export.exportEvents')) ?>?eventid=<?php p($_['eventid']) ?>"><?php p($l->t("Export"));?> <i style="color:#000;" class="ioc ioc-export"></i></button> 
+			<button id="editEvent-export" class="button" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.export.exportEvents')) ?>?eventid=<?php p($_['eventid']) ?>"><?php p($l->t("Export"));?> <i style="color:#000;" class="ioc ioc-download"></i></button> 
 
 		</div>
 		<div  class="button-group second" style="float:right;">

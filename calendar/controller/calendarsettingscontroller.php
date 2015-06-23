@@ -106,7 +106,7 @@ class CalendarSettingsController extends Controller {
    
 		$agendaTime ='hh:mm tt { - hh:mm tt}';
 		$defaultTime ='hh:mm tt';
-		if($this ->configInfo ->getUserValue($this -> userId, 'calendar', 'timeformat', '24') == '24'){
+		if($this ->configInfo ->getUserValue($this -> userId, 'calendar', 'timeformat', '24') === '24'){
 			$agendaTime ='HH:mm { - HH:mm}';
 			$defaultTime ='HH:mm';
 		}
@@ -131,13 +131,13 @@ class CalendarSettingsController extends Controller {
 		foreach($calendars as $calendar) {
 			$isAktiv= $calendar['active'];
 			
-			if($this ->configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendar['id'])!=''){
+			if($this ->configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendar['id']) !== ''){
 			    $isAktiv=$this ->configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendar['id']);
 		    }	
 			if(!array_key_exists('active', $calendar)){
 				$isAktiv= 1;
 			}
-			if($isAktiv == 1) {
+			if($isAktiv === 1) {
 				$eventSources[] = CalendarCalendar::getEventSourceInfo($calendar);
 				$calendarInfo[$calendar['id']]=[
 					'bgcolor'=>$calendar['calendarcolor'],
@@ -226,7 +226,7 @@ class CalendarSettingsController extends Controller {
      * @NoAdminRequired
      */
     public function getGuessTimeZoneUser() {
-    	$pTimezone= $this -> params('timezone');
+    	$pTimezone= (string)$this -> params('timezone');
 		
 		try {
 			$tz = new \DateTimeZone($pTimezone);
@@ -239,7 +239,7 @@ class CalendarSettingsController extends Controller {
 			return $response;
 		}
 		
-			if($pTimezone == $this -> configInfo -> getUserValue($this->userId, 'calendar', 'timezone')) {
+			if($pTimezone === $this -> configInfo -> getUserValue($this->userId, 'calendar', 'timezone')) {
 			$params = [
 				'status' => 'success',
 			];
@@ -289,12 +289,12 @@ class CalendarSettingsController extends Controller {
      */
     public function setTimeFormat() {
     	
-		$timeformat = $this -> params('timeformat');
+		$timeformat = (string) $this -> params('timeformat');
 		$this -> configInfo -> setUserValue($this -> userId,'calendar','timeformat',$timeformat);
 		
 		$agendaTime ='hh:mm tt { - hh:mm tt}';
 		$defaultTime ='hh:mm tt';
-		if($this ->configInfo ->getUserValue($this -> userId, 'calendar', 'timeformat', '24') == '24'){
+		if($this ->configInfo ->getUserValue($this -> userId, 'calendar', 'timeformat', '24') === '24'){
 			$agendaTime ='HH:mm { - HH:mm}';
 			$defaultTime ='HH:mm';
 		}
@@ -320,7 +320,7 @@ class CalendarSettingsController extends Controller {
     public function setFirstDay() {
     	
 		$firstday = $this -> params('firstday');
-		$this -> configInfo -> setUserValue($this -> userId,'calendar','firstday',$firstday);
+		$this -> configInfo -> setUserValue($this -> userId,'calendar','firstday', $firstday);
 		$firstDay = $this -> prepareFirstDay($firstday);
 		
 		$params = [
@@ -424,9 +424,9 @@ class CalendarSettingsController extends Controller {
      */
     public function timeZoneDectection() {
     	
-		$timezonedetection = $this -> params('timezonedetection');
+		$timezonedetection = (string) $this -> params('timezonedetection');
 		
-		if($timezonedetection == 'on'){
+		if($timezonedetection === 'on'){
 			$this -> configInfo -> setUserValue($this -> userId,'calendar','timezonedetection','true');
 		}else{
 			$this -> configInfo -> setUserValue($this -> userId,'calendar','timezonedetection','false');

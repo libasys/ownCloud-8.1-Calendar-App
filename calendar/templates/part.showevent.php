@@ -171,9 +171,9 @@
 		 ?> 
 
 	<?php if($_['permissions'] & OCP\PERMISSION_DELETE) { ?>
-		 <button class="button" id="showEvent-delete"  data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteEvent')) ?>"><?php p($DeleteButtonTitle);?> <i class="ioc ioc-ban text-danger"></i></button> 
+		 <button class="button" id="showEvent-delete"  data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteEvent')) ?>"><?php p($DeleteButtonTitle);?> <i class="ioc ioc-block text-danger"></i></button> 
 		    <?php if($_['addSingleDeleteButton'] ) { ?>
-				<button class="button" id="editEvent-delete-single" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteSingleRepeatingEvent')) ?>"><?php p($l->t("Event"));?> <i class="ioc ioc-ban text-danger"></i></button> 
+				<button class="button" id="editEvent-delete-single" data-link="<?php print_unescaped(\OC::$server->getURLGenerator()->linkToRoute('calendar.event.deleteSingleRepeatingEvent')) ?>"><?php p($l->t("Event"));?> <i class="ioc ioc-block text-danger"></i></button> 
 
 			<?php } ?>
 		<?php } ?> 

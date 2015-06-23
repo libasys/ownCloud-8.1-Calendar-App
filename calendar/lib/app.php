@@ -763,7 +763,10 @@ class App {
 			if (array_key_exists('bday', $event)) {
 				$bDay = $event['bday'];
 			}
-
+			$isEventShared = false;
+			if(isset($event['shared'])){
+				$isEventShared = $event['shared'];
+			}
 			$lastmodified = ($last_modified) ? $last_modified -> getDateTime() -> format('U') : 0;
 			$staticoutput = array(
 				'id' => (int)$event['id'],
@@ -772,7 +775,7 @@ class App {
 				'categories' => $vevent -> getAsArray('CATEGORIES'), 
 				'calendarid' => (int)$calid, 
 				'bday' => $bDay, 
-				'shared' => $event['shared'], 
+				'shared' => $isEventShared, 
 				'privat' => $event['privat'], 
 				'isrepeating' => false, 
 				'isalarm' => $event['isalarm'], 

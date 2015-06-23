@@ -302,9 +302,9 @@ class Calendar{
 	 */
 	public static function setCalendarActive($id,$active) {
 			
-		if($id!='birthday_'. \OCP\User::getUser()){	
+		if($id !== 'birthday_'. \OCP\User::getUser()){	
 			$calendar = self::find($id);
-			if ($calendar['userid'] != \OCP\User::getUser()) {
+			if ($calendar['userid'] !== \OCP\User::getUser()) {
 				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar', 'calendar-'.$id);
 				
 				if($sharedCalendar){

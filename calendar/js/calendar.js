@@ -333,40 +333,40 @@ var Calendar = {
 		getReminderonSubmit : function() {
 			var sAdvMode = $('#reminderAdvanced option:selected').val();
 			var sResult = '';
-			if (sAdvMode == 'DISPLAY') {
+			if (sAdvMode === 'DISPLAY') {
 				var sTimeMode = $('#remindertimeselect option:selected').val();
 				//-PT5M
 				var rTimeSelect = $('#remindertimeinput').val();
 
-				if (sTimeMode != 'ondate' && (Math.floor(rTimeSelect) == rTimeSelect && $.isNumeric(rTimeSelect))) {
+				if (sTimeMode !== 'ondate' && (Math.floor(rTimeSelect) == rTimeSelect && $.isNumeric(rTimeSelect))) {
 					var sTimeInput = $('#remindertimeinput').val();
-					if (sTimeMode == 'minutesbefore') {
+					if (sTimeMode === 'minutesbefore') {
 						sResult = '-PT' + sTimeInput + 'M';
 					}
 					if (sTimeMode == 'hoursbefore') {
 						sResult = '-PT' + sTimeInput + 'H';
 					}
-					if (sTimeMode == 'daysbefore') {
+					if (sTimeMode === 'daysbefore') {
 						sResult = '-PT' + sTimeInput + 'D';
 					}
-					if (sTimeMode == 'weeksbefore') {
+					if (sTimeMode === 'weeksbefore') {
 						sResult = '-PT' + sTimeInput + 'W';
 					}
-					if (sTimeMode == 'minutesafter') {
+					if (sTimeMode === 'minutesafter') {
 						sResult = '+PT' + sTimeInput + 'M';
 					}
-					if (sTimeMode == 'hoursafter') {
+					if (sTimeMode === 'hoursafter') {
 						sResult = '+PT' + sTimeInput + 'H';
 					}
-					if (sTimeMode == 'daysafter') {
+					if (sTimeMode === 'daysafter') {
 						sResult = '+PT' + sTimeInput + 'D';
 					}
-					if (sTimeMode == 'weeksafter') {
+					if (sTimeMode === 'weeksafter') {
 						sResult = '+PT' + sTimeInput + 'W';
 					}
 					sResult = 'TRIGGER:' + sResult;
 				}
-				if (sTimeMode == 'ondate' && $('#reminderdate').val() != '') {
+				if (sTimeMode === 'ondate' && $('#reminderdate').val() !== '') {
 					//20140416T065000Z
 					var dateTuple = $('#reminderdate').val().split('-');
 					var timeTuple = $('#remindertime').val().split(':');
@@ -382,12 +382,12 @@ var Calendar = {
 
 					sResult = 'TRIGGER;VALUE=DATE-TIME:' + sDate;
 				}
-				if (sResult != '') {
+				if (sResult !== '') {
 					$("#sReminderRequest").val(sResult);
 					var sReader = Calendar.Util.reminderToText(sResult);
 					$('#reminderoutput').text(sReader);
 					$('#lReminder').html(' <i style="font-size:14px;" class="ioc ioc-clock"></i> '+sReader).show();
-
+				
 				} else {
 					Calendar.UI.reminder('reminderreset');
 					alert('Wrong Input!');
@@ -1278,11 +1278,11 @@ var Calendar = {
 			
 			
 			var sReminderReader = '';
-			$('.sReminderRequest').each(function(i, el) {
+			$('input.sReminderRequest').each(function(i, el) {
 				sRead = Calendar.Util.reminderToText($(this).val());
-				if (sReminderReader == '')
+				if (sReminderReader == ''){
 					sReminderReader = sRead;
-				else {
+				}else {
 					sReminderReader += '<br />' + sRead;
 				}
 			});
@@ -1417,23 +1417,23 @@ var Calendar = {
 					$("#lRrule").html('<i style="font-size:12px;" class="ioc ioc-repeat"></i> '+sRule);
 					$('#linfoRepeatReminder').hide();
 				}
-
+				
 				var sReminder = Calendar.Util.reminderToText($("#sReminderRequest").val());
 				
-				if (sReminder != ''){
+				if (sReminder !== false && sReminder !== ''){
 					$("#reminderoutput").text(sReminder);
 					$("#lReminder").html('<i style="font-size:14px;" class="ioc ioc-clock"></i> '+sReminder);
 					$('#linfoRepeatReminder').hide();
 				}
 				
 				$('#accordion span.ioc-checkmark').hide();
-				if($('#event_form input[name="link"]').val() != ''){
+				if($('#event_form input[name="link"]').val() !== ''){
 					$('#accordion span.lurl').show();
 				}
-				if($('#event_form textarea[name="description"]').val() != ''){
+				if($('#event_form textarea[name="description"]').val() !== ''){
 					$('#accordion span.lnotice').show();
 				}
-				if($('#event_form input[name="categories"]').val() != ''){
+				if($('#event_form input[name="categories"]').val() !== ''){
 					$('#accordion span.ltag').show();
 				}
 				
@@ -2385,7 +2385,7 @@ var Calendar = {
 			if (task == 'init') {
 				$('#remCancel').on('click', function() {
 					$('#showOwnReminderDev').hide();
-					if ($('#submitNewEvent').length != 0) {
+					if ($('#submitNewEvent').length !== 0) {
 						Calendar.UI.reminder('reminderreset');
 
 					}
@@ -2404,7 +2404,7 @@ var Calendar = {
 				Calendar.UI.reminder('reminder');
 				Calendar.UI.reminder('remindertime');
 			}
-			if (task == 'reminderreset') {
+			if (task === 'reminderreset') {
 				var sReminderSel = '#sReminderSelect.combobox';
 				$(sReminderSel + ' li .colCal').removeClass('isSelectedCheckbox');
 				$(sReminderSel + ' li').removeClass('isSelected');
@@ -2417,27 +2417,27 @@ var Calendar = {
 				$(sReminderSel + ' li[data-id=none]').find('.colCal').addClass('isSelectedCheckbox');
 			}
 
-			if (task == 'reminder') {
+			if (task === 'reminder') {
 				$('.advancedReminder').css('display', 'none');
 
-				if ($('#reminderAdvanced option:selected').val() == 'DISPLAY') {
+				if ($('#reminderAdvanced option:selected').val() === 'DISPLAY') {
 
 					$('#reminderemailinputTable').css('display', 'none');
 					$('#reminderTable').css('display', 'block');
 					$('#remindertimeinput').css('display', 'block');
 				}
-				if ($('#reminderAdvanced option:selected').val() == 'EMAIL') {
+				if ($('#reminderAdvanced option:selected').val() === 'EMAIL') {
 					$('#reminderemailinputTable').css('display', 'block');
 					$('#reminderTable').css('display', 'block');
 					$('#remindertimeinput').css('display', 'block');
 				}
 			}
-			if (task == 'remindertime') {
+			if (task === 'remindertime') {
 
 				$('#reminderemailinputTable').css('display', 'none');
 				$('#reminderdateTable').css('display', 'none');
 				$('#remindertimeinput').css('display', 'block');
-				if ($('#remindertimeselect option:selected').val() == 'ondate') {
+				if ($('#remindertimeselect option:selected').val() === 'ondate') {
 					$('#reminderdateTable').css('display', 'block');
 					$('#remindertimeinput').css('display', 'none');
 				}

@@ -78,11 +78,11 @@ class CalendarController extends Controller {
 	 * @NoAdminRequired
 	 */
 	public function newCalendar() {
-		$calendarName = $this -> params('name');	
-		$externUriFile = $this -> params('externuri');
-		$pColor = $this -> params('color');
+		$calendarName = (string) $this -> params('name');	
+		$externUriFile = (string) $this -> params('externuri');
+		$pColor = (string) $this -> params('color');
 		
-		if(trim($calendarName) == '') {
+		if(trim($calendarName) === '') {
 			$params = [
 			'status' => 'error',
 			];
@@ -92,7 +92,7 @@ class CalendarController extends Controller {
 		
 		$calendars =CalendarCalendar::allCalendars($this->userId);
 		foreach($calendars as $cal) {
-			if($cal['displayname'] == $calendarName) {
+			if($cal['displayname'] === $calendarName) {
 				$params = [
 				'status' => 'error',
 				'message' => 'namenotavailable'
@@ -105,9 +105,10 @@ class CalendarController extends Controller {
 		$bError=false;
 		
 		$count=false;
-		if(trim($externUriFile) != '') {
+		
+		if(trim($externUriFile) !== '') {
 			$aResult=$this->addEventsFromSubscribedCalendar($externUriFile, $calendarName, $pColor);
-			if($aResult['isError'] == true){
+			if($aResult['isError'] === true){
 				$bError=true;
 			}
 			if($aResult['countEvents'] > 0){
@@ -115,7 +116,7 @@ class CalendarController extends Controller {
 			}
 			$calendarid = $aResult['calendarid'];
 		}else{
-		   $calendarid = CalendarCalendar::addCalendar($this -> userId, $calendarName, 'VEVENT,VTODO,VJOURNAL', null, 0, $pColor);
+		   $calendarid = CalendarCalendar::addCalendar($this->userId, $calendarName, 'VEVENT,VTODO,VJOURNAL', null, 0, $pColor);
 		   CalendarCalendar::setCalendarActive($calendarid, 1);
 		}
 		
@@ -123,7 +124,7 @@ class CalendarController extends Controller {
 			$calendar = CalendarCalendar::find($calendarid);
 			$isShareApiActive=\OC::$server->getAppConfig()->getValue('core', 'shareapi_enabled', 'yes');
 			
-			$paramsList =[
+			$paramsList = [
 				'calendar' => $calendar,
 				'shared' => false,
 				'isShareApi' => $isShareApiActive,
@@ -155,7 +156,7 @@ class CalendarController extends Controller {
 	 * @NoAdminRequired
 	 */
 	public function getEditFormCalendar() {
-		$calId = $this -> params('calendarid');
+		$calId = (int) $this -> params('calendarid');
 		
 		$calendar = CalendarApp::getCalendar($calId, true, true);
 		
@@ -176,13 +177,13 @@ class CalendarController extends Controller {
 	 */
 	public function editCalendar() {
 		
-		$calendarid = $this -> params('id');
-		$pName = $this -> params('name');
-		$pActive = $this -> params('active');
-		$pColor = $this -> params('color');	
+		$calendarid = (int) $this -> params('id');
+		$pName = (string) $this -> params('name');
+		$pActive = (int) $this -> params('active');
+		$pColor = (string) $this -> params('color');	
 			
 			
-		if(trim($pName) == '') {
+		if(trim($pName) === '') {
 				
 			$params = [
 				'status' => 'error',
@@ -196,10 +197,10 @@ class CalendarController extends Controller {
 		
 		$calendars = CalendarCalendar::allCalendars($this -> userId);
 		foreach($calendars as $cal) {
-			if($cal['userid'] != $this -> userId){
+			if($cal['userid'] !== $this -> userId){
 				continue;
 			}
-			if($cal['displayname'] == $pName && $cal['id'] != $calendarid) {
+			if($cal['displayname'] === $pName && $cal['id'] !== $calendarid) {
 				$params = [
 					'status' => 'error',
 					'message' => 'namenotavailable'
@@ -212,7 +213,7 @@ class CalendarController extends Controller {
 			
 		try {
 			CalendarCalendar::editCalendar($calendarid, strip_tags($pName), null, null, null, $pColor, null);
-			CalendarCalendar::setCalendarActive($calendarid,$pActive);
+			CalendarCalendar::setCalendarActive($calendarid, $pActive);
 		} catch(Exception $e) {
 				$params = [
 					'status' => 'error',
@@ -227,7 +228,7 @@ class CalendarController extends Controller {
 		$isShareApiActive=\OC::$server->getAppConfig()->getValue('core', 'shareapi_enabled', 'yes');
 		
 		$shared = false;
-		if ($calendar['userid'] != $this -> userId) {
+		if ($calendar['userid'] !== $this -> userId) {
 			$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calendarid);
 			if ($sharedCalendar && ($sharedCalendar['permissions'] & \OCP\PERMISSION_UPDATE)) {
 				$shared = true;
@@ -259,9 +260,9 @@ class CalendarController extends Controller {
 	 */
 	public function deleteCalendar() {
 			
-		$calId = $this -> params('calendarid');
+		$calId = (int) $this -> params('calendarid');
 		$del = CalendarCalendar::deleteCalendar($calId);
-		if($del == true) {
+		if($del === true) {
 			$params = [
 			'status' => 'success',
 			];
@@ -280,7 +281,7 @@ class CalendarController extends Controller {
 	 */
 	public function setMyActiveCalendar() {
 			
-		$calendarid = $this -> params('calendarid');
+		$calendarid = (int) $this -> params('calendarid');
 		$this -> configInfo -> setUserValue($this -> userId, 'calendar', 'choosencalendar', $calendarid);
 		
 		$params = [
@@ -301,11 +302,11 @@ class CalendarController extends Controller {
 		$pActive = intval($this -> params('active'));
 		
 		$calendar=false;
-		if($calendarid != 'birthday_'.$this -> userId) {
-			$calendar = CalendarApp::getCalendar($calendarid, true,true);
+		if($calendarid !== 'birthday_'.$this -> userId) {
+			$calendar = CalendarApp::getCalendar((int)$calendarid, true,true);
 		}
 		
-		if(!$calendar && $calendarid != 'birthday_'.$this -> userId) {
+		if(!$calendar && $calendarid !== 'birthday_'.$this -> userId) {
 			$params = [
 			'status' => 'error',
 			'message' => 'permission denied'
@@ -314,16 +315,16 @@ class CalendarController extends Controller {
 			return $response;
 		}
 		
-		CalendarCalendar::setCalendarActive($calendarid, $pActive);
+		CalendarCalendar::setCalendarActive($calendarid,(int) $pActive);
 		
-		$isAktiv=$pActive;
+		$isAktiv = $pActive;
 		
-		if($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendarid)!=''){
-			$isAktiv=$this -> configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendarid);
+		if($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendarid) !== ''){
+			$isAktiv = $this -> configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calendarid);
 		}
 		
 		$eventSource='';
-		if( $calendarid!='birthday_'.$this -> userId){
+		if( $calendarid !== 'birthday_'.$this -> userId){
 			$eventSource = CalendarCalendar::getEventSourceInfo($calendar);
 		}else{
 			\OCP\Util::emitHook('OC_Calendar', 'getSources', array('all'=>false,'sources' => &$eventSource));
@@ -344,7 +345,7 @@ class CalendarController extends Controller {
 	 * @NoAdminRequired
 	 */
 	public function refreshSubscribedCalendar() {
-		$calendarid = $this -> params('calendarid');	
+		$calendarid = (int) $this -> params('calendarid');	
 		
 		$calendar =CalendarApp::getCalendar($calendarid, false,false);
 		if(!$calendar) {
@@ -406,7 +407,7 @@ class CalendarController extends Controller {
 			$bExistUri=false;
 			$getProtocol=explode('://',$externUriFile);
 			
-			if(strtolower($getProtocol[0]) == 'webcal') {
+			if(strtolower($getProtocol[0]) === 'webcal') {
 				$newUrl='https://'.	$getProtocol[1];
 				$last_modified=$this -> stream_last_modified($newUrl);
 				if (is_null($last_modified)){
@@ -546,32 +547,32 @@ class CalendarController extends Controller {
 						 
 						  $notice='';
 						  $shareInfo ='';
-				         if($calInfo['userid'] != $this->userId){
+				         if($calInfo['userid'] !== $this->userId){
 				  	      	if($shareLink === ''){	
 					  	      	if(\OCP\Share::getItemSharedWithByLink('calendar','calendar-'.$calInfo['id'],$calInfo['userid'])){
 					         		$notice='<b>Notice</b><br>This calendar is also shared by Link for public!<br>';
 					         	}
 								
-								$rightsOutput=CalendarCalendar::permissionReader($calInfo['permissions']);
-								$shareInfo='<i style="float:right;" class="toolTip ioc ioc-info" title="'.$notice.(string) $this->l10n->t('by') . ' ' .$calInfo['userid'].'<br />('.$rightsOutput.')"></i>';
+								$rightsOutput = CalendarCalendar::permissionReader($calInfo['permissions']);
+								$shareInfo = '<i style="float:right;" class="toolTip ioc ioc-info" title="'.$notice.(string) $this->l10n->t('by') . ' ' .$calInfo['userid'].'<br />('.$rightsOutput.')"></i>';
 							}
 							
-							$calShare=$calInfo['active'];
-							if($this -> configInfo ->getUserValue($this->userId, 'calendar', 'calendar_'.$calInfo['id'])!=''){
+							$calShare = $calInfo['active'];
+							if($this -> configInfo ->getUserValue($this->userId, 'calendar', 'calendar_'.$calInfo['id']) !== ''){
 								$calShare= $this -> configInfo ->getUserValue($this->userId, 'calendar', 'calendar_'.$calInfo['id']);
 							}
 							$checked=$calShare ? ' checked="checked"' : '';
 							
 				  	        	
-				  	        $displayName='<span class="descr">'.$calInfo['displayname'].'</span>'.$shareLink.$shareInfo;
+				  	        $displayName = '<span class="descr">'.$calInfo['displayname'].'</span>'.$shareLink.$shareInfo;
 				           // $checkBox='';
 						 }
 						 
-				 	    $checkBox='<input class="activeCalendarNav regular-checkbox" data-id="'.$calInfo['id'].'" style="float:left;" id="edit_active_'.$calInfo['id'].'" type="checkbox" '.$checked.' /><label style="float:left;margin-right:5px;" for="edit_active_'.$calInfo['id'].'"></label>';
+				 	    $checkBox = '<input class="activeCalendarNav regular-checkbox" data-id="'.$calInfo['id'].'" style="float:left;" id="edit_active_'.$calInfo['id'].'" type="checkbox" '.$checked.' /><label style="float:left;margin-right:5px;" for="edit_active_'.$calInfo['id'].'"></label>';
 				 		 
 				 		 
 						 
-						 if($calInfo['issubscribe'] == false){
+						 if((bool)$calInfo['issubscribe'] === false){
 					   	 		$output.='<li data-id="'.$calInfo['id'].'" class="calListen '.$isActiveUserCal.'">'.$checkBox.'<div class="colCal iCalendar '.$addCheckClass.'" style="cursor:pointer;background:'.$calInfo['calendarcolor'].'">&nbsp;</div> '.$displayName.'</li>';
 						 }else{
 						   $refreshImage='<i title="refresh"  class="refreshSubscription ioc ioc-refresh" style="cursor:pointer;float:right;">&nbsp;</i>';
@@ -579,7 +580,7 @@ class CalendarController extends Controller {
 							
 						 }
 					}
-				   if($outputAbo!=''){
+				   if($outputAbo !== ''){
 				   	  $outputAbo='<br style="clear:both;"><br /><h3><i class="ioc ioc-rss-alt"></i>&nbsp;'.$this->l10n->t('Subscription').'</h3><ul>'.$outputAbo.'</ul>';
 				   }
 				   $output.='</ul>'.$outputAbo.'<br />
@@ -604,7 +605,7 @@ class CalendarController extends Controller {
 	 * 
 	 */
 	public function changeViewCalendar() {
-		$view = $this -> params('v');
+		$view = (string) $this -> params('v');
 		
 		switch($view) {
 			case 'agendaDay':	
@@ -635,7 +636,7 @@ class CalendarController extends Controller {
 	 */
 	public function touchCalendar() {
 		
-		$id = $this -> params('eventid');
+		$id = (int) $this -> params('eventid');
 		$data = CalendarApp::getEventObject($id, false, false);
 		$vcalendar =  VObject::parse($data['calendardata']);
 		$vevent=$vcalendar->VEVENT;

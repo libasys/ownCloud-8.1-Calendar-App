@@ -58,10 +58,10 @@ class EventController extends Controller {
 		$calendar_id = null;
 		\OC::$server->getSession()->close();
 		
-			$getId = $this -> params('calendar_id');
+		$getId = $this -> params('calendar_id');
 			
 			
-			if (strval(intval($getId)) == strval($getId)) { // integer for sure.
+			if (strval(intval($getId)) === strval($getId)) { // integer for sure.
 				$id = intval($getId);
 			
 				$calendarrow = CalendarApp::getCalendar($id, true, false); // Let's at least security check otherwise we might as well use OCA\Calendar\Calendar::find())
@@ -128,7 +128,7 @@ class EventController extends Controller {
 				if($this -> configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calInfo['id']) !== ''){
 					$isAktiv= (int) $this -> configInfo -> getUserValue($this -> userId, 'calendar', 'calendar_'.$calInfo['id']);
 				}
-				if($calInfo['id'] != 'birthday_'.$this -> userId && $isAktiv === 1){
+				if($calInfo['id'] !== 'birthday_'.$this -> userId && $isAktiv === 1){
 					\OCP\Util::writeLog('calendar','DAYVIEW => '.$calInfo['id'], \OCP\Util::DEBUG);	
 					$events[] = CalendarApp::getrequestedEvents($calInfo['id'], $start, $end);
 				}
@@ -144,7 +144,7 @@ class EventController extends Controller {
 							
 						foreach($event as $eventInfo){
 								
-							if($eventInfo['repeating'] == 0) {
+							if((int)$eventInfo['repeating'] === 0) {
 											
 								$start_dt = new \DateTime($eventInfo['startdate'], new \DateTimeZone('UTC'));
 							    $startDate=$start_dt->format('Y/m/d');
@@ -178,7 +178,7 @@ class EventController extends Controller {
 								 $eventArray[$startDate][]=CalendarApp::generateEventOutput($eventInfo, $start, $end);
 							}
 							
-							if($eventInfo['repeating'] == 1) {
+							if((int)$eventInfo['repeating'] === 1) {
 							  	
 							  $cachedinperiod = \OCA\Calendar\Repeat::get_inperiod($eventInfo['id'], $start, $end);
 								$counter=0;
@@ -237,15 +237,14 @@ class EventController extends Controller {
 				$aCatNew=array();
 				foreach($aCategory as $sCat){
 					$aCatNew[$sCat]=1;	
-					if($sCatNew == '') {
-						$sCatNew=$sCat;
-					}
-					else{
-						$sCatNew.=','.$sCat;
+					if($sCatNew === '') {
+						$sCatNew = $sCat;
+					}else{
+						$sCatNew.= ','.$sCat;
 					}
 				}
 				if(!array_key_exists($category, $aCatNew)){
-					$sCatNew.=','.$category;
+					$sCatNew.= ','.$category;
 				}
 				$vevent->setString('CATEGORIES', $sCatNew);
 			}else{
@@ -323,9 +322,10 @@ class EventController extends Controller {
 		$timezone = CalendarApp::getTimezone();
 		$paramsExt=array();
 		foreach($vevent->EXDATE as $key => $param){
-			$paramToCheck= new \DateTime($param);
+			$paramToCheck = new \DateTime($param);
 			$checkEx=$paramToCheck -> format('U');
-			if($checkEx!=$choosenDate){
+			
+			if($checkEx !== $choosenDate){
 				$paramsExt[]=$param;
 			}
 		} 
@@ -380,16 +380,18 @@ class EventController extends Controller {
 			
 			$dtstart = $vevent->DTSTART;
 			$dtend = Object::getDTEndFromVEvent($vevent);
-			$start_type = $dtstart->getValueType();
+			$start_type = (string) $dtstart->getValueType();
 			
 			$end_type = $dtend->getValueType();
-			if ($allday && $start_type != 'DATE') {
+			if ($allday && $start_type !== 'DATE') {
 				$start_type = $end_type ='DATE';
 				$dtend->setDateTime($dtend->getDateTime()->modify('+1 day'));
 			}
-			if (!$allday && $start_type == 'DATE') {
+			
+			if (!$allday && $start_type === 'DATE') {
 				$start_type = $end_type = 'DATE-TIME';
 			}
+			
 			if($vevent->EXDATE){
 				$aExt=$vevent->EXDATE;
 				$vevent->setString('EXDATE','');
@@ -415,7 +417,7 @@ class EventController extends Controller {
 			
 			$lastmodified = $vevent->__get('LAST-MODIFIED')->getDateTime();
 			$params = [
-				'status' =>$aCheckPermissions['status'],
+				'status' => $aCheckPermissions['status'],
 				'lastmodified' => (int)$lastmodified->format('U')
 			];
 		}else{
@@ -434,7 +436,7 @@ class EventController extends Controller {
 		$calid = Object::getCalendarid($eventId);
 		$calendar = CalendarCalendar::find($calid);
 		
-		if ($calendar['userid'] == $this->userId) {
+		if ($calendar['userid'] === $this->userId) {
 			$return=[
 				 'status' => 'success',
 				 'msg' => 'All good'
@@ -442,7 +444,7 @@ class EventController extends Controller {
 				return $return;
 		}
 		
-		if ($calendar['userid'] != $this->userId) {
+		if ($calendar['userid'] !== $this->userId) {
 			$shareMode=Object::checkShareMode($calid);
 			if($shareMode){
 				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calid);
@@ -541,7 +543,7 @@ class EventController extends Controller {
 		$calendar_options = array();
 		
 		foreach($calendars as $calendar) {
-			if($calendar['userid'] != $this -> userId) {
+			if($calendar['userid'] !== $this -> userId) {
 				$sharedCalendar = \OCP\Share::getItemSharedWithBySource('calendar','calendar-'. $calendar['id']);
 				if ($sharedCalendar && ($sharedCalendar['permissions'] & \OCP\PERMISSION_CREATE)) {
 					array_push($calendar_options, $calendar);
@@ -610,8 +612,10 @@ class EventController extends Controller {
         ];
 		
 		$activeCal=$this -> configInfo -> getUserValue($this -> userId, 'calendar', 'choosencalendar');
+		
 		$myChoosenCalendar='';
-		if(intval($activeCal) > 0 && $activeCal!=''){
+		
+		if(intval($activeCal) > 0 && $activeCal !== ''){
 			$myChoosenCalendar = $activeCal;
 		}else{
 			$myChoosenCalendar = $calendar_options[0]['id'];
@@ -756,7 +760,7 @@ class EventController extends Controller {
         $transWeekDay[$tWeekDay]=$tWeekDay;
         
         
-       if ($editInfo['rrule']['repeat'] != 'doesnotrepeat') {
+       if ((string)$editInfo['rrule']['repeat'] !== 'doesnotrepeat') {
                
            $paramsRepeat = [
             'logicCheckWeekDay' => $tWeekDay,
@@ -884,12 +888,12 @@ class EventController extends Controller {
      * @NoAdminRequired
      */
     public function editEvent() {
-    	$id = $this -> params('id');
+    	$id = (int) $this -> params('id');
 		$pStart = $this -> params('viewstart');
 		$pEnd = $this -> params('viewend');
 		
 		$postRequestAll = $this -> getParams();
-		$calId = $this -> params('calendar');
+		$calId = (int) $this -> params('calendar');
 		$lastmodified = $this -> params('lastmodified');
 		
 		if(!array_key_exists('calendar', $postRequestAll)) {
@@ -909,7 +913,7 @@ class EventController extends Controller {
 			CalendarApp::isNotModified($vcalendar->VEVENT, $lastmodified);
 			Object::updateVCalendarFromRequest($postRequestAll, $vcalendar);
 			Object::edit($id, $vcalendar->serialize());
-			if ($data['calendarid'] != $calId) {
+			if ($data['calendarid'] !== $calId) {
 				Object::moveToCalendar($id, $calId);
 			}
 			$editedEvent = CalendarApp::getEventObject($id, false, false);
@@ -976,12 +980,12 @@ class EventController extends Controller {
         $permissions = CalendarApp::getPermissions($id, CalendarApp::EVENT, $accessclass);
         $dtstart = $vevent -> DTSTART;
         
-        if (isset($choosenDate) && $choosenDate != ''){
+        if (isset($choosenDate) && $choosenDate !== ''){
             $choosenDate = $choosenDate;
         } else {
             $choosenDate = $dtstart -> getDateTime() -> format('Ymd');
-			
-        }
+       }
+		
         $showdate = $dtstart -> getDateTime() -> format('Y-m-d H:i:s');
 		
         $organzier='';
@@ -1002,10 +1006,10 @@ class EventController extends Controller {
 	
         $dtend = Object::getDTEndFromVEvent($vevent);
         
-        $dtstartType=$vevent->DTSTART->getValueType();
+        $dtstartType = (string) $vevent->DTSTART->getValueType();
         
           $datetimedescr='';      
-         if($dtstartType=='DATE'){
+         if($dtstartType === 'DATE'){
             $startdate = $dtstart -> getDateTime() -> format('d-m-Y');
             $starttime = '';
             $enddate = $dtend -> getDateTime()-> modify('-1 day') -> format('d-m-Y');
@@ -1014,7 +1018,7 @@ class EventController extends Controller {
             $choosenDate=$choosenDate + (3600 * 24);
             $allday = true;
 			
-			if($startdate == $enddate){
+			if($startdate === $enddate){
 				$datetimedescr = (string)$this -> l10n -> t('On').' '.$dtstart -> getDateTime() -> format('d.m.Y');
 			}else{
 				$datetimedescr= (string)$this->l10n -> t('From').' '.$dtstart -> getDateTime() -> format('d.m.Y').' '.(string)$this->l10n ->t('To').' '.$dtend -> getDateTime()-> modify('-1 day') -> format('d.m.Y');
@@ -1022,7 +1026,7 @@ class EventController extends Controller {
 			
          }
          
-         if($dtstartType=='DATE-TIME'){
+         if($dtstartType === 'DATE-TIME'){
             $tz= CalendarApp::getTimezone();
             
             $start_dt = new \DateTime($data['startdate'], new \DateTimeZone('UTC'));
@@ -1033,7 +1037,7 @@ class EventController extends Controller {
             $starttime = $start_dt -> format('H:i');
             $enddate = $end_dt -> format('d-m-Y');
             $endtime = $end_dt -> format('H:i');
-            if($startdate == $enddate){
+            if($startdate === $enddate){
 				$datetimedescr = (string)$this -> l10n -> t('On').' '.$start_dt -> format('d.m.Y'). ' '.(string)$this -> l10n -> t('From').' '.$starttime.' '.(string)$this -> l10n -> t('To').' '.$endtime;
 			}else{
 				$datetimedescr = (string)$this -> l10n -> t('From').' '.$start_dt -> format('d.m.Y').' '.$starttime.' '.(string)$this -> l10n -> t('To').' '.$end_dt -> format('d.m.Y').' '.$endtime;
@@ -1066,7 +1070,8 @@ class EventController extends Controller {
         $addSingleDeleteButton = false;
         $repeatInfo = array();
         $repeat['repeat'] = '';
-        if ($data['repeating'] == 1) {
+		
+        if ((int)$data['repeating'] === 1) {
             $addSingleDeleteButton = true;
             $rrule = explode(';', $vevent -> getAsString('RRULE'));
             $rrulearr = array();
@@ -1074,13 +1079,14 @@ class EventController extends Controller {
             $repeat['repeat_rules'] = '';
             foreach ($rrule as $rule) {
                 list($attr, $val) = explode('=', $rule);
-                if ($attr != 'COUNT' && $attr != 'UNTIL') {
-                    if ($repeat['repeat_rules'] == '')
+                if ((string)$attr !== 'COUNT' && (string)$attr !== 'UNTIL') {
+                    if ($repeat['repeat_rules'] === ''){
                         $repeat['repeat_rules'] = $attr . '=' . $val;
-                    else
+                        } else{
                         $repeat['repeat_rules'] .= ';' . $attr . '=' . $val;
+						}
                 }
-                if ($attr == 'COUNT' || $attr != 'UNTIL') {
+                if ((string)$attr === 'COUNT' || (string)$attr !== 'UNTIL') {
                     $rrulearr[$attr] = $val;
                 }
             }
@@ -1099,13 +1105,13 @@ class EventController extends Controller {
             }
         
             $repeat_end_options = CalendarApp::getEndOptions();
-            if ($repeat['end'] == 'count') {
+            if ($repeat['end'] === 'count') {
                 $repeatInfo['end'] = $this->l10n -> t('after') . ' ' . $repeat['count'] . ' ' . $this->l10n -> t('Events');
             }
-            if ($repeat['end'] == 'date') {
+            if ($repeat['end'] === 'date') {
                 $repeatInfo['end'] = $repeat['date'];
             }
-            if ($repeat['end'] == 'never') {
+            if ($repeat['end'] === 'never') {
                 $repeatInfo['end'] = $repeat_end_options[$repeat['end']];
             }
         
@@ -1157,7 +1163,7 @@ class EventController extends Controller {
              $counter=0;
             
             foreach ($vevent ->getComponents() as $param) {
-                if($param->name == 'VALARM'){
+                if($param->name === 'VALARM'){
                     $attr = $param->children();
                     foreach($attr as $attrInfo){
                         $valarm[$counter][$attrInfo->name]=$attrInfo->getValue();
@@ -1166,22 +1172,24 @@ class EventController extends Controller {
                 }
             }
             foreach($valarm as $vInfo){
-                if($vInfo['ACTION']=='DISPLAY' && strstr($vInfo['TRIGGER'],'P')){
-                    if(substr_count($vInfo['TRIGGER'],'PT') == 1){
+                if($vInfo['ACTION'] === 'DISPLAY' && strstr($vInfo['TRIGGER'],'P')){
+                    if(substr_count($vInfo['TRIGGER'],'PT') === 1 && !stristr($vInfo['TRIGGER'],'TRIGGER')){
                     	 $sAlarm[]='TRIGGER:'.$vInfo['TRIGGER'];
                     }
-					
-				    if(substr_count($vInfo['TRIGGER'],'-P') == 1 && substr_count($vInfo['TRIGGER'],'PT') == 0){
+					if(substr_count($vInfo['TRIGGER'],'PT') === 1 && stristr($vInfo['TRIGGER'],'TRIGGER')){
+                    	 $sAlarm[]=$vInfo['TRIGGER'];
+                    }
+				    if(substr_count($vInfo['TRIGGER'],'-P') === 1 && substr_count($vInfo['TRIGGER'],'PT') === 0){
                     	 $temp=explode('-P',(string)$vInfo['TRIGGER']);
 						 $sAlarm[]='TRIGGER:-PT'.$temp[1];
                     }
-					if(substr_count($vInfo['TRIGGER'],'+P') == 1 && substr_count($vInfo['TRIGGER'],'PT') == 0){
+					if(substr_count($vInfo['TRIGGER'],'+P') === 1 && substr_count($vInfo['TRIGGER'],'PT') === 0){
                     	$temp=explode('+P',$vInfo['TRIGGER']);
 						 $sAlarm[]='TRIGGER:+PT'.$temp[1];
                     }
 				   
                 }
-                if($vInfo['ACTION']=='DISPLAY' && !strstr($vInfo['TRIGGER'],'P')){
+                if($vInfo['ACTION'] === 'DISPLAY' && !strstr($vInfo['TRIGGER'],'P')){
                     if(!strstr($vInfo['TRIGGER'],'DATE-TIME'))  {
                         $sAlarm[]='TRIGGER;VALUE=DATE-TIME:'.$vInfo['TRIGGER'];
                     }else{
@@ -1207,7 +1215,7 @@ class EventController extends Controller {
             }
            
             $pRepeatInfo='';
-            if ($repeat['repeat'] != 'doesnotrepeat') {
+            if ($repeat['repeat'] !== 'doesnotrepeat') {
                 $pRepeatInfo = $repeatInfo;
             }
             
@@ -1286,9 +1294,9 @@ class EventController extends Controller {
 		$vevent->setDateTime('LAST-MODIFIED', 'now');
 		$vevent->setDateTime('DTSTAMP', 'now');
 		$dtstart = $vevent->DTSTART;
-		$start_type = $dtstart->getValueType();
+		$start_type = (string) $dtstart->getValueType();
 		
-		if ($start_type == 'DATE') {
+		if ($start_type === 'DATE') {
 			    $dateTime = new \DateTime($choosenDate);
 			   if ($dateTime instanceof \DateTime) {
 					$vevent->addProperty('EXDATE',$dateTime);
@@ -1393,12 +1401,14 @@ class EventController extends Controller {
 				
 			$EvSource = $this -> params('EvSource');
 				
-			$ALARMDATA=new \OCA\Calendar\Alarm();
+			$ALARMDATA = new \OCA\Calendar\Alarm();
 			$resultRefresh='';
-			if(isset($EvSource) && $EvSource != '') {
+			if(isset($EvSource) && $EvSource !== '') {
 				$ALARMDATA->setEventSources($EvSource);
-				$resultRefresh=$ALARMDATA->checkAutoRefresh();
-				if($resultRefresh === false) $resultRefresh='onlyTimeLine';
+				$resultRefresh = $ALARMDATA->checkAutoRefresh();
+				if($resultRefresh === false){
+					 $resultRefresh='onlyTimeLine';
+				}
 			}else{
 				$resultRefresh='onlyTimeLine';
 			}
@@ -1408,7 +1418,7 @@ class EventController extends Controller {
 				$result=$ALARMDATA->getAlarms();
 			}
 		
-			if(count($result)>0 || $resultRefresh!=''){
+			if(count($result)>0 || $resultRefresh !== ''){
 					
 				$params=[
 					'data' => $result,
@@ -1454,38 +1464,41 @@ class EventController extends Controller {
         $repeat['repeat_rules']=''; 
             foreach ($rrule as $rule) {
                 list($attr, $val) = explode('=', $rule);
-                if($attr!='COUNT'){
-                    if($repeat['repeat_rules']=='') $repeat['repeat_rules']=$attr.'='.$val; 
-                    else $repeat['repeat_rules'].=';'.$attr.'='.$val;
+                if((string)$attr !== 'COUNT'){
+                    if($repeat['repeat_rules'] === ''){
+                    	 $repeat['repeat_rules']=$attr.'='.$val; 
+                    }else{
+                    	 $repeat['repeat_rules'].=';'.$attr.'='.$val;
+					}
                 }
             }
             foreach ($rrule as $rule) {
                 list($attr, $val) = explode('=', $rule);
                 $rrulearr[$attr] = $val;
             }
-            if (!isset($rrulearr['INTERVAL']) || $rrulearr['INTERVAL'] == '') {
+            if (!isset($rrulearr['INTERVAL']) || $rrulearr['INTERVAL'] === '') {
                 $rrulearr['INTERVAL'] = 1;
             }
             if (array_key_exists('BYDAY', $rrulearr)) {
-                if (substr_count($rrulearr['BYDAY'], ',') == 0) {
-                    if (strlen($rrulearr['BYDAY']) == 2) {
+                if (substr_count($rrulearr['BYDAY'], ',') === 0) {
+                    if (strlen($rrulearr['BYDAY']) === 2) {
                         $repeat['weekdays'][$rrulearr['BYDAY']] = $rrulearr['BYDAY'];
-                    } elseif (strlen($rrulearr['BYDAY']) == 3) {
+                    } elseif (strlen($rrulearr['BYDAY']) === 3) {
                         $repeat['weekofmonth'] = substr($rrulearr['BYDAY'], 0, 1);
                         $repeat['weekdays'][substr($rrulearr['BYDAY'], 1, 2)] = substr($rrulearr['BYDAY'], 1, 2);
-                    } elseif (strlen($rrulearr['BYDAY']) == 4) {
+                    } elseif (strlen($rrulearr['BYDAY']) === 4) {
                         $repeat['weekofmonth'] = substr($rrulearr['BYDAY'], 0, 2);
                         $repeat['weekdays'][substr($rrulearr['BYDAY'], 2, 2)] = substr($rrulearr['BYDAY'], 2, 2);
                     }
                 } else {
                     $byday_days = explode(',', $rrulearr['BYDAY']);
                     foreach ($byday_days as $byday_day) {
-                        if (strlen($byday_day) == 2) {
+                        if (strlen($byday_day) === 2) {
                             $repeat['weekdays'][$byday_day] = $byday_day;
-                        } elseif (strlen($byday_day) == 3) {
+                        } elseif (strlen($byday_day) === 3) {
                             $repeat['weekofmonth'] = substr($byday_day, 0, 1);
                             $repeat['weekdays'][substr($byday_day, 1, 2)] = substr($byday_day, 1, 2);
-                        } elseif (strlen($byday_day) == 4) {
+                        } elseif (strlen($byday_day) === 4) {
                             $repeat['weekofmonth'] = substr($byday_day, 0, 2);
                             $repeat['weekdays'][substr($byday_day, 2, 2)] = substr($byday_day, 2, 2);
                         }
@@ -1493,7 +1506,7 @@ class EventController extends Controller {
                 }
             }
             if (array_key_exists('BYMONTHDAY', $rrulearr)) {
-                if (substr_count($rrulearr['BYMONTHDAY'], ',') == 0) {
+                if (substr_count($rrulearr['BYMONTHDAY'], ',') === 0) {
                     $repeat['bymonthday'][$rrulearr['BYMONTHDAY']] = $rrulearr['BYMONTHDAY'];
                 } else {
                     $bymonthdays = explode(',', $rrulearr['BYMONTHDAY']);
@@ -1506,7 +1519,7 @@ class EventController extends Controller {
             if (array_key_exists('BYMONTH', $rrulearr)) {
                 //$months = OCA\Calendar\App::getByMonthShortOptions();
                 //Fix
-                if (substr_count($rrulearr['BYMONTH'], ',') == 0) {
+                if (substr_count($rrulearr['BYMONTH'], ',') === 0) {
                     $repeat['bymonth'][(string)$rrulearr['BYMONTH']] = (string)$rrulearr['BYMONTH'];
                 } else {
                     $bymonth = explode(',', $rrulearr['BYMONTH']);
@@ -1518,7 +1531,7 @@ class EventController extends Controller {
             }
             switch($rrulearr['FREQ']) {
                 case 'DAILY' :
-                       if($repeat['interval'] == 1){
+                       if((int)$repeat['interval'] === 1){
                           $repeat['repeat'] = 'DAILY';
                        }else{
                            $repeat['repeat'] = 'OWNDEF';
@@ -1565,7 +1578,7 @@ class EventController extends Controller {
                         $repeat['bdayClass']='';
                         $repeat['repeat'] = 'OWNDEF';
                         $repeat['rAdvanced'] = 'YEARLY';
-                    }elseif (array_key_exists('BYMONTH', $rrulearr) && array_key_exists('BYDAY', $rrulearr) == false) {
+                    }elseif (array_key_exists('BYMONTH', $rrulearr) && array_key_exists('BYDAY', $rrulearr) === false) {
                         $repeat['checkedMonth']='';
                         $repeat['repeat'] = 'OWNDEF';
                         $repeat['rAdvanced'] = 'YEARLY';
@@ -1608,7 +1621,7 @@ class EventController extends Controller {
         	$counter=0;
             $tAlarm='';
             foreach ($vevent ->getComponents() as $param) {
-                if($param->name == 'VALARM'){
+                if($param->name === 'VALARM'){
                     $attr = $param->children();
                     foreach($attr as $attrInfo){
                         $tAlarm[$counter][$attrInfo->name]=(string) $attrInfo->getValue();
@@ -1624,23 +1637,28 @@ class EventController extends Controller {
 				$valarm=$tAlarm[0];
 			}
 			
-            $aAlarm['action']=$valarm['ACTION'];
-            $aAlarm['triggerRequest']=$valarm['TRIGGER'];
+            $aAlarm['action']= $valarm['ACTION'];
+            $aAlarm['triggerRequest'] = $valarm['TRIGGER'];
             $tempTrigger=(string)$aAlarm['triggerRequest'];
 			
-           	 if(substr_count($tempTrigger,'PT') == 1){
+           	 if(substr_count($tempTrigger,'PT') === 1 && stristr($tempTrigger,'TRIGGER')){
            	 	$temp=explode('TRIGGER:',$tempTrigger);	
            	 	$aAlarm['trigger']=$temp[1];
 				$aAlarm['triggerRequest']=$aAlarm['trigger'];
-				//\OCP\Util::writeLog('calendar', 'ALARM TRIGGER TIME-> '.$tempTrigger, \OCP\Util::DEBUG);
            	 }
-           	 if(substr_count($tempTrigger,'-P') == 1 && substr_count($tempTrigger,'PT') == 0){
+ 			
+ 			if(substr_count($tempTrigger,'PT') === 1 && !stristr($tempTrigger,'TRIGGER')){
+           	 	$aAlarm['trigger']=$tempTrigger;
+				$aAlarm['triggerRequest']=$aAlarm['trigger'];
+           	 }
+			
+           	 if(substr_count($tempTrigger,'-P') === 1 && substr_count($tempTrigger,'PT') === 0){
            	 	$temp=explode('-P',$tempTrigger);
 				$aAlarm['trigger']='-PT'.$temp[1];
 				$aAlarm['triggerRequest']=$aAlarm['trigger'];
 				
            	 }
-			 if(substr_count($tempTrigger,'+P') == 1 && substr_count($tempTrigger,'PT') == 0){
+			 if(substr_count($tempTrigger,'+P') === 1 && substr_count($tempTrigger,'PT') === 0){
            	 	$temp=explode('+P',$tempTrigger);
 				$aAlarm['trigger']='+PT'.$temp[1];
 				$aAlarm['triggerRequest']=$aAlarm['trigger'];
@@ -1657,7 +1675,7 @@ class EventController extends Controller {
                 $aAlarm['email']=$valarm['ATTENDEE'];
                 if(stristr($aAlarm['email'],'mailto:')) $aAlarm['email']=substr($aAlarm['email'],7,strlen($aAlarm['email']));
             }
-        
+       
            if(array_key_exists($aAlarm['trigger'],$reminder_options)){
                $aAlarm['action']=$aAlarm['trigger'];
                $aAlarm['reminderdate'] ='';
@@ -1685,17 +1703,17 @@ class EventController extends Controller {
                         
                         //returns M,H,D
                         $alarmTimeDescr=substr($aAlarm['trigger'],-1,1);
-                        if($alarmTimeDescr=='H'){
+                        if($alarmTimeDescr === 'H'){
                             $aAlarm['reminder_time_select']='hours'.$tempDescr;
                             
                         }
-                        if($alarmTimeDescr=='M'){
+                        if($alarmTimeDescr === 'M'){
                             $aAlarm['reminder_time_select']='minutes'.$tempDescr;
                         }
-                        if($alarmTimeDescr=='D'){
+                        if($alarmTimeDescr === 'D'){
                             $aAlarm['reminder_time_select']='days'.$tempDescr;
                         }
-						 if($alarmTimeDescr=='W'){
+						 if($alarmTimeDescr === 'W'){
                             $aAlarm['reminder_time_select']='weeks'.$tempDescr;
                         }
                 }else{
@@ -1704,7 +1722,7 @@ class EventController extends Controller {
 					$tDttriggertime=explode('TRIGGER;VALUE=DATE-TIME:',$aAlarm['triggerRequest']);
 					$tDttriggertime = $tDttriggertime[1];
 					
-                    if(strlen($tDttriggertime)== 8){
+                    if(strlen($tDttriggertime) === 8){
                          $dttriggertime= new \DateTime($tDttriggertime);		
                         $aAlarm['reminderdate'] = $dttriggertime  -> format('d-m-Y');
                         $aAlarm['remindertime'] ='';
@@ -1747,9 +1765,9 @@ class EventController extends Controller {
         $result['dtstart'] = $dtstart;
         
         $dtend = Object::getDTEndFromVEvent($vevent);
-        $dateStartType=$vevent->DTSTART->getValueType();
+        $dateStartType= (string)$vevent->DTSTART->getValueType();
                 
-         if($dateStartType=='DATE'){
+         if($dateStartType === 'DATE'){
             $result['startdate'] = $dtstart -> getDateTime() -> format('d-m-Y');
             $result['starttime'] = '';
             $result['enddate'] = $dtend -> getDateTime()-> modify('-1 day') -> format('d-m-Y');
@@ -1758,7 +1776,7 @@ class EventController extends Controller {
             $result['allday'] = true;
          }
          
-         if($dateStartType=='DATE-TIME'){
+         if($dateStartType === 'DATE-TIME'){
             $tz= CalendarApp::getTimezone();
             $start_dt = new \DateTime($data['startdate'], new \DateTimeZone('UTC'));
             $end_dt = new \DateTime($data['enddate'], new \DateTimeZone('UTC'));    
@@ -1786,7 +1804,7 @@ class EventController extends Controller {
         }
         
          $result['addSingleDeleteButton']=false;
-        if ($data['repeating'] == 1) {
+        if ((int)$data['repeating'] === 1) {
             $result['addSingleDeleteButton']=true;
             $rrule = explode(';', $vevent -> getAsString('RRULE'));
             $result['rrule']= $this -> parseRrules($rrule);

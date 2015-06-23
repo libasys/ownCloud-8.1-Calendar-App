@@ -459,13 +459,14 @@ class PublicController extends Controller {
 					$repeat['repeat_rules'] = '';
 					foreach ($rrule as $rule) {
 						list($attr, $val) = explode('=', $rule);
-						if ($attr != 'COUNT' && $attr != 'UNTIL') {
-							if ($repeat['repeat_rules'] == '')
+						if ($attr != 'COUNT' && $attr !== 'UNTIL') {
+							if ($repeat['repeat_rules'] === ''){
 								$repeat['repeat_rules'] = $attr . '=' . $val;
-							else
+							}else{
 								$repeat['repeat_rules'] .= ';' . $attr . '=' . $val;
+								}
 						}
-						if ($attr == 'COUNT' || $attr != 'UNTIL') {
+						if ($attr === 'COUNT' || $attr !== 'UNTIL') {
 							$rrulearr[$attr] = $val;
 						}
 					}
@@ -484,13 +485,13 @@ class PublicController extends Controller {
 					}
 				
 					$repeat_end_options =CalendarApp::getEndOptions();
-					if ($repeat['end'] == 'count') {
+					if ($repeat['end'] === 'count') {
 						$repeatInfo['end'] = $this->l10n -> t('after') . ' ' . $repeat['count'] . ' ' . $this->l10n -> t('Events');
 					}
-					if ($repeat['end'] == 'date') {
+					if ($repeat['end'] === 'date') {
 						$repeatInfo['end'] = $repeat['date'];
 					}
-					if ($repeat['end'] == 'never') {
+					if ($repeat['end'] === 'never') {
 						$repeatInfo['end'] = $repeat_end_options[$repeat['end']];
 					}
 				

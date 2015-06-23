@@ -433,6 +433,71 @@ CalendarShare={
 				return false;
 			//alert(soFreq+saveMonthDay+saveDay+saveMonth);
 		},
+		reminderToText : function(sReminder) {
+			if (sReminder != '') {
+				
+				var sReminderTxt = '';
+				if (sReminder.indexOf('-PT') != -1) {
+					//before
+					var sTemp = sReminder.split('-PT');
+					var sTempTF = sTemp[1].substring((sTemp[1].length - 1));
+					if (sTempTF == 'M') {
+						sReminderTxt = t('calendar', 'Minutes before');
+					}
+					if (sTempTF == 'H') {
+						sReminderTxt = t('calendar', 'Hours before');
+					}
+					if (sTempTF == 'D') {
+						sReminderTxt = t('calendar', 'Days before');
+					}
+					if (sTempTF == 'W') {
+						sReminderTxt = t('calendar', 'Weeks before');
+					}
+					var sTime = sTemp[1].substring(0, (sTemp[1].length - 1));
+					sReminderTxt = sTime + ' ' + sReminderTxt;
+				} else if (sReminder.indexOf('+PT') != -1) {
+					var sTemp = sReminder.split('+PT');
+					var sTempTF = sTemp[1].substring((sTemp[1].length - 1));
+					if (sTempTF == 'M') {
+						sReminderTxt = t('calendar', 'Minutes after');
+					}
+					if (sTempTF == 'H') {
+						sReminderTxt = t('calendar', 'Hours after');
+					}
+					if (sTempTF == 'D') {
+						sReminderTxt = t('calendar', 'Days after');
+					}
+					if (sTempTF == 'W') {
+						sReminderTxt = t('calendar', 'Weeks after');
+					}
+					var sTime = sTemp[1].substring(0, (sTemp[1].length - 1));
+					sReminderTxt = sTime + ' ' + sReminderTxt;
+				} else {
+					//onDate
+					sReminderTxt = t('calendar', 'on');
+					
+					var sTemp = sReminder.split('DATE-TIME:');
+					var sDateTime = sTemp[1].split('T');
+					var sYear = sDateTime[0].substring(0, 4);
+					var sDay = sDateTime[0].substring(4, 6);
+					var sMonth = sDateTime[0].substring(6, 8);
+				    var sHour='';
+				    var sMinute='';
+				    var sHM='';
+				    
+				    if(sDateTime.length > 1){
+						 sHour = sDateTime[1].substring(0, 2);
+						 sMinute = sDateTime[1].substring(2, 4);
+						 sHM =  sHour + ':' + sMinute;
+					}
+					sReminderTxt = sReminderTxt + ' ' + sDay + '.' + sMonth + '.' + sYear + ' ' +sHM;
+
+				}
+
+				return sReminderTxt;
+			} else
+				return false;
+		},
    },
    UI:{
    	  loading: function(isLoading){
@@ -505,9 +570,19 @@ CalendarShare={
 
 			
 			$('.tipsy').remove();
-		    
-			$('.tipsy').remove();
+		   
+			var sReminderReader = '';
+			$('input.sReminderRequest').each(function(i, el) {
+				sRead = CalendarShare.Util.reminderToText($(this).val());
+				if (sReminderReader == ''){
+					sReminderReader = sRead;
+				}else {
+					sReminderReader += '<br />' + sRead;
+				}
+			});
+			$('#reminderoutput').html(sReminderReader);
 			
+
 			var sRuleReader=CalendarShare.Util.rruleToText($('#sRuleRequest').val());
              $("#rruleoutput").text(sRuleReader);
              
@@ -553,7 +628,9 @@ CalendarShare={
 				if (event.isrepeating) {
 					EventInner.prepend(CalendarShare.Util.addIconsCal('repeating','repeat','14'));
 				}
-				
+				if (event.isalarm) {
+					EventInner.prepend(CalendarShare.Util.addIconsCal('repeating','clock','14'));
+				}
 				if (event.privat == 'confidential') {
 					EventInner.prepend(CalendarShare.Util.addIconsCal('confidential','eye','12'));
 				}
