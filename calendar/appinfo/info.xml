@@ -8,7 +8,7 @@
 	<description>Calendar Advanced with CalDAV support</description>
 	<namespace>Calendar</namespace>
 	<website>https://github.com/libasys/ownCloud-8.1-Calendar-App</website>
-	<version>1.0.2</version>
+	<version>1.0.3</version>
 	<category>productivity</category>
 	<default_enable/>
 	<remote>
