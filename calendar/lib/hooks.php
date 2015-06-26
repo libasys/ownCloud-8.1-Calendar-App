@@ -80,13 +80,13 @@ class Hooks{
 					$parameters['translation']=$parameters['language']->t('%2$s unshared %1$s with you',$preparedParams);
 				break;
 				case 'created_by_other':
-					$parameters['translation']=$parameters['language']->t('A new %1$s  from %2$s in shared calendar %3$s created',$preparedParams);
+					$parameters['translation']=$parameters['language']->t('A new %1$s from %2$s in shared calendar %3$s created',$preparedParams);
 				break;
 				case 'edited_by_other':
-					$parameters['translation']=$parameters['language']->t('A %1$s  from %2$s in shared calendar %3$s edited',$preparedParams);
+					$parameters['translation']=$parameters['language']->t('A %1$s from %2$s in shared calendar %3$s edited',$preparedParams);
 				break;
 				case 'deleted_by_other':
-					$parameters['translation']=$parameters['language']->t('A %1$s  from %2$s in shared calendar %3$s deleted',$preparedParams);
+					$parameters['translation']=$parameters['language']->t('A %1$s from %2$s in shared calendar %3$s deleted',$preparedParams);
 				break;
 				}
 		return true;
