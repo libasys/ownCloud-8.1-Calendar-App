@@ -177,9 +177,9 @@ var Calendar = {
 				}
 				if (view.name == 'month' || view.name == 'year' ) {
 					
-					$("#fullcalendar").niceScroll();
+				//	$("#fullcalendar").niceScroll();
 				}else{
-					$("#scrollDiv").niceScroll();
+					//$("#scrollDiv").niceScroll();
 				}
 				
 				
@@ -2786,7 +2786,7 @@ var Calendar = {
 				var description = $("#description_" + calendarid).val();
 
 				var calendarcolor = $("#calendarcolor_" + calendarid).val();
-				if (displayname == '') {
+				if (displayname === '') {
 					$("#displayname_" + calendarid).css('background-color', '#FF2626');
 					$("#displayname_" + calendarid).focus(function() {
 						$("#displayname_" + calendarid).css('background-color', '#F8F8F8');
@@ -2819,6 +2819,7 @@ var Calendar = {
 						$("#externuri_" + calendarid).focus(function() {
 							$("#externuri_" + calendarid).css('background-color', '#F8F8F8');
 						});
+						
 						$("#messageTxtImportCal").animate({
 							color : 'green',
 						}, 3000, function() {
@@ -3314,7 +3315,16 @@ $(document).ready(function() {
 	$('#datecontrol_today').click(function() {
 		$('#fullcalendar').fullCalendar('today');
 	});
-
+	$('#printCal').click(function() {
+		//yearColumns:2,
+		
+		 $('#fullcalendar').printElement({ 
+		 	printMode: 'popup' ,
+		 	pageTitle:'wussa',
+		 	overrideElementCSS: ['http://127.0.0.1/81rc1/apps/calendar/css/3rdparty/fullcalendar.print.css']
+		 	});
+	});
+	
 	//Calendar.UI.Share.init();
 	Calendar.UI.Drop.init();
 

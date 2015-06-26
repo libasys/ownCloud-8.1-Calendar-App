@@ -673,3 +673,10 @@ table.fc-border-separate {
 .fc-year-main-table .fc-last {
 	/*border-right:1px solid red;*/
 }
+
+.fc-scroller{
+	position:absolute;
+	width:100%;
+	overflow-x:hidden;
+	overflow-y:auto;
+}

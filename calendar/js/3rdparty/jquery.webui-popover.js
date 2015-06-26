@@ -35,7 +35,6 @@
 								'<div class="arrow"></div>'+
 								'<div class="webui-popover-inner">'+
 									'<a href="#" class="close">x</a>'+
-									'<h3 class="webui-popover-title"></h3>'+
 									'<div class="webui-popover-content"><i class="icon-refresh"></i> <p>&nbsp;</p></div>'+
 								'</div>'+
 							'</div>'
@@ -101,9 +100,11 @@
 						event.stopPropagation();
 						
 					}
-					if (this.xhr){
+					
+					if (this.xhr && (!this.getCache() || !this._poped || this.content === '')){
 						this.xhr.abort();
 						this.xhr = null;
+						
 					}
 
 					var e = $.Event('hide.' + pluginType);
@@ -133,7 +134,7 @@
 						this.hideAll();
 					}
 					// use cache by default, if not cache setted  , reInit the contents 
-					if (!this.getCache()||!this._poped||this.content===''){
+					if (!this.getCache() || !this._poped || this.content===''){
 						this.content = '';
 						this.setTitle(this.getTitle());
 						if (!this.options.closeable){

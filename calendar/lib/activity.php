@@ -75,7 +75,7 @@ class Activity implements \OCP\Activity\IExtension {
 	 * @return array|false
 	 */
 	public function filterNotificationTypes($types, $filter) {
-		return $types;
+		return false;
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Activity implements \OCP\Activity\IExtension {
 	 * @return array|false
 	 */
 	public function getDefaultTypes($method) {
-			if ($method === 'stream') {
+		if ($method === 'stream') {
 			$settings = array();
 			$settings[] = self::TYPE_SHARED_EVENT_CREATED;
 			$settings[] = self::TYPE_SHARED_EVENT_EDITED;
@@ -95,8 +95,8 @@ class Activity implements \OCP\Activity\IExtension {
 			$settings[] = self::TYPE_UNSHARED_CALENDAR;
 			$settings[] = self::TYPE_CALENDAR_DELETED;
 			return $settings;
-			}
-			return false;
+		}
+		return false;
 	}
 
 	/**
@@ -132,7 +132,7 @@ class Activity implements \OCP\Activity\IExtension {
 					return (string) $l->t('You edited calendar %1$s',$params);
 				break;
 				case 'deleted_calendar_self':
-					return (string) $l->t('You deleted calendar %1$s',$params);	
+					return (string) $l->t('You deleted calendar %1$s',$params);
 				break;
 				case 'shared_link_self_calendar':
 					return (string) $l->t('You shared %1$s via Link',$params);
@@ -159,21 +159,18 @@ class Activity implements \OCP\Activity\IExtension {
 					return (string) $l->t('%2$s unshared %1$s with you',$params);
 				break;
 				case 'created_by_other':
-					return (string) $l->t('A new %1$s  from %2$s in shared calendar %3$s created',$params);
+					return (string) $l->t('A new %1$s from %2$s in shared calendar %3$s created',$params);
 				break;
 				case 'edited_by_other':
-					return (string) $l->t('A %1$s  from %2$s in shared calendar %3$s edited',$params);
+					return (string) $l->t('A %1$s from %2$s in shared calendar %3$s edited',$params);
 				break;
 				case 'deleted_by_other':
-					return (string) $l->t('A %1$s  from %2$s in shared calendar %3$s deleted',$params);
+					return (string) $l->t('A %1$s from %2$s in shared calendar %3$s deleted',$params);
 				break;
-				
-				default:
-				return false;
-				}
+			}
 		}
 
-		
+		return false;
 	}
 
 	/**
@@ -190,26 +187,42 @@ class Activity implements \OCP\Activity\IExtension {
 	public function getSpecialParameterList($app, $text) {
 		if ($app === 'calendar') {
 			switch ($text) {
-				case 'created_self':
-				case 'edited_self':
-				case 'deleted_self':
-				case 'created_calendar_self':
-				case 'edited_calendar_self':
-				case 'deleted_calendar_self':	
-				case 'shared_link_self_calendar':
-				case 'unshared_link_self_calendar':
-				case 'shared_user_self_calendar':
-				case 'unshared_user_self_calendar':
-				case 'shared_group_self_calendar':
-				case 'unshared_group_self_calendar':
 				case 'shared_with_by_calendar':
 				case 'unshared_with_by_calendar':
+				case 'shared_user_self_calendar':
+				case 'unshared_user_self_calendar':
+					return [
+						//0 => 'calendar'
+						1 => 'username',
+					];
 				case 'created_by_other':
 				case 'edited_by_other':
 				case 'deleted_by_other':
 					return [
-					0 => 'event',
-					1 => 'calendar',
+						//0 => 'event',
+						1 => 'username',
+						//2 => 'calendar'
+					];
+				case 'shared_group_self_calendar':
+				case 'unshared_group_self_calendar':
+					return [
+						//0 => 'calendar'
+						1 => 'group',
+					];
+				case 'created_self':
+				case 'edited_self':
+				case 'deleted_self':
+					return [
+						//0 => 'event',
+						//1 => 'calendar',
+					];
+				case 'shared_link_self_calendar':
+				case 'unshared_link_self_calendar':
+				case 'created_calendar_self':
+				case 'edited_calendar_self':
+				case 'deleted_calendar_self':
+					return [
+						//0 => 'calendar',
 					];
 			}
 		}
@@ -235,23 +248,22 @@ class Activity implements \OCP\Activity\IExtension {
 			break;
 			case self::TYPE_SHARED_EVENT_CREATED:
 			case self::TYPE_EVENT_CREATED:
-			case self::TYPE_CALENDAR_CREATED:	
+			case self::TYPE_CALENDAR_CREATED:
 				return 'icon-info';
 			break;
 			case self::TYPE_EVENT_EDITED:
 			case self::TYPE_SHARED_EVENT_EDITED:
-			case self::TYPE_CALENDAR_EDITED:		
+			case self::TYPE_CALENDAR_EDITED:
 				return 'icon-rename';
 			break;
 			case self::TYPE_SHARED_EVENT_DELETED:
-			case self::TYPE_CALENDAR_DELETED:		
+			case self::TYPE_CALENDAR_DELETED:
 			case self::TYPE_EVENT_DELETED:
 				return 'icon-delete';
 			break;
-			default:
-			return false;			
-		}	
+		}
 
+		return false;
 	}
 
 	/**
@@ -264,16 +276,26 @@ class Activity implements \OCP\Activity\IExtension {
 	public function getGroupParameter($activity) {
 		if ($activity['app'] === 'calendar') {
 			switch ($activity['subject']) {
-					case 'shared_user_self_calendar':
-					case 'shared_group_self_calendar':
-					case 'unshared_user_self_calendar':
-					case 'unshared_group_self_calendar':
-						return 0;
-						break;
-				
+				case 'created_calendar_self':
+				case 'edited_calendar_self':
+				case 'deleted_calendar_self':
+					// You created calendar calA and calB
+					return 0;
+
+				case 'shared_user_self_calendar':
+				case 'shared_group_self_calendar':
+				case 'unshared_user_self_calendar':
+				case 'unshared_group_self_calendar':
+					// You shared calA with userA and userB
+					return 1;
+
+				case 'shared_with_by_calendar':
+				case 'unshared_with_by_calendar':
+					// UserA shared calA and calB with you
+					return 0;
 			}
 		}
-			
+
 		return false;
 	}
 
@@ -285,29 +307,29 @@ class Activity implements \OCP\Activity\IExtension {
 	 * @return array|false
 	 */
 	public function getNavigation() {
-				
-			$l = \OC::$server->getL10N('calendar');
-			
-			return [
-				'apps' => [
-					self::FILTER_CALENDAR => [
+
+		$l = \OC::$server->getL10N('calendar');
+
+		return [
+			'apps' => [
+				self::FILTER_CALENDAR => [
 					'id' => self::FILTER_CALENDAR,
 					'name' => $l->t('calendar'),
 					'url' =>\OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => self::FILTER_CALENDAR)),
-					],
-					self::FILTER_SHARECALENDAR => [
+				],
+				self::FILTER_SHARECALENDAR => [
 					'id' => self::FILTER_SHARECALENDAR,
 					'name' => $l->t('Sharees Calendar'),
 					'url' => \OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => self::FILTER_SHARECALENDAR)),
-					],
-					self::FILTER_UNSHARECALENDAR => [
+				],
+				self::FILTER_UNSHARECALENDAR => [
 					'id' => self::FILTER_UNSHARECALENDAR,
 					'name' => $l->t('Suspendend Sharees Calendar'),
 					'url' => \OC::$server->getRouter()->generate('activity.Activities.showList',array('filter' => self::FILTER_UNSHARECALENDAR)),
-					],
 				],
-				'top' => [],
-				];
+			],
+			'top' => [],
+		];
 	}
 
 	/**
@@ -318,7 +340,6 @@ class Activity implements \OCP\Activity\IExtension {
 	 */
 	public function isFilterValid($filterValue) {
 		return $filterValue === self::FILTER_CALENDAR || $filterValue === self::FILTER_SHARECALENDAR || $filterValue === self::FILTER_UNSHARECALENDAR;
-		//return true;
 	}
 
 	/**

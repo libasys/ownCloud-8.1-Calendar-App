@@ -102,6 +102,7 @@ class PageController extends Controller {
 			\OCP\Util::addScript('calendar', 'geo');
 		}
 		
+		\OCP\Util::addScript('calendar', '3rdparty/printThis');
 		\OCP\Util::addScript('calendar', 'calendar');
 		\OCP\Util::addScript('calendar','loaderimport');
 		\OCP\Util::addStyle('calendar', 'style');

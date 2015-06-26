@@ -5,6 +5,7 @@
  * See the COPYING-README file.
  */
 
+
 .app-calendar #searchresults {
 	background-color:rgba(255,255,255,0.9);
 	box-shadow:-1px 1px 8px rgba(0,0,0,0.5);
@@ -1738,3 +1739,17 @@ label {
 	line-height:14px;
 }
 
+@media print {
+    header{
+    	display:none;
+    }
+    footer{
+    	display:none;
+    }
+    #controls{
+    	display:none;
+    }
+    body{
+    	background:red;
+    }
+}

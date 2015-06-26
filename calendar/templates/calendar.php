@@ -12,7 +12,7 @@
 		<button id="calendarnavActive" class="button <?php p($_['buttonCalAktive']) ?>"><i class="ioc ioc-calendar"></i></button>	
 
 	<button class="button"  id="datecontrol_today"><?php p($l->t('Today'));?></button>
-	
+	<!--<button class="button"  id="printCal"><?php p($l->t('Print'));?></button> -->
 	</div>
 	
 	</div>
@@ -58,7 +58,7 @@
 	    	<div id="datepickerDayMore"></div>
 	    	<div id="DayListMore"></div>
 	    	</div>
-		<div id="fullcalendar"></div>
+		<div id="fullcalendar" class="PrintArea"></div>
 	
 		<div id="rightCalendarNav" <?php print_unescaped($_['isHidden']); ?>>
 			<?php if($_['rightnavAktiv']==='true') {?>

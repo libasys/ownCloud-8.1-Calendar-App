@@ -200,7 +200,7 @@ class CalendarController extends Controller {
 			if($cal['userid'] !== $this -> userId){
 				continue;
 			}
-			if($cal['displayname'] === $pName && $cal['id'] !== $calendarid) {
+			if($cal['displayname'] === $pName && (int)$cal['id'] !== $calendarid) {
 				$params = [
 					'status' => 'error',
 					'message' => 'namenotavailable'
