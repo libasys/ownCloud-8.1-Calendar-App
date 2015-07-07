@@ -1,4 +1,4 @@
-Calendar App
+Calendar+ App
 =============
 
 Maintainer:
@@ -7,7 +7,7 @@ Sebastian Döll
 
 Version Info:
 ============
-1.0.3
+1.0.0
 
 Setup Info:
 ===========
@@ -17,12 +17,13 @@ The old sharees won't work if you export the database shema from an old installa
 
 Installation:
 =============
-Upload the calendar app folder to your apps folder, activate it on the web ui apps!
+Download the zip file and rename folder from calendarplus-master to calendarplus! Upload the app to your apps directory and activate it on the apps settings page!
 
 New Features:
 =============
 - Sharing calendar via public link 
 - Sharing events via public link
+- Customizing public sharings via link on share.config.js
 - Exdate for repeating events (means you can delete a single event of a series)
 - Calendar subscription
 - Reminder support
